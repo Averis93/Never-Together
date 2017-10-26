@@ -8,6 +8,7 @@ public class CharacterBehaviour : MonoBehaviour {
     public float Amplitude;
     public Transform PointCenter;
     public Transform Character;
+    public GameObject Floor;
 
     public bool JumpedUp;
     public bool ChangePos;
@@ -77,7 +78,7 @@ public class CharacterBehaviour : MonoBehaviour {
     // Pick up coins
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Once a coin is picked up
+        // If the object with which the magnets collide is a coin
         if (other.gameObject.CompareTag("Coin"))
         {
             // Make the coin disappear
@@ -86,6 +87,11 @@ public class CharacterBehaviour : MonoBehaviour {
             // Increment the coins count
             transform.parent.GetComponent<MagnetsController>().SetCount();
             transform.parent.GetComponent<MagnetsController>().SetCountText();
+        }
+        // If the object with which the magnets collide is a tree
+        else if (other.gameObject.CompareTag("Branch"))
+        {
+            transform.parent.GetComponent<MagnetsController>().RemoveLife();
         }
     }
 
@@ -97,6 +103,15 @@ public class CharacterBehaviour : MonoBehaviour {
         if (Mathf.Abs(newPosition.y - _trans.position.y) < 0.02)
         {
             _trans.position = newPosition;
+        }
+
+        if (JumpedUp)
+        {
+            Floor.SetActive(false);
+        }
+        else
+        {
+            Floor.SetActive(true);
         }
     }
 }

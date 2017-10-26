@@ -12,11 +12,13 @@ public class MagnetsController : MonoBehaviour {
 	// Lives
 	public GameObject[] Lives;
 
+	// GameOver text
+	public GameObject GameOver;
+
 	// Coins count
 	private int _count;
-	
-	// Remaining lives
 	private int _remainingLives;
+	private bool _gameover;
 
 	// Initialization
 	void Start ()
@@ -24,6 +26,7 @@ public class MagnetsController : MonoBehaviour {
 		_count = 0;
 		SetCountText();
 		_remainingLives = 3;
+		_gameover = false;
 	}
 	
 	// Sets the number of collected coins
@@ -44,13 +47,28 @@ public class MagnetsController : MonoBehaviour {
 		if (transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().JumpedUp &&
 		    transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().JumpedUp)
 		{
-			_remainingLives = _remainingLives - 1;
-			Debug.Log(_remainingLives);
-			Lives[_remainingLives].SetActive(false);
-			transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().JumpedUp = false;
-			transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().JumpedUp = false;
+			RemoveLife();
+			if (!_gameover)
+			{
+				transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().JumpedUp = false;
+				transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().JumpedUp = false;
 			
-			Invoke("BringMagnetsDown", 3f);
+				Invoke("BringMagnetsDown", 3f);
+			}
+		}
+	}
+	
+	// When the 2 magnets collide or when they hit a tree remove a life. If no more lives are available, gameover.
+	public void RemoveLife()
+	{
+		_remainingLives = _remainingLives - 1;
+		Debug.Log(_remainingLives);
+		Lives[_remainingLives].SetActive(false);
+		
+		if (_remainingLives == 0)
+		{
+			_gameover = true;
+			GameOver.SetActive(true);
 		}
 	}
 
