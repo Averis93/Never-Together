@@ -7,7 +7,7 @@ public class HorizzontalMovement : Movement {
 
     public override void move(GameObject g)
     {
-        g.transform.position += g.transform.right * 0.05f;
+        //g.transform.position += g.transform.right * 0.05f;
     }
 }
 
