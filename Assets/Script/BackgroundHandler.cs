@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BackgroundHendler : MonoBehaviour {
+public class BackgroundHandler : MonoBehaviour {
 
     public GameObject BackgroundPrefab;
     public GameObject Player;
