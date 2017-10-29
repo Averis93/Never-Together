@@ -41,7 +41,7 @@ public class CharacterBehaviour : MonoBehaviour {
     void Update()
     {
 
-        if (Character.CompareTag("Woman") && Input.GetKeyDown(KeyCode.DownArrow) || Character.CompareTag("Man") && Input.GetKeyDown(KeyCode.UpArrow))
+        if (Character.CompareTag("Woman") && Input.GetKeyDown("a") || Character.CompareTag("Man") && Input.GetKeyDown("d"))
         {
             if (!JumpedUp)
             {

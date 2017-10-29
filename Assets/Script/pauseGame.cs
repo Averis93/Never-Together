@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pause : MonoBehaviour {
+public class pauseGame : MonoBehaviour {
 
     //public GameObject PausePanel;
     //public AudioMixerSnapshot Paused;
