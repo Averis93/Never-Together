@@ -7,10 +7,11 @@ using UnityEngine.UI;
 public class MagnetsController : MonoBehaviour {
 	
 	// Coins count string
-	public Text CountText;
+	public Text CoinsCountText;
 	
 	// Lives
 	public GameObject[] Lives;
+	public GameObject AdditionalLife;
 
 	// GameOver text
 	public GameObject GameOver;
@@ -23,10 +24,10 @@ public class MagnetsController : MonoBehaviour {
     public GameObject AppManager;
 	
 
-    // Coins count
-    private int _count;
-	
+    private int _coinsCount;
+	private int _maxCoins;
 	private int _remainingLives;
+	private bool _additionalLife;
 	private bool _gameover;
 	private CameraShake _camShake;
     
@@ -34,9 +35,11 @@ public class MagnetsController : MonoBehaviour {
     // Initialization
     void Start ()
 	{
-		_count = 0;
+		_coinsCount = 0;
+		_maxCoins = 5;
 		SetCountText();
 		_remainingLives = 3;
+		_additionalLife = false;
 		_gameover = false;
 
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
@@ -45,18 +48,36 @@ public class MagnetsController : MonoBehaviour {
 	// Sets the number of collected coins
 	public void SetCount()
 	{
-		_count++;
+		_coinsCount++;
+		
+		// If the player collects 200 coins, add a life and reset the coins count
+		if (_coinsCount == _maxCoins)
+		{
+			_coinsCount = 0;
+
+			if (_remainingLives == 3)
+			{
+				AdditionalLife.SetActive(true);
+				_additionalLife = true;
+			}
+			else
+			{
+				AddLife();
+			}
+			
+			SetCountText();
+		}
 	}
 	
 	// Sets the text string specifying the number of collected coins
 	public void SetCountText()
 	{
-		CountText.text = _count.ToString();
+		CoinsCountText.text = _coinsCount.ToString();
 	}
 	
-	// If the two magnets collide, remove 1 heart
 	void LateUpdate()
 	{
+		// If the two magnets collide, remove 1 heart
 		if (transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().JumpedUp &&
 		    transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().JumpedUp)
 		{
@@ -83,17 +104,31 @@ public class MagnetsController : MonoBehaviour {
 	// When the 2 magnets collide or when they hit a tree remove a life. If no more lives are available, gameover.
 	public void RemoveLife()
 	{
-		_remainingLives = _remainingLives - 1;
-		Debug.Log(_remainingLives);
-		Lives[_remainingLives].SetActive(false);
-		
-		if (_remainingLives == 0)
+		if (_additionalLife)
 		{
-			_gameover = true;
-            GameOver.SetActive(true);
-			
-			// END THE GAME!!!
+			AdditionalLife.SetActive(false);
+			_additionalLife = false;
 		}
+		else
+		{
+			_remainingLives = _remainingLives - 1;
+			Lives[_remainingLives].SetActive(false);
+			
+			if (_remainingLives == 0)
+			{
+				_gameover = true;
+				GameOver.SetActive(true);
+			
+				// END THE GAME!!!
+			}
+		}
+	}
+
+	// Add a red heart when the player collects 200 coins
+	void AddLife()
+	{
+		Lives[_remainingLives].SetActive(true);
+		_remainingLives = _remainingLives + 1;
 	}
 
     void ImpactEffect()
@@ -114,6 +149,11 @@ public class MagnetsController : MonoBehaviour {
 		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().ChangePos = false;
 		
 		// Enable keyboard input
+		Invoke("EnableKeyboardInput", 0.8f);
+	}
+
+	void EnableKeyboardInput()
+	{
 		transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
 		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
 	}

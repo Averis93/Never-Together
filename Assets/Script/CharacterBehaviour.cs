@@ -44,7 +44,7 @@ public class CharacterBehaviour : MonoBehaviour {
     void Update()
     {
 
-        if (Character.CompareTag("Woman") && Input.GetKeyDown("a") || Character.CompareTag("Man") && Input.GetKeyDown("d"))
+        if (Character.CompareTag("Woman") && Input.GetKeyDown(KeyCode.DownArrow) || Character.CompareTag("Man") && Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (_inputAllowed)
             {
@@ -95,8 +95,9 @@ public class CharacterBehaviour : MonoBehaviour {
             transform.parent.GetComponent<MagnetsController>().SetCountText();
         }
         // If the object with which the magnets collide is a tree
-        else if (other.gameObject.CompareTag("Branch"))
+        else if (other.gameObject.CompareTag("Branch") && _inputAllowed)
         {
+            StartCoroutine(Blink(3, 0.2f, 0.4f));
             transform.parent.GetComponent<MagnetsController>().RemoveLife();
         }
     }
@@ -121,8 +122,25 @@ public class CharacterBehaviour : MonoBehaviour {
         }
     }
 
+    // Enable (input = true) or disable (input = false) the input from keyboard
     public void SetInput(bool input)
     {
         _inputAllowed = input;
+    }
+    
+    // Flicker when a magnet hits a tree
+    IEnumerator Blink(int nTimes, float timeOn, float timeOff)
+    {
+        while (nTimes > 0)
+        {
+            GetComponent<Renderer>().enabled = true;
+            yield return new WaitForSeconds(timeOn);
+            GetComponent<Renderer>().enabled = false;
+            yield return new WaitForSeconds(timeOff);
+            nTimes--;
+        }
+
+        GetComponent<Renderer>().enabled = true;
+
     }
 }
