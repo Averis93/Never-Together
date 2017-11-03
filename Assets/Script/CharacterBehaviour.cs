@@ -24,6 +24,8 @@ public class CharacterBehaviour : MonoBehaviour {
     // Private Variables
     private Transform _trans;	// Will hold this.transform.
 
+    private bool _inputAllowed;
+
     void Start()
     {
         TempPosition = PointCenter.position;
@@ -31,6 +33,7 @@ public class CharacterBehaviour : MonoBehaviour {
         OldPositionDown = Character.position;
         JumpedUp = false;
         ChangePos = false;
+        _inputAllowed = true;
     }
 
     void Awake()
@@ -43,15 +46,18 @@ public class CharacterBehaviour : MonoBehaviour {
 
         if (Character.CompareTag("Woman") && Input.GetKeyDown("a") || Character.CompareTag("Man") && Input.GetKeyDown("d"))
         {
-            if (!JumpedUp)
+            if (_inputAllowed)
             {
-                ChangePos = true;
-                JumpedUp = true;
-            }
-            else
-            {
-                JumpedUp = false; //impedisce di entrare nell'if dell'ondeggio
-                ChangePos = false; //dovrebbe permettere di tornare a terra
+                if (!JumpedUp)
+                {
+                    ChangePos = true;
+                    JumpedUp = true;
+                }
+                else
+                {
+                    JumpedUp = false; //impedisce di entrare nell'if dell'ondeggio
+                    ChangePos = false; //dovrebbe permettere di tornare a terra
+                }
             }
         }
 
@@ -113,5 +119,10 @@ public class CharacterBehaviour : MonoBehaviour {
         {
             Floor.SetActive(true);
         }
+    }
+
+    public void SetInput(bool input)
+    {
+        _inputAllowed = input;
     }
 }

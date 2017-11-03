@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BackgroundMove : MonoBehaviour {
 
-    float speed = 3.0f;
+    public float Speed = 3.0f;
     //public GameObject go;
     public ChangePoint StopMove;
 
@@ -12,10 +12,13 @@ public class BackgroundMove : MonoBehaviour {
 
     void Update()
     {
-        this.transform.position += Vector3.left * Time.deltaTime * speed;
-        if (StopMove.circol == false)
-            this.transform.position += Vector3.left * Time.deltaTime * speed;
-        else
-            transform.position = transform.position;
+
+    this.transform.position += Vector3.left * Time.deltaTime * Speed;
+
+    if (StopMove.circol == false)
+        this.transform.position += Vector3.left * Time.deltaTime * Speed;
+    else
+        transform.position = transform.position;
+
     }
 }

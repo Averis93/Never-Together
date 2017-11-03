@@ -19,14 +19,16 @@ public class MagnetsController : MonoBehaviour {
     public GameObject[] ParticleEffect;
 
     //Handle Camera shake
-    public float camShakeAmt = 0.1f;
-    CameraShake camShake;
+    public float CamShakeAmt = 0.1f;
     public GameObject AppManager;
+	
 
     // Coins count
     private int _count;
+	
 	private int _remainingLives;
 	private bool _gameover;
+	private CameraShake _camShake;
     
 
     // Initialization
@@ -37,7 +39,7 @@ public class MagnetsController : MonoBehaviour {
 		_remainingLives = 3;
 		_gameover = false;
 
-        camShake = AppManager.gameObject.GetComponent<CameraShake>();
+        _camShake = AppManager.gameObject.GetComponent<CameraShake>();
 	}
 	
 	// Sets the number of collected coins
@@ -58,7 +60,14 @@ public class MagnetsController : MonoBehaviour {
 		if (transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().JumpedUp &&
 		    transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().JumpedUp)
 		{
-            Invoke("Impact_Effect", 0.4f);
+			// Disable keyboard input
+			transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().SetInput(false);
+			transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(false);
+			
+			// Create sparks
+            Invoke("ImpactEffect", 0.4f);
+			
+			//Remove a life and gameover in case lives = 0
             RemoveLife();
 
             if (!_gameover)
@@ -82,16 +91,18 @@ public class MagnetsController : MonoBehaviour {
 		{
 			_gameover = true;
             GameOver.SetActive(true);
+			
+			// END THE GAME!!!
 		}
 	}
 
-    void Impact_Effect()
+    void ImpactEffect()
     {
         ParticleEffect[0].SetActive(true);
         ParticleEffect[1].SetActive(true);
 
         //Shake the camera
-        camShake.Shake(camShakeAmt, 0.1f);
+        _camShake.Shake(CamShakeAmt, 0.1f);
     }
 
 	// Move the magnets back on the surface when they collide
@@ -101,5 +112,9 @@ public class MagnetsController : MonoBehaviour {
         ParticleEffect[1].SetActive(false);
         transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().ChangePos = false;
 		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().ChangePos = false;
+		
+		// Enable keyboard input
+		transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
+		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
 	}
 }
