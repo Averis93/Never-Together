@@ -10,6 +10,9 @@ public class CharacterBehaviour : MonoBehaviour {
     public Transform Character;
     public GameObject Floor;
 
+    public float CamShakeAmt = 0.1f;
+    public GameObject AppManager;
+
     public bool JumpedUp;
     public bool ChangePos;
 
@@ -23,7 +26,7 @@ public class CharacterBehaviour : MonoBehaviour {
 
     // Private Variables
     private Transform _trans;	// Will hold this.transform.
-
+    private CameraShake _camShake;
     private bool _inputAllowed;
 
     void Start()
@@ -34,6 +37,7 @@ public class CharacterBehaviour : MonoBehaviour {
         JumpedUp = false;
         ChangePos = false;
         _inputAllowed = true;
+        _camShake = AppManager.gameObject.GetComponent<CameraShake>();
     }
 
     void Awake()
@@ -98,6 +102,7 @@ public class CharacterBehaviour : MonoBehaviour {
         else if (other.gameObject.CompareTag("Branch") && _inputAllowed)
         {
             StartCoroutine(Blink(3, 0.2f, 0.4f));
+            _camShake.Shake(CamShakeAmt, 0.1f);
             transform.parent.GetComponent<MagnetsController>().RemoveLife();
         }
     }
