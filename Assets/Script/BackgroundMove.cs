@@ -13,10 +13,10 @@ public class BackgroundMove : MonoBehaviour {
     void Update()
     {
 
-    this.transform.position += Vector3.left * Time.deltaTime * Speed;
+    transform.position += Vector3.left * Time.deltaTime * Speed;
 
     if (StopMove.circol == false)
-        this.transform.position += Vector3.left * Time.deltaTime * Speed;
+        transform.position += Vector3.left * Time.deltaTime * Speed;
     else
         transform.position = transform.position;
 

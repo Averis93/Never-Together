@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class CharacterBehaviour : MonoBehaviour {
 
@@ -9,6 +12,7 @@ public class CharacterBehaviour : MonoBehaviour {
     public Transform PointCenter;
     public Transform Character;
     public GameObject Floor;
+    public GameObject Background;
 
     public float CamShakeAmt = 0.1f;
     public GameObject AppManager;
@@ -99,11 +103,17 @@ public class CharacterBehaviour : MonoBehaviour {
             transform.parent.GetComponent<MagnetsController>().SetCountText();
         }
         // If the object with which the magnets collide is a tree
-        else if (other.gameObject.CompareTag("Branch") && _inputAllowed)
+        else if ((other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")) && _inputAllowed)
         {
             StartCoroutine(Blink(3, 0.2f, 0.4f));
             _camShake.Shake(CamShakeAmt, 0.1f);
             transform.parent.GetComponent<MagnetsController>().RemoveLife();
+        }
+        // If the object with which the magnets collide is the finish line
+        else if (other.gameObject.CompareTag("Finish"))
+        {
+                Background.GetComponent<Image>().color = Color.Lerp(Background.GetComponent<Image>().color, 
+                    Color.black, 10f); 
         }
     }
 
