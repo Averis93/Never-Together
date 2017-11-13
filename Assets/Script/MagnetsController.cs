@@ -16,12 +16,17 @@ public class MagnetsController : MonoBehaviour {
 	// GameOver text
 	public GameObject GameOver;
 
-    //Particle effect
+    // Particle effect
     public GameObject[] ParticleEffect;
 
-    //Handle Camera shake
+    // Handle Camera shake
     public float CamShakeAmt = 0.1f;
     public GameObject AppManager;
+	
+	// Handle power-ups
+	public int PowerUpDuration = 10;
+	public GameObject TimerText;
+	public GameObject[] AttractionPowerUp;
 	
 
     private int _coinsCount;
@@ -156,5 +161,34 @@ public class MagnetsController : MonoBehaviour {
 	{
 		transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
 		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
+	}
+
+	public void Attraction()
+	{
+		AttractionPowerUp[0].SetActive(true);
+		AttractionPowerUp[1].SetActive(true);
+		AttractionPowerUp[2].SetActive(true);
+		TimerText.SetActive(true);
+		StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp));
+	}
+	    
+	// Timer for power-ups
+	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp)
+	{
+		TimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
+        
+		while (countdownValue > 0)
+		{
+			yield return new WaitForSeconds(1.0f);
+			countdownValue--;
+			TimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
+		}
+        
+		TimerText.SetActive(false);
+
+		for (var i = 0; i < powerUp.Length; i++)
+		{
+			powerUp[i].SetActive(false);
+		}
 	}
 }

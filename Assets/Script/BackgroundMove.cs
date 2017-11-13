@@ -6,7 +6,7 @@ public class BackgroundMove : MonoBehaviour {
 
     public float Speed = 3.0f;
     //public GameObject go;
-    public ChangePoint StopMove;
+    //public ChangePoint StopMove;
 
     void Start() { }
 
@@ -14,11 +14,12 @@ public class BackgroundMove : MonoBehaviour {
     {
 
     transform.position += Vector3.left * Time.deltaTime * Speed;
-
+/*
     if (StopMove.circol == false)
         transform.position += Vector3.left * Time.deltaTime * Speed;
     else
         transform.position = transform.position;
+        */
 
     }
 }

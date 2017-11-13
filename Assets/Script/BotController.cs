@@ -18,9 +18,6 @@ public class BotController : MonoBehaviour
 		_direction = 1;
 		_rightBound = transform.localPosition.x + 1.5f;
 		_leftBound = transform.localPosition.x - 1.5f;
-		
-		Debug.Log(transform.localPosition);
-		Debug.Log(_rightBound);
 	}
 	
 	// Update is called once per frame
@@ -32,7 +29,7 @@ public class BotController : MonoBehaviour
 		else if (transform.localPosition.x < _leftBound) {
 			_direction = 1;
 		}
-		transform.localPosition += Vector3.right * _direction * Speed * Time.deltaTime; 
 		
+		transform.localPosition += Vector3.right * _direction * Speed * Time.deltaTime; 
 	}
 }

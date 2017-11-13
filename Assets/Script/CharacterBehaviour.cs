@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,13 +15,13 @@ public class CharacterBehaviour : MonoBehaviour {
     public GameObject Floor;
     public GameObject Background;
 
+    public GameObject MagneticField;
+
     public float CamShakeAmt = 0.1f;
     public GameObject AppManager;
 
     public bool JumpedUp;
     public bool ChangePos;
-
-    public Vector3 TempPosition;
 
     // Public Variables
     public Vector3 NewPositionUp; // The target position
@@ -32,21 +33,22 @@ public class CharacterBehaviour : MonoBehaviour {
     private Transform _trans;	// Will hold this.transform.
     private CameraShake _camShake;
     private bool _inputAllowed;
+    private Transform _magneticFieldTrans;
 
     void Start()
     {
-        TempPosition = PointCenter.position;
         NewPositionUp = PointCenter.position;
         OldPositionDown = Character.position;
         JumpedUp = false;
         ChangePos = false;
         _inputAllowed = true;
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
+        _magneticFieldTrans = MagneticField.transform;
     }
 
     void Awake()
     {
-        _trans = transform;
+        _trans = transform; 
     }
 
     void Update()
@@ -75,7 +77,7 @@ public class CharacterBehaviour : MonoBehaviour {
             ChangePosition(NewPositionUp);
 
         }//fa tornare sulla rispettiva superficie la calamita 
-        else if(!ChangePos)
+        else 
         {
             ChangePosition(OldPositionDown);
         }
@@ -86,6 +88,28 @@ public class CharacterBehaviour : MonoBehaviour {
             Index += Time.deltaTime;
             float y = Mathf.Abs(VerticalSpeed * Mathf.Sin(Amplitude * Index));
             transform.localPosition += new Vector3(0, y, 0);
+        }
+    }
+    
+    // Go up or down
+    void ChangePosition(Vector3 newPosition)
+    {
+        _trans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 4f);
+        _magneticFieldTrans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 4f);
+
+        if (Mathf.Abs(newPosition.y - _trans.position.y) < 0.02)
+        {
+            _trans.position = newPosition;
+            _magneticFieldTrans.position = newPosition; 
+        }
+
+        if (JumpedUp)
+        {
+            Floor.SetActive(false);
+        }
+        else
+        {
+            Floor.SetActive(true);
         }
     }
 
@@ -102,6 +126,17 @@ public class CharacterBehaviour : MonoBehaviour {
             transform.parent.GetComponent<MagnetsController>().SetCount();
             transform.parent.GetComponent<MagnetsController>().SetCountText();
         }
+        // If the object with which the magnets collide is a power-up
+        else if (other.gameObject.CompareTag("PowerUp"))
+        {
+            other.gameObject.SetActive(false);
+            
+            if (other.gameObject.name == "Attraction")
+            {
+                transform.parent.GetComponent<MagnetsController>().Attraction();
+            }
+            
+        }
         // If the object with which the magnets collide is a tree
         else if ((other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")) && _inputAllowed)
         {
@@ -114,26 +149,6 @@ public class CharacterBehaviour : MonoBehaviour {
         {
                 Background.GetComponent<Image>().color = Color.Lerp(Background.GetComponent<Image>().color, 
                     Color.black, 10f); 
-        }
-    }
-
-    // Go up or down
-    void ChangePosition(Vector3 newPosition)
-    {
-        _trans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 4f);
-
-        if (Mathf.Abs(newPosition.y - _trans.position.y) < 0.02)
-        {
-            _trans.position = newPosition;
-        }
-
-        if (JumpedUp)
-        {
-            Floor.SetActive(false);
-        }
-        else
-        {
-            Floor.SetActive(true);
         }
     }
 
@@ -156,6 +171,5 @@ public class CharacterBehaviour : MonoBehaviour {
         }
 
         GetComponent<Renderer>().enabled = true;
-
     }
 }
