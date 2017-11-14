@@ -13,7 +13,6 @@ public class CharacterBehaviour : MonoBehaviour {
     public Transform PointCenter;
     public Transform Character;
     public GameObject Floor;
-    public GameObject Background;
 
     public GameObject MagneticField;
 
@@ -138,7 +137,7 @@ public class CharacterBehaviour : MonoBehaviour {
             
         }
         // If the object with which the magnets collide is a tree
-        else if ((other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")) && _inputAllowed)
+        else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
         {
             StartCoroutine(Blink(3, 0.2f, 0.4f));
             _camShake.Shake(CamShakeAmt, 0.1f);
@@ -147,8 +146,7 @@ public class CharacterBehaviour : MonoBehaviour {
         // If the object with which the magnets collide is the finish line
         else if (other.gameObject.CompareTag("Finish"))
         {
-                Background.GetComponent<Image>().color = Color.Lerp(Background.GetComponent<Image>().color, 
-                    Color.black, 10f); 
+            transform.parent.GetComponent<MagnetsController>().ShowStatistics();
         }
     }
 

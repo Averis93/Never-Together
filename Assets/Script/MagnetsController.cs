@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +14,13 @@ public class MagnetsController : MonoBehaviour {
 	public GameObject[] Lives;
 	public GameObject AdditionalLife;
 
-	// GameOver text
+	// Ending of the game
 	public GameObject GameOver;
+	public GameObject Statistics;
+	public Text TotalCoinsCollected;
+	public Text TotalLivesLost;
+	public Text TimerText;
+	public GameObject TotalCoins;
 
     // Particle effect
     public GameObject[] ParticleEffect;
@@ -24,17 +30,24 @@ public class MagnetsController : MonoBehaviour {
     public GameObject AppManager;
 	
 	// Handle power-ups
-	public int PowerUpDuration = 10;
-	public GameObject TimerText;
+	public int PowerUpDuration = 20;
+	public GameObject PowerUpTimerText;
 	public GameObject[] AttractionPowerUp;
+	
+	// Timer
+	public Text Time;
 	
 
     private int _coinsCount;
 	private int _maxCoins;
+	private int _totalCoinsCollected;
+	private int _totalCoins;
 	private int _remainingLives;
+	private int _livesLost;
 	private bool _additionalLife;
 	private bool _gameover;
 	private CameraShake _camShake;
+	private bool _stopGame;
     
 
     // Initialization
@@ -42,18 +55,23 @@ public class MagnetsController : MonoBehaviour {
 	{
 		_coinsCount = 0;
 		_maxCoins = 5;
+		_totalCoinsCollected = 0;
+		_totalCoins = TotalCoins.transform.childCount;
 		SetCountText();
 		_remainingLives = 3;
+		_livesLost = 0;
 		_additionalLife = false;
 		_gameover = false;
-
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
+		_stopGame = false;
+		StartCoroutine(StartTimer());
 	}
 	
 	// Sets the number of collected coins
 	public void SetCount()
 	{
 		_coinsCount++;
+		_totalCoinsCollected++;
 		
 		// If the player collects 200 coins, add a life and reset the coins count
 		if (_coinsCount == _maxCoins)
@@ -85,7 +103,7 @@ public class MagnetsController : MonoBehaviour {
 		// If the two magnets collide, remove 1 heart
 		if (transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().JumpedUp &&
 		    transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().JumpedUp)
-		{
+		{	
 			// Disable keyboard input
 			transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().SetInput(false);
 			transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(false);
@@ -117,6 +135,7 @@ public class MagnetsController : MonoBehaviour {
 		else
 		{
 			_remainingLives = _remainingLives - 1;
+			_livesLost++;
 			Lives[_remainingLives].SetActive(false);
 			
 			if (_remainingLives == 0)
@@ -163,32 +182,77 @@ public class MagnetsController : MonoBehaviour {
 		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(true);
 	}
 
+	// Enable attraction power-up
 	public void Attraction()
 	{
 		AttractionPowerUp[0].SetActive(true);
 		AttractionPowerUp[1].SetActive(true);
 		AttractionPowerUp[2].SetActive(true);
-		TimerText.SetActive(true);
+		PowerUpTimerText.SetActive(true);
 		StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp));
 	}
 	    
 	// Timer for power-ups
 	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp)
 	{
-		TimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
+		PowerUpTimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
         
 		while (countdownValue > 0)
 		{
 			yield return new WaitForSeconds(1.0f);
 			countdownValue--;
-			TimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
+			PowerUpTimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
 		}
         
-		TimerText.SetActive(false);
+		PowerUpTimerText.SetActive(false);
 
 		for (var i = 0; i < powerUp.Length; i++)
 		{
 			powerUp[i].SetActive(false);
 		}
+	}
+	
+	// Timer for the level
+	IEnumerator StartTimer()
+	{
+		var seconds = 0;
+		var minutes = 0;
+
+
+		
+		while (!_stopGame)
+		{
+			if (seconds < 10)
+			{
+				Time.text = minutes + ".0" + seconds;
+			}
+			else if (seconds == 60)
+			{
+				minutes++;
+				seconds = 0;
+
+				Time.text = minutes + ".0" + seconds;
+			}
+			else
+			{
+				Time.text = minutes + "." + seconds;
+			}
+			
+			yield return new WaitForSeconds(1.0f);
+			seconds++;
+		}
+
+		TimerText.transform.GetComponent<Text>().text = Time.text;
+
+		
+	}
+
+	// Displays the statistics on the screen at the end of a level
+	public void ShowStatistics()
+	{
+		_stopGame = true;
+		TotalCoinsCollected.text = _totalCoinsCollected + "/" + _totalCoins;
+		TotalLivesLost.text = _livesLost.ToString();
+		Statistics.SetActive(true);
 	}
 }
