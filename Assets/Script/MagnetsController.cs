@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Timers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -80,12 +81,16 @@ public class MagnetsController : MonoBehaviour {
 
 			if (_remainingLives == 3)
 			{
-				AdditionalLife.SetActive(true);
-				_additionalLife = true;
+				if (!_additionalLife)
+				{
+					AddLife(AdditionalLife);
+					_additionalLife = true;
+				}
 			}
 			else
 			{
-				AddLife();
+				AddLife(Lives[_remainingLives]);
+				_remainingLives = _remainingLives + 1;
 			}
 			
 			SetCountText();
@@ -149,10 +154,11 @@ public class MagnetsController : MonoBehaviour {
 	}
 
 	// Add a red heart when the player collects 200 coins
-	void AddLife()
+	void AddLife(GameObject life)
 	{
-		Lives[_remainingLives].SetActive(true);
-		_remainingLives = _remainingLives + 1;
+		life.SetActive(true);
+		life.GetComponent<Life>().ChangeShape();
+		
 	}
 
     void ImpactEffect()

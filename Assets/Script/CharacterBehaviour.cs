@@ -13,6 +13,7 @@ public class CharacterBehaviour : MonoBehaviour {
     public Transform PointCenter;
     public Transform Character;
     public GameObject Floor;
+    public Button ScreenInput;
 
     public GameObject MagneticField;
 
@@ -43,13 +44,16 @@ public class CharacterBehaviour : MonoBehaviour {
         _inputAllowed = true;
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
         _magneticFieldTrans = MagneticField.transform;
+        
+        Button screenInput = ScreenInput.GetComponent<Button>();
+        screenInput.onClick.AddListener(MoveMagnet);
     }
 
     void Awake()
     {
         _trans = transform; 
     }
-
+/*
     void Update()
     {
 
@@ -89,7 +93,48 @@ public class CharacterBehaviour : MonoBehaviour {
             transform.localPosition += new Vector3(0, y, 0);
         }
     }
-    
+*/
+    public void MoveMagnet()
+    {
+        if (_inputAllowed)
+        {
+            if (!JumpedUp)
+            {
+                ChangePos = true;
+                JumpedUp = true;
+            }
+            else
+            {
+                JumpedUp = false; //impedisce di entrare nell'if dell'ondeggio
+                ChangePos = false; //dovrebbe permettere di tornare a terra
+            }
+        }
+        
+        
+    }
+
+    void Update()
+    {
+        //posizionamento al centro delle due calamitine
+        if (ChangePos)
+        {
+            ChangePosition(NewPositionUp);
+
+        }//fa tornare sulla rispettiva superficie la calamita 
+        else 
+        {
+            ChangePosition(OldPositionDown);
+        }
+
+        //esegue l'ondeggio
+        if (JumpedUp)
+        {
+            Index += Time.deltaTime;
+            float y = Mathf.Abs(VerticalSpeed * Mathf.Sin(Amplitude * Index));
+            transform.localPosition += new Vector3(0, y, 0);
+        }
+    }
+
     // Go up or down
     void ChangePosition(Vector3 newPosition)
     {
