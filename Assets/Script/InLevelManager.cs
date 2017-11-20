@@ -8,11 +8,13 @@ public class InLevelManager : MonoBehaviour
 {
 
 	public Button NextLevel;
+	public Text LevelNumber;
 	
 	// Use this for initialization
 	void Start () {
 		Button btnNextLevel = NextLevel.GetComponent<Button>();
 		btnNextLevel.onClick.AddListener(StartNextLevel);
+		StartCoroutine(FadeTextIn(0.7f));
 	}
 
 	void StartNextLevel()
@@ -34,6 +36,26 @@ public class InLevelManager : MonoBehaviour
 			case "4":
 				SceneManager.LoadScene("Level5");
 				break;
+		}
+	}
+	
+	IEnumerator FadeTextIn(float t)
+	{
+		while (LevelNumber.color.a < 1.0f)
+		{
+			LevelNumber.color = new Color(LevelNumber.color.r, LevelNumber.color.g, LevelNumber.color.b, LevelNumber.color.a + (Time.deltaTime / t));
+			yield return null;
+		}
+		yield return new WaitForSeconds(1.0f);
+		StartCoroutine(FadeTextOut());
+	}
+	
+	IEnumerator FadeTextOut()
+	{
+		while (LevelNumber.color.a > 0.0f)
+		{
+			LevelNumber.color = new Color(LevelNumber.color.r, LevelNumber.color.g, LevelNumber.color.b, LevelNumber.color.a - (Time.deltaTime));
+			yield return null;
 		}
 	}
 }
