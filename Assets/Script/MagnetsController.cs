@@ -49,6 +49,7 @@ public class MagnetsController : MonoBehaviour {
 	private bool _gameover;
 	private CameraShake _camShake;
 	private bool _stopGame;
+	private int _timeAfterCollision;
     
 
     // Initialization
@@ -63,6 +64,7 @@ public class MagnetsController : MonoBehaviour {
 		_livesLost = 0;
 		_additionalLife = false;
 		_gameover = false;
+		_timeAfterCollision = 0;
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
 		_stopGame = false;
 		StartCoroutine(StartTimer());
@@ -224,10 +226,36 @@ public class MagnetsController : MonoBehaviour {
 		var seconds = 0;
 		var minutes = 0;
 
-
+		Time.text = "0.00";
 		
 		while (!_stopGame)
 		{
+			while (_timeAfterCollision != 0)
+			{
+				yield return new WaitForSeconds(0.05f);
+				seconds ++;
+				_timeAfterCollision--;
+				
+				if (seconds < 10)
+				{
+					Time.text = minutes + ".0" + seconds;
+				}
+				else if (seconds == 60)
+				{
+					minutes++;
+					seconds = 0;
+
+					Time.text = minutes + ".0" + seconds;
+				}
+				else
+				{
+					Time.text = minutes + "." + seconds;
+				}
+			}
+			
+			yield return new WaitForSeconds(1.0f);
+			seconds++;
+			
 			if (seconds < 10)
 			{
 				Time.text = minutes + ".0" + seconds;
@@ -243,14 +271,15 @@ public class MagnetsController : MonoBehaviour {
 			{
 				Time.text = minutes + "." + seconds;
 			}
-			
-			yield return new WaitForSeconds(1.0f);
-			seconds++;
 		}
 
 		TimerText.transform.GetComponent<Text>().text = Time.text;
+	}
 
-		
+	// Add 20 seconds to the total time after every collision with a branch or a bot
+	public void SetTimeAfterCollision()
+	{
+		_timeAfterCollision = 20;
 	}
 
 	// Displays the statistics on the screen at the end of a level

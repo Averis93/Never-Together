@@ -184,6 +184,7 @@ public class CharacterBehaviour : MonoBehaviour {
         // If the object with which the magnets collide is a tree
         else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
         {
+            _trans.parent.GetComponent<MagnetsController>().SetTimeAfterCollision();
             StartCoroutine(Blink(3, 0.2f, 0.4f));
             _camShake.Shake(CamShakeAmt, 0.1f);
             transform.parent.GetComponent<MagnetsController>().RemoveLife();
