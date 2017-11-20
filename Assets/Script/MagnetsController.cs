@@ -271,9 +271,12 @@ public class MagnetsController : MonoBehaviour {
 			{
 				Time.text = minutes + "." + seconds;
 			}
-		}
-
+		}	
+		
 		TimerText.transform.GetComponent<Text>().text = Time.text;
+		TotalCoinsCollected.text = _totalCoinsCollected + "/" + _totalCoins;
+		TotalLivesLost.text = _livesLost.ToString();
+		Statistics.SetActive(true);
 	}
 
 	// Add 20 seconds to the total time after every collision with a branch or a bot
@@ -286,8 +289,5 @@ public class MagnetsController : MonoBehaviour {
 	public void ShowStatistics()
 	{
 		_stopGame = true;
-		TotalCoinsCollected.text = _totalCoinsCollected + "/" + _totalCoins;
-		TotalLivesLost.text = _livesLost.ToString();
-		Statistics.SetActive(true);
 	}
 }

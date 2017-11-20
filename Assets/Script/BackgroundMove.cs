@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BackgroundMove : MonoBehaviour {
 
@@ -13,12 +14,13 @@ public class BackgroundMove : MonoBehaviour {
     void Update()
     {
 
-    transform.position += Vector3.left * Time.deltaTime * Speed;
-/*
-    if (StopMove.circol == false)
         transform.position += Vector3.left * Time.deltaTime * Speed;
-    else
-        transform.position = transform.position;
+        
+        /*
+        if (StopMove.circol == false)
+            transform.position += Vector3.left * Time.deltaTime * Speed;
+        else
+            transform.position = transform.position;
         */
 
     }

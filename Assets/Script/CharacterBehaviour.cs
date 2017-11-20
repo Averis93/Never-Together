@@ -94,7 +94,7 @@ public class CharacterBehaviour : MonoBehaviour {
         }
     }
 */
-    public void MoveMagnet()
+    void MoveMagnet()
     {
         if (_inputAllowed)
         {
