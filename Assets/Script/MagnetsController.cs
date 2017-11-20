@@ -289,5 +289,9 @@ public class MagnetsController : MonoBehaviour {
 	public void ShowStatistics()
 	{
 		_stopGame = true;
+		
+		// Disable keyboard input
+		transform.GetChild(0).gameObject.GetComponent<CharacterBehaviour>().SetInput(false);
+		transform.GetChild(1).gameObject.GetComponent<CharacterBehaviour>().SetInput(false);
 	}
 }
