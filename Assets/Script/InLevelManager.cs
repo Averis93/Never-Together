@@ -11,6 +11,7 @@ public class InLevelManager : MonoBehaviour
 	public Text LevelNumber;
 
 	public GameObject[] Magnets;
+	public GameObject Background;
 	
 	// Coins count string
 	public Text CoinsCountText;
@@ -23,17 +24,18 @@ public class InLevelManager : MonoBehaviour
 	public Text Timer;
 	
 	// Particle effect
+	[Header("Effects")]
 	public GameObject[] ParticleEffect;
-
-	// Handle Camera shake
 	public float CamShakeAmt = 0.1f;
 	
 	// Handle power-ups
+	[Header("Power-Ups")]
 	public int PowerUpDuration = 20;
-	public GameObject PowerUpTimerText;
 	public GameObject[] AttractionPowerUp;
+	public GameObject[] SlowdownPowerUp;
 	
 	// Ending of the level
+	[Header("End level")]
 	public GameObject GameOver;
 	public GameObject Statistics;
 	public Text TotalCoinsCollected;
@@ -53,6 +55,10 @@ public class InLevelManager : MonoBehaviour
 	private bool _stopGame;
 	private int _timeAfterCollision;
 	private CameraShake _camShake;
+
+	private Text _attractionTimer;
+	private Text _slowdownTimer;
+	private float _slowdownBackgroundSpeed;
 	
 	// Use this for initialization
 	void Start () {
@@ -68,6 +74,11 @@ public class InLevelManager : MonoBehaviour
 		_timeAfterCollision = 0;
 		_stopGame = false;
 		_camShake = GetComponent<CameraShake>();
+
+		_attractionTimer = AttractionPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
+		_slowdownTimer = SlowdownPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
+		_slowdownBackgroundSpeed = 0.7f;
+		
 		StartCoroutine(StartTimer());
 		StartCoroutine(FadeTextIn(0.7f));
 		
@@ -349,30 +360,39 @@ public class InLevelManager : MonoBehaviour
 		AttractionPowerUp[0].SetActive(true);
 		AttractionPowerUp[1].SetActive(true);
 		AttractionPowerUp[2].SetActive(true);
-		PowerUpTimerText.SetActive(true);
-		StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp));
+		StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp, _attractionTimer, "Attraction"));
+	}
+	
+	// Enable slowdown power-up
+	public void Slowdown()
+	{
+		SlowdownPowerUp[0].SetActive(true);
+		Background.GetComponent<BackgroundMove>().Speed *= _slowdownBackgroundSpeed;
+		StartCoroutine(StartCountdown(PowerUpDuration, SlowdownPowerUp, _slowdownTimer, "Slowdown"));
 	}
 	    
 	// Timer for power-ups
-	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp)
+	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp, Text powerUpTimer, string type)
 	{
-		PowerUpTimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
+		powerUpTimer.text = ":" + countdownValue;
         
 		while (countdownValue > 0)
 		{
 			yield return new WaitForSeconds(1.0f);
 			countdownValue--;
-			PowerUpTimerText.transform.GetComponent<Text>().text = ":" + countdownValue;
+			powerUpTimer.text = ":" + countdownValue;
 		}
-        
-		PowerUpTimerText.SetActive(false);
+		
+		if (type == "Slowdown")
+		{
+			Background.GetComponent<BackgroundMove>().Speed /= _slowdownBackgroundSpeed;
+		}
 
 		for (var i = 0; i < powerUp.Length; i++)
 		{
 			powerUp[i].SetActive(false);
 		}
 	}
-	
 		
 	void ImpactEffect()
 	{

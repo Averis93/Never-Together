@@ -15,13 +15,12 @@ public class Life : MonoBehaviour
 	void Start()
 	{
 		_increase = true;
+		_tempScale = transform.localScale;
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		_tempScale = transform.localScale;
-
 		if (_increase)
 		{
 			if (_tempScale.x < _maxScale)

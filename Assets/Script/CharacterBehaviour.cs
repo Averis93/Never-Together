@@ -173,6 +173,10 @@ public class CharacterBehaviour : MonoBehaviour {
             if (other.gameObject.name == "Attraction")
             {
                 AppManager.GetComponent<InLevelManager>().Attraction();
+            } 
+            else if (other.gameObject.name == "Slowdown")
+            {
+                AppManager.GetComponent<InLevelManager>().Slowdown();
             }
             
         }
