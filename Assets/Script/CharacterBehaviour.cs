@@ -44,9 +44,6 @@ public class CharacterBehaviour : MonoBehaviour {
         _inputAllowed = true;
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
         _magneticFieldTrans = MagneticField.transform;
-        
-        Button screenInput = ScreenInput.GetComponent<Button>();
-        screenInput.onClick.AddListener(MoveMagnet);
     }
 
     void Awake()
@@ -94,7 +91,7 @@ public class CharacterBehaviour : MonoBehaviour {
         }
     }
 */
-    void MoveMagnet()
+    public void MoveMagnet()
     {
         if (_inputAllowed)
         {
@@ -108,9 +105,7 @@ public class CharacterBehaviour : MonoBehaviour {
                 JumpedUp = false; //impedisce di entrare nell'if dell'ondeggio
                 ChangePos = false; //dovrebbe permettere di tornare a terra
             }
-        }
-        
-        
+        } 
     }
 
     void Update()
@@ -167,8 +162,8 @@ public class CharacterBehaviour : MonoBehaviour {
             other.gameObject.SetActive(false);
             
             // Increment the coins count
-            transform.parent.GetComponent<MagnetsController>().SetCount();
-            transform.parent.GetComponent<MagnetsController>().SetCountText();
+            AppManager.GetComponent<InLevelManager>().SetCount();
+            AppManager.GetComponent<InLevelManager>().SetCountText();
         }
         // If the object with which the magnets collide is a power-up
         else if (other.gameObject.CompareTag("PowerUp"))
@@ -177,22 +172,27 @@ public class CharacterBehaviour : MonoBehaviour {
             
             if (other.gameObject.name == "Attraction")
             {
-                transform.parent.GetComponent<MagnetsController>().Attraction();
+                AppManager.GetComponent<InLevelManager>().Attraction();
+            } 
+            else if (other.gameObject.name == "Slowdown")
+            {
+                AppManager.GetComponent<InLevelManager>().Slowdown();
             }
             
         }
         // If the object with which the magnets collide is a tree
         else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
         {
-            _trans.parent.GetComponent<MagnetsController>().SetTimeAfterCollision();
+            AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision();
             StartCoroutine(Blink(3, 0.2f, 0.4f));
             _camShake.Shake(CamShakeAmt, 0.1f);
-            transform.parent.GetComponent<MagnetsController>().RemoveLife();
+            AppManager.GetComponent<InLevelManager>().RemoveLife();
         }
         // If the object with which the magnets collide is the finish line
         else if (other.gameObject.CompareTag("Finish"))
         {
-            transform.parent.GetComponent<MagnetsController>().ShowStatistics();
+            ScreenInput.gameObject.SetActive(false);
+            AppManager.GetComponent<InLevelManager>().ShowStatistics();
         }
     }
 
