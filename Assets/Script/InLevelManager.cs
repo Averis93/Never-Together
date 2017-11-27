@@ -324,7 +324,6 @@ public class InLevelManager : MonoBehaviour
 		var i = 0;
 		while (i < activeStars.Count)
 		{
-			Debug.Log("Stars");
 			activeStars[i].SetActive(true);
 			activeStars[i].GetComponent<Star>().ChangeShape();
 			i++;
