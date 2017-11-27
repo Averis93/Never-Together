@@ -91,4 +91,11 @@ public class MenuManager : MonoBehaviour
 	{
 		SwitchMenu(Menu.Credits);
 	}
+	
+	
+	// Get back to the levels menu
+	public void BackToMenu()
+	{
+		SwitchMenu(Menu.Main);
+	}
 }

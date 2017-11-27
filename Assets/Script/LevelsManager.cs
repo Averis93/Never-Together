@@ -49,4 +49,10 @@ public class LevelsManager : MonoBehaviour
 	{
 		SceneManager.LoadScene("Level5");
 	}
+	
+	// Get back to the levels menu
+	public void BackToMenu()
+	{
+		SceneManager.LoadScene("Menu");
+	}
 }

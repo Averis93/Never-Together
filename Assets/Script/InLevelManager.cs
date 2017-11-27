@@ -12,6 +12,7 @@ public class InLevelManager : MonoBehaviour
 
 	public GameObject[] Magnets;
 	public GameObject Background;
+	public GameObject Bots;
 	
 	// Coins count string
 	public Text CoinsCountText;
@@ -58,7 +59,7 @@ public class InLevelManager : MonoBehaviour
 
 	private Text _attractionTimer;
 	private Text _slowdownTimer;
-	private float _slowdownBackgroundSpeed;
+	private float _slowdownSpeed;
 	
 	// Use this for initialization
 	void Start () {
@@ -77,13 +78,10 @@ public class InLevelManager : MonoBehaviour
 
 		_attractionTimer = AttractionPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
 		_slowdownTimer = SlowdownPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
-		_slowdownBackgroundSpeed = 0.7f;
+		_slowdownSpeed = 0.7f;
 		
 		StartCoroutine(StartTimer());
 		StartCoroutine(FadeTextIn(0.7f));
-		
-		//var btnNextLevel = NextLevel.GetComponent<Button>();
-		//btnNextLevel.onClick.AddListener(StartNextLevel);
 	}
 	
 	void LateUpdate()
@@ -137,6 +135,12 @@ public class InLevelManager : MonoBehaviour
 				Debug.Log("Couldn't find level");
 				break;
 		}
+	}
+
+	// Get back to the levels menu
+	public void BackToMenu()
+	{
+		SceneManager.LoadScene("Levels");
 	}
 	
 	// Fade in the text 'Level n' at the beginning of a level
@@ -366,7 +370,13 @@ public class InLevelManager : MonoBehaviour
 	public void Slowdown()
 	{
 		SlowdownPowerUp[0].SetActive(true);
-		Background.GetComponent<BackgroundMove>().Speed *= _slowdownBackgroundSpeed;
+		Background.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
+		
+		for (var i = 0; i < Bots.transform.childCount; i++)
+		{
+			Bots.transform.GetChild(i).GetComponent<BotController>().Speed *= _slowdownSpeed;
+		}
+		
 		StartCoroutine(StartCountdown(PowerUpDuration, SlowdownPowerUp, _slowdownTimer, "Slowdown"));
 	}
 	    
@@ -384,7 +394,12 @@ public class InLevelManager : MonoBehaviour
 		
 		if (type == "Slowdown")
 		{
-			Background.GetComponent<BackgroundMove>().Speed /= _slowdownBackgroundSpeed;
+			Background.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
+			
+			for (var i = 0; i < Bots.transform.childCount; i++)
+			{
+				Bots.transform.GetChild(i).GetComponent<BotController>().Speed /= _slowdownSpeed;
+			}
 		}
 
 		for (var i = 0; i < powerUp.Length; i++)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BotController : MonoBehaviour
 {
-	public float Speed;
+	public float Speed = 2.0f;
 
 	private float _rightBound;
 	private float _leftBound;
@@ -14,7 +14,6 @@ public class BotController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		Speed = 2.0f;
 		_direction = 1;
 		_rightBound = transform.localPosition.x + 1.5f;
 		_leftBound = transform.localPosition.x - 1.5f;
