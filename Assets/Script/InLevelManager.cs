@@ -10,6 +10,10 @@ public class InLevelManager : MonoBehaviour
 	//public Button NextLevel;
 	public Text LevelNumber;
 
+	public Transform AdditionalTime;
+	public Canvas Canvas;
+	public Camera Cam;
+
 	public GameObject[] Magnets;
 	public GameObject Background;
 	public GameObject Bots;
@@ -99,7 +103,7 @@ public class InLevelManager : MonoBehaviour
 			
 			//Remove a life, add time and gameover in case lives = 0
 			RemoveLife();
-			SetTimeAfterCollision();
+			SetTimeAfterCollision(Cam.WorldToScreenPoint(new Vector3(0.0f, 0.0f, 0.0f)));
 
 			if (!_gameover)
 			{
@@ -336,8 +340,12 @@ public class InLevelManager : MonoBehaviour
 	}
 
 	// Add 20 seconds to the total time after every collision with a branch or a bot
-	public void SetTimeAfterCollision()
+	public void SetTimeAfterCollision(Vector3 position)
 	{
+		var testo = AdditionalTime.GetComponent<Text>();
+		var addTime = Instantiate(testo, position, Quaternion.identity);
+		addTime.transform.SetParent(Canvas.transform, false);
+		
 		_timeAfterCollision = 20;
 	}
 

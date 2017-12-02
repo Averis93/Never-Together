@@ -14,6 +14,7 @@ public class CharacterBehaviour : MonoBehaviour {
     public Transform Character;
     public GameObject Floor;
     public Button ScreenInput;
+    public Camera Cam;
 
     public GameObject MagneticField;
 
@@ -183,7 +184,7 @@ public class CharacterBehaviour : MonoBehaviour {
         // If the object with which the magnets collide is a tree
         else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
         {
-            AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision();
+            AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
             StartCoroutine(Blink(3, 0.2f, 0.4f));
             _camShake.Shake(CamShakeAmt, 0.1f);
             AppManager.GetComponent<InLevelManager>().RemoveLife();
