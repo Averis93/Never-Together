@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -134,7 +133,7 @@ public class CharacterBehaviour : MonoBehaviour {
     // Go up or down
     void ChangePosition(Vector3 newPosition)
     {
-        _trans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 4f);
+        _trans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 5.5f);
         _magneticFieldTrans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 4f);
 
         if (Mathf.Abs(newPosition.y - _trans.position.y) < 0.02)
