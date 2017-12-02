@@ -68,7 +68,7 @@ public class InLevelManager : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		_coinsCount = 0;
-		_maxCoins = 5;
+		_maxCoins = 200;
 		_totalCoinsCollected = 0;
 		_totalCoins = TotalCoins.transform.childCount;
 		SetCountText();
