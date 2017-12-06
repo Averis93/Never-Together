@@ -29,6 +29,11 @@ public class CharacterBehaviour : MonoBehaviour {
 
     public float Index;
 
+    //Sounds
+    public AudioSource audioSource;
+    public AudioClip CoinSound;
+    public AudioClip PowerUpSound;
+
     // Private Variables
     private Transform _trans;	// Will hold this.transform.
     private CameraShake _camShake;
@@ -160,7 +165,10 @@ public class CharacterBehaviour : MonoBehaviour {
         {
             // Make the coin disappear
             other.gameObject.SetActive(false);
-            
+
+            //Play sound
+            audioSource.PlayOneShot(CoinSound);
+
             // Increment the coins count
             AppManager.GetComponent<InLevelManager>().SetCount();
             AppManager.GetComponent<InLevelManager>().SetCountText();
@@ -169,7 +177,10 @@ public class CharacterBehaviour : MonoBehaviour {
         else if (other.gameObject.CompareTag("PowerUp"))
         {
             other.gameObject.SetActive(false);
-            
+
+            //Play sound
+            audioSource.PlayOneShot(PowerUpSound);
+
             if (other.gameObject.name == "Attraction")
             {
                 AppManager.GetComponent<InLevelManager>().Attraction();
@@ -191,6 +202,8 @@ public class CharacterBehaviour : MonoBehaviour {
         // If the object with which the magnets collide is the finish line
         else if (other.gameObject.CompareTag("Finish"))
         {
+            ChangePos = false;
+            JumpedUp = false;
             ScreenInput.gameObject.SetActive(false);
             AppManager.GetComponent<InLevelManager>().ShowStatistics();
         }
