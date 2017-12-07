@@ -17,23 +17,32 @@ public class TriggerController : MonoBehaviour {
     public GameObject[] SecondTutorial;
     public GameObject[] ThirdTutorial;
 
-    private bool isFreeze;
-    private bool showed;
+    [Header("Effect")]
+    public GameObject ExplosionEffect;
+
+    [Header("Light")]
+    public Light[] RedLight;
+
+    [Header("Screen Inputs")]
+    public GameObject[] screenInput;
+
+    private bool _isFreeze;
+    private bool _showed;
 
     // Use this for initialization
     void Start () {
-        isFreeze = false;
-        showed = false;
+        _isFreeze = false;
+        _showed = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if(isFreeze)
+        if(_isFreeze)
         {
             Time.timeScale = 0f;
         }
 
-        if (showed)
+        if (_showed)
         {
             Time.timeScale = 1f;
         }
@@ -48,28 +57,35 @@ public class TriggerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("FirstTutorial"))
         {
-            if (!isFreeze && !showed)
+            if (!_isFreeze && !_showed)
             {
-                isFreeze = true;
+                _isFreeze = true;
                 StartCoroutine(ShowTutorial(FirstTutorial));
             }
         }
         else if (other.gameObject.CompareTag("SecondTutorial"))
         {
-            if (!isFreeze && !showed)
+            if (!_isFreeze && !_showed)
             {
-                isFreeze = true;
+                _isFreeze = true;
                 StartCoroutine(ShowTutorial(SecondTutorial));
             }
             
         }
         else if (other.gameObject.CompareTag("ThirdTutorial"))
         {
-            if (!isFreeze && !showed)
+            if (!_isFreeze && !_showed)
             {
-                isFreeze = true;
-                StartCoroutine(ShowTutorial(ThirdTutorial));
+                _isFreeze = true;
+                StartCoroutine(ShowExplosionTutorial(ThirdTutorial, ExplosionEffect));
             }
+        }
+        else if (other.gameObject.CompareTag("EndExplosionEffect"))
+        {
+            screenInput[0].SetActive(true);
+            screenInput[1].SetActive(true);
+            screenInput[2].SetActive(false);
+            screenInput[3].SetActive(false);
         }
     }
 
@@ -77,19 +93,19 @@ public class TriggerController : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("FirstTutorial"))
         {
-            isFreeze = false;
-            showed = false;
+            _isFreeze = false;
+            _showed = false;
         }
         else if (other.gameObject.CompareTag("SecondTutorial"))
         {
-            isFreeze = false;
-            showed = false;
+            _isFreeze = false;
+            _showed = false;
 
         }
         else if (other.gameObject.CompareTag("ThirdTutorial"))
         {
-            isFreeze = false;
-            showed = false;
+            _isFreeze = false;
+            _showed = false;
         }
     }
 
@@ -115,6 +131,41 @@ public class TriggerController : MonoBehaviour {
         }
     }
 
+    IEnumerator ShowExplosionTutorial(GameObject[] tutorial, GameObject effect)
+    {
+        Man.GetComponent<CharacterBehaviour>().SetInput(false);
+        Woman.GetComponent<CharacterBehaviour>().SetInput(false);
+        effect.SetActive(true);
+
+        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
+
+        for (int i = 0; i < RedLight.Length; i++)
+        {
+            RedLight[i].color = Color.red;
+        }
+
+        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2.3f));
+        effect.SetActive(false);
+        tutorial[0].SetActive(true);
+        tutorial[1].SetActive(false);
+        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2f));
+        tutorial[0].SetActive(false);
+        tutorial[1].SetActive(true);
+        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2f));
+        tutorial[1].SetActive(false);
+
+        //change the screen input
+        screenInput[0].SetActive(false);
+        screenInput[1].SetActive(false);
+        screenInput[2].SetActive(true);
+        screenInput[3].SetActive(true);
+
+        Man.GetComponent<CharacterBehaviour>().SetInput(true);
+        Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+        StopCoroutine("ShowExplosionTutorial");
+        _showed = true;
+    }
+
     IEnumerator ShowTutorial(GameObject[] tutorial)
     {
         Man.GetComponent<CharacterBehaviour>().SetInput(false);
@@ -129,7 +180,7 @@ public class TriggerController : MonoBehaviour {
         Man.GetComponent<CharacterBehaviour>().SetInput(true);
         Woman.GetComponent<CharacterBehaviour>().SetInput(true);
         StopCoroutine("ShowTutorial");
-        showed = true;
+        _showed = true;
     }
 
     static class CoroutineUtilities
