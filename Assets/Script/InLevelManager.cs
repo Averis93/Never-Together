@@ -16,7 +16,8 @@ public class InLevelManager : MonoBehaviour
 
 	public GameObject[] Magnets;
 	public GameObject Background;
-	public GameObject Bots;
+    public GameObject InfiniteBackground;
+    public GameObject Bots;
 	
 	// Coins count string
 	public Text CoinsCountText;
@@ -32,10 +33,12 @@ public class InLevelManager : MonoBehaviour
 	// Particle effect
 	[Header("Effects")]
 	public GameObject[] ParticleEffect;
+    public GameObject[] AttractionEffect;
+    public GameObject[] ShieldEffect;
 	public float CamShakeAmt = 0.1f;
-	
-	// Handle power-ups
-	[Header("Power-Ups")]
+
+    // Handle power-ups
+    [Header("Power-Ups")]
 	public int PowerUpDuration = 20;
 	public GameObject[] AttractionPowerUp;
 	public GameObject[] SlowdownPowerUp;
@@ -69,7 +72,7 @@ public class InLevelManager : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		_coinsCount = 0;
-		_maxCoins = 200;
+		_maxCoins = 150;
 		_totalCoinsCollected = 0;
 		_totalCoins = TotalCoins.transform.childCount;
 		SetCountText();
@@ -375,7 +378,10 @@ public class InLevelManager : MonoBehaviour
 		AttractionPowerUp[0].SetActive(true);
 		AttractionPowerUp[1].SetActive(true);
 		AttractionPowerUp[2].SetActive(true);
-		StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp, _attractionTimer, "Attraction"));
+
+        AttractionEffect[0].SetActive(true);
+        AttractionEffect[1].SetActive(true);
+        StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp, _attractionTimer, "Attraction"));
 	}
 	
 	// Enable slowdown power-up
@@ -383,8 +389,9 @@ public class InLevelManager : MonoBehaviour
 	{
 		SlowdownPowerUp[0].SetActive(true);
 		Background.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
-		
-		for (var i = 0; i < Bots.transform.childCount; i++)
+        InfiniteBackground.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
+
+        for (var i = 0; i < Bots.transform.childCount; i++)
 		{
 			Bots.transform.GetChild(i).GetComponent<BotController>().Speed *= _slowdownSpeed;
 		}
@@ -407,8 +414,9 @@ public class InLevelManager : MonoBehaviour
 		if (type == "Slowdown")
 		{
 			Background.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
-			
-			for (var i = 0; i < Bots.transform.childCount; i++)
+            InfiniteBackground.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
+
+            for (var i = 0; i < Bots.transform.childCount; i++)
 			{
 				Bots.transform.GetChild(i).GetComponent<BotController>().Speed /= _slowdownSpeed;
 			}
@@ -418,7 +426,10 @@ public class InLevelManager : MonoBehaviour
 		{
 			powerUp[i].SetActive(false);
 		}
-	}
+
+        AttractionEffect[0].SetActive(false);
+        AttractionEffect[1].SetActive(false);
+    }
 		
 	void ImpactEffect()
 	{
