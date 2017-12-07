@@ -28,11 +28,16 @@ public class TriggerController : MonoBehaviour {
 
     private bool _isFreeze;
     private bool _showed;
+    private int _lenghtTutorial;
+    private int _numTutorial;
+
+    public bool _nextImage;
 
     // Use this for initialization
     void Start () {
         _isFreeze = false;
         _showed = false;
+        _nextImage = false;
 	}
 	
 	// Update is called once per frame
@@ -57,6 +62,9 @@ public class TriggerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("FirstTutorial"))
         {
+            _numTutorial = 1;
+            _lenghtTutorial = FirstTutorial.Length - 1;
+
             if (!_isFreeze && !_showed)
             {
                 _isFreeze = true;
@@ -65,6 +73,9 @@ public class TriggerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("SecondTutorial"))
         {
+            _numTutorial = 2;
+            _lenghtTutorial = SecondTutorial.Length - 1;
+
             if (!_isFreeze && !_showed)
             {
                 _isFreeze = true;
@@ -74,6 +85,9 @@ public class TriggerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("ThirdTutorial"))
         {
+            _numTutorial = 3;
+            _lenghtTutorial = ThirdTutorial.Length - 1;
+
             if (!_isFreeze && !_showed)
             {
                 _isFreeze = true;
@@ -82,10 +96,12 @@ public class TriggerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("EndExplosionEffect"))
         {
-            screenInput[0].SetActive(true);
-            screenInput[1].SetActive(true);
-            screenInput[2].SetActive(false);
-            screenInput[3].SetActive(false);
+            if (!_isFreeze && !_showed)
+            {
+                _isFreeze = true;
+                StartCoroutine(ShowTutorial(FirstTutorial));
+            }
+            
         }
     }
 
@@ -109,7 +125,89 @@ public class TriggerController : MonoBehaviour {
         }
     }
 
-    // Fade in the text 'Level n' at the beginning of a level
+    //Show the several image onClick
+    public void NextImageTutorial()
+    {
+        if (_isFreeze && _nextImage)
+        {
+            if (_numTutorial == 1)
+            {
+                if (_lenghtTutorial == 3)
+                {
+                    FirstTutorial[_lenghtTutorial - 2].SetActive(true);
+                    FirstTutorial[_lenghtTutorial - 3].SetActive(false);
+                    _lenghtTutorial--;
+                }
+                else if(_lenghtTutorial == 2)
+                {
+                    FirstTutorial[_lenghtTutorial].SetActive(true);
+                    FirstTutorial[_lenghtTutorial - 1].SetActive(false);
+                    _lenghtTutorial--;
+                }
+                else if(_lenghtTutorial == 1)
+                {
+                    FirstTutorial[_lenghtTutorial + 2].SetActive(true);
+                    FirstTutorial[_lenghtTutorial + 1].SetActive(false);
+                    _lenghtTutorial--;
+                }
+                else if(_lenghtTutorial == 0)
+                {
+                    FirstTutorial[_lenghtTutorial + 3].SetActive(false);
+                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                    screenInput[0].SetActive(true);
+                    screenInput[1].SetActive(true);
+                    screenInput[4].SetActive(false);
+                    screenInput[5].SetActive(false);
+                    _showed = true;
+                }
+            }
+            else if (_numTutorial == 2)
+            {
+                if (_lenghtTutorial == 1)
+                {
+                    SecondTutorial[_lenghtTutorial].SetActive(true);
+                    SecondTutorial[_lenghtTutorial - 1].SetActive(false);
+                    _lenghtTutorial--;
+
+                }else if(_lenghtTutorial == 0)
+                {
+                    SecondTutorial[_lenghtTutorial + 1].SetActive(false);
+                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                    screenInput[0].SetActive(true);
+                    screenInput[1].SetActive(true);
+                    screenInput[2].SetActive(false);
+                    screenInput[3].SetActive(false);
+                    screenInput[4].SetActive(false);
+                    screenInput[5].SetActive(false);
+                    _showed = true;
+                }
+            }
+            else if (_numTutorial == 3)
+            {
+                if (_lenghtTutorial == 1)
+                {
+                    ThirdTutorial[_lenghtTutorial].SetActive(true);
+                    ThirdTutorial[_lenghtTutorial - 1].SetActive(false);
+                    _lenghtTutorial--;
+
+                }else if(_lenghtTutorial == 0)
+                {
+                    ThirdTutorial[_lenghtTutorial + 1].SetActive(false);
+                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                    screenInput[2].SetActive(true);
+                    screenInput[3].SetActive(true);
+                    screenInput[4].SetActive(false);
+                    screenInput[5].SetActive(false);
+                    _showed = true;
+                }
+            }
+        }
+    }
+
+    // Fade in the text 
     IEnumerator FadeTextIn(float t)
     {
         while (LevelNumber.color.a < 1.0f)
@@ -121,7 +219,7 @@ public class TriggerController : MonoBehaviour {
         StartCoroutine(FadeTextOut());
     }
 
-    // Fade out the text 'Level n' at the beginning of a level
+    // Fade out the text l
     IEnumerator FadeTextOut()
     {
         while (LevelNumber.color.a > 0.0f)
@@ -131,6 +229,24 @@ public class TriggerController : MonoBehaviour {
         }
     }
 
+    //Show the FIRST and the SECOND TUTORIAL
+    IEnumerator ShowTutorial(GameObject[] tutorial)
+    {
+        Man.GetComponent<CharacterBehaviour>().SetInput(false);
+        Woman.GetComponent<CharacterBehaviour>().SetInput(false);
+        tutorial[0].SetActive(true);
+        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
+
+        //Change input for tutorial
+        screenInput[0].SetActive(false);
+        screenInput[1].SetActive(false);
+        screenInput[4].SetActive(true);
+        screenInput[5].SetActive(true);
+        StopCoroutine("ShowTutorial");
+        _nextImage = true;
+    }
+
+    //Show the THIRD TUTORIAL
     IEnumerator ShowExplosionTutorial(GameObject[] tutorial, GameObject effect)
     {
         Man.GetComponent<CharacterBehaviour>().SetInput(false);
@@ -148,39 +264,14 @@ public class TriggerController : MonoBehaviour {
         effect.SetActive(false);
         tutorial[0].SetActive(true);
         tutorial[1].SetActive(false);
-        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2f));
-        tutorial[0].SetActive(false);
-        tutorial[1].SetActive(true);
-        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2f));
-        tutorial[1].SetActive(false);
 
-        //change the screen input
+        //Change input for tutorial
         screenInput[0].SetActive(false);
         screenInput[1].SetActive(false);
-        screenInput[2].SetActive(true);
-        screenInput[3].SetActive(true);
-
-        Man.GetComponent<CharacterBehaviour>().SetInput(true);
-        Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+        screenInput[4].SetActive(true);
+        screenInput[5].SetActive(true);
         StopCoroutine("ShowExplosionTutorial");
-        _showed = true;
-    }
-
-    IEnumerator ShowTutorial(GameObject[] tutorial)
-    {
-        Man.GetComponent<CharacterBehaviour>().SetInput(false);
-        Woman.GetComponent<CharacterBehaviour>().SetInput(false);
-        tutorial[0].SetActive(true);
-        tutorial[1].SetActive(false);
-        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2f));
-        tutorial[0].SetActive(false);
-        tutorial[1].SetActive(true);
-        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2f));
-        tutorial[1].SetActive(false);
-        Man.GetComponent<CharacterBehaviour>().SetInput(true);
-        Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-        StopCoroutine("ShowTutorial");
-        _showed = true;
+        _nextImage = true;
     }
 
     static class CoroutineUtilities
