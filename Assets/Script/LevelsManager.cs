@@ -9,9 +9,22 @@ public class LevelsManager : MonoBehaviour
 
 	[Header("Levels Btn")] 
 	public Button[] Levels;
+
+	public bool[] Locked;
+
+	public static LevelsManager Control;
+
+	void Awake()
+	{
+		Control = this;                          // linking the self-reference
+		DontDestroyOnLoad(transform.gameObject); // set to dont destroy
+	}
 	
 	void Start()
 	{
+		
+		Locked = new[] {false, true, true, true, true};
+		
 		var btn1 = Levels[0].GetComponent<Button>();
 		var btn2 = Levels[1].GetComponent<Button>();
 		var btn3 = Levels[2].GetComponent<Button>();
@@ -27,26 +40,58 @@ public class LevelsManager : MonoBehaviour
 
 	void StartLevel1()
 	{
-		SceneManager.LoadScene("Level1");
+		//Debug.Log("Level1: " + Locked[0]);
+		SceneManager.LoadScene("Level1");	
 	}
 	
 	void StartLevel2()
 	{
+		/*
+		Debug.Log("Level2: " + Locked[1]);
+		if (!Locked[1])
+		{
+			SceneManager.LoadScene("Level2");
+		}
+		*/
+		
 		SceneManager.LoadScene("Level2");
 	}
 	
 	void StartLevel3()
 	{
+		
+		/*
+		Debug.Log("Level3: " + Locked[2]);
+		if (!Locked[2])
+		{
+			SceneManager.LoadScene("Level3");
+		}
+		*/
+		
 		SceneManager.LoadScene("Level3");
 	}
 	
 	void StartLevel4()
 	{
+		/*
+		if (!Locked[3])
+		{
+			SceneManager.LoadScene("Level4");
+		}
+		*/
+		
 		SceneManager.LoadScene("Level4");
 	}
 	
 	void StartLevel5()
 	{
+		/*
+		if (!Locked[4])
+		{
+			SceneManager.LoadScene("Level5");
+		}
+		*/
+		
 		SceneManager.LoadScene("Level5");
 	}
 	

@@ -28,6 +28,7 @@ public class InLevelManager : MonoBehaviour
 	
 	// Timer
 	public Text Timer;
+	public int TimeAfterCollision;
 	
 	// Particle effect
 	[Header("Effects")]
@@ -52,6 +53,7 @@ public class InLevelManager : MonoBehaviour
 	public GameObject TotalCoins;
 	public GameObject[] Stars;
 	
+	
 	private int _coinsCount;
 	private int _maxCoins;
 	private int _totalCoinsCollected;
@@ -61,7 +63,6 @@ public class InLevelManager : MonoBehaviour
 	private bool _additionalLife;
 	private bool _gameover;
 	private bool _stopGame;
-	private int _timeAfterCollision;
 	private CameraShake _camShake;
 
 	private Text _attractionTimer;
@@ -79,7 +80,7 @@ public class InLevelManager : MonoBehaviour
 		_livesLost = 0;
 		_additionalLife = false;
 		_gameover = false;
-		_timeAfterCollision = 0;
+		TimeAfterCollision = 0;
 		_stopGame = false;
 		_camShake = GetComponent<CameraShake>();
 
@@ -145,7 +146,7 @@ public class InLevelManager : MonoBehaviour
 	}
 
 	// Get back to the levels menu
-	public void BackToMenu()
+	public void BackToLevels()
 	{
 		SceneManager.LoadScene("Levels");
 	}
@@ -249,11 +250,11 @@ public class InLevelManager : MonoBehaviour
 		
 		while (!_stopGame)
 		{
-			while (_timeAfterCollision != 0)
+			while (TimeAfterCollision != 0)
 			{
 				yield return new WaitForSeconds(0.05f);
 				seconds ++;
-				_timeAfterCollision--;
+				TimeAfterCollision--;
 				
 				if (seconds < 10)
 				{
@@ -297,6 +298,11 @@ public class InLevelManager : MonoBehaviour
 		TotalLivesLost.text = _livesLost.ToString();
 		Statistics.SetActive(true);
 		StartCoroutine(CheckStars());
+
+		
+		//var levels = SceneManager.GetSceneByName("DontDestroyOnLoad").GetRootGameObjects()[0].GetComponent<LevelsManager>();
+		var currentScene = SceneManager.GetActiveScene().name;
+		LevelsManager.Control.Locked[Int32.Parse(currentScene.Substring(currentScene.Length-1))+1] = false;
 	}
 
 	IEnumerator CheckStars()
@@ -348,8 +354,6 @@ public class InLevelManager : MonoBehaviour
 		var testo = AdditionalTime.GetComponent<Text>();
 		var addTime = Instantiate(testo, position, Quaternion.identity);
 		addTime.transform.SetParent(Canvas.transform, false);
-		
-		_timeAfterCollision = 20;
 	}
 
 	// Displays the statistics on the screen at the end of a level
