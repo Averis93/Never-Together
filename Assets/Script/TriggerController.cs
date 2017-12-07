@@ -96,8 +96,12 @@ public class TriggerController : MonoBehaviour {
         }
         else if (other.gameObject.CompareTag("EndExplosionEffect"))
         {
+            _numTutorial = 1;
+            _lenghtTutorial = FirstTutorial.Length - 1;
+
             if (!_isFreeze && !_showed)
             {
+                Debug.Log(_lenghtTutorial);
                 _isFreeze = true;
                 StartCoroutine(ShowTutorial(FirstTutorial));
             }
@@ -123,6 +127,11 @@ public class TriggerController : MonoBehaviour {
             _isFreeze = false;
             _showed = false;
         }
+        else if (other.gameObject.CompareTag("EndExplosionEffect"))
+        {
+            _isFreeze = false;
+            _showed = false;
+        }
     }
 
     //Show the several image onClick
@@ -132,6 +141,7 @@ public class TriggerController : MonoBehaviour {
         {
             if (_numTutorial == 1)
             {
+                Debug.Log(_lenghtTutorial);
                 if (_lenghtTutorial == 3)
                 {
                     FirstTutorial[_lenghtTutorial - 2].SetActive(true);
@@ -240,6 +250,8 @@ public class TriggerController : MonoBehaviour {
         //Change input for tutorial
         screenInput[0].SetActive(false);
         screenInput[1].SetActive(false);
+        screenInput[2].SetActive(false);
+        screenInput[3].SetActive(false);
         screenInput[4].SetActive(true);
         screenInput[5].SetActive(true);
         StopCoroutine("ShowTutorial");
