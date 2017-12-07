@@ -30,28 +30,25 @@ public class InLevelManager : MonoBehaviour
 	public Text Timer;
 	public int TimeAfterCollision;
 	
-	// Particle effect
+	// Particle effects
 	[Header("Effects")]
 	public GameObject[] ParticleEffect;
     public GameObject[] AttractionEffect;
     public GameObject[] ShieldEffect;
+	public bool ShieldActive;
 	public float CamShakeAmt = 0.1f;
-
-    // Handle power-ups
-    [Header("Power-Ups")]
 	public int PowerUpDuration = 20;
-	public GameObject[] AttractionPowerUp;
-	public GameObject[] SlowdownPowerUp;
 	
 	// Ending of the level
 	[Header("End level")]
-	public GameObject GameOver;
+	public GameObject GameOverObject;
 	public GameObject Statistics;
 	public Text TotalCoinsCollected;
 	public Text TotalLivesLost;
 	public Text TimerText;
 	public GameObject TotalCoins;
 	public GameObject[] Stars;
+	public bool Gameover;
 	
 	
 	private int _coinsCount;
@@ -61,7 +58,6 @@ public class InLevelManager : MonoBehaviour
 	private int _remainingLives;
 	private int _livesLost;
 	private bool _additionalLife;
-	private bool _gameover;
 	private bool _stopGame;
 	private CameraShake _camShake;
 
@@ -79,13 +75,12 @@ public class InLevelManager : MonoBehaviour
 		_remainingLives = 3;
 		_livesLost = 0;
 		_additionalLife = false;
-		_gameover = false;
+		Gameover = false;
+		ShieldActive = false;
 		TimeAfterCollision = 0;
 		_stopGame = false;
 		_camShake = GetComponent<CameraShake>();
 
-		_attractionTimer = AttractionPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
-		_slowdownTimer = SlowdownPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
 		_slowdownSpeed = 0.7f;
 		
 		StartCoroutine(StartTimer());
@@ -109,7 +104,7 @@ public class InLevelManager : MonoBehaviour
 			RemoveLife();
 			SetTimeAfterCollision(Cam.WorldToScreenPoint(new Vector3(0.0f, 0.0f, 0.0f)));
 
-			if (!_gameover)
+			if (!Gameover)
 			{
 				Magnets[0].GetComponent<CharacterBehaviour>().JumpedUp = false;
 				Magnets[1].GetComponent<CharacterBehaviour>().JumpedUp = false;
@@ -149,6 +144,12 @@ public class InLevelManager : MonoBehaviour
 	public void BackToLevels()
 	{
 		SceneManager.LoadScene("Levels");
+	}
+	
+	// Repeat current level
+	public void RepeatLevel()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 	
 	// Fade in the text 'Level n' at the beginning of a level
@@ -224,12 +225,25 @@ public class InLevelManager : MonoBehaviour
 			
 			if (_remainingLives == 0)
 			{
-				_gameover = true;
-				GameOver.SetActive(true);
-			
+				Gameover = true;
+				GameOverObject.SetActive(true);
+
+				StartCoroutine(FadePanelIn(GameOverObject.transform.GetChild(0), 1.5f));
+
 				// END THE GAME!!!
 			}
 		}
+	}
+
+	IEnumerator FadePanelIn(Transform panel, float t)
+	{
+		var img = panel.GetComponent<Image>();
+		while (img.color.a < 1.0f)
+		{
+			img.color = new Color(img.color.r, img.color.g, img.color.b, img.color.a + (Time.deltaTime / t));
+			yield return null;
+		}
+		yield return new WaitForSeconds(1.0f);
 	}
 	
 	// Add a red heart when the player collects 200 coins
@@ -299,10 +313,11 @@ public class InLevelManager : MonoBehaviour
 		Statistics.SetActive(true);
 		StartCoroutine(CheckStars());
 
-		
+		/*
 		//var levels = SceneManager.GetSceneByName("DontDestroyOnLoad").GetRootGameObjects()[0].GetComponent<LevelsManager>();
 		var currentScene = SceneManager.GetActiveScene().name;
 		LevelsManager.Control.Locked[Int32.Parse(currentScene.Substring(currentScene.Length-1))+1] = false;
+		*/
 	}
 
 	IEnumerator CheckStars()
@@ -375,19 +390,16 @@ public class InLevelManager : MonoBehaviour
 	// Enable attraction power-up
 	public void Attraction()
 	{
-		AttractionPowerUp[0].SetActive(true);
-		AttractionPowerUp[1].SetActive(true);
-		AttractionPowerUp[2].SetActive(true);
-
         AttractionEffect[0].SetActive(true);
         AttractionEffect[1].SetActive(true);
-        StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp, _attractionTimer, "Attraction"));
+		AttractionEffect[2].SetActive(true);
+		AttractionEffect[3].SetActive(true);
+        StartCoroutine(StartCountdown(PowerUpDuration, AttractionEffect, "Attraction"));
 	}
 	
 	// Enable slowdown power-up
 	public void Slowdown()
 	{
-		SlowdownPowerUp[0].SetActive(true);
 		Background.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
         InfiniteBackground.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
 
@@ -396,21 +408,30 @@ public class InLevelManager : MonoBehaviour
 			Bots.transform.GetChild(i).GetComponent<BotController>().Speed *= _slowdownSpeed;
 		}
 		
-		StartCoroutine(StartCountdown(PowerUpDuration, SlowdownPowerUp, _slowdownTimer, "Slowdown"));
+		StartCoroutine(StartCountdown(PowerUpDuration, null, "Slowdown"));
+	}
+	
+	// Enable shield power-up
+	public void Shield()
+	{
+		ShieldEffect[0].SetActive(true);
+		ShieldEffect[1].SetActive(true);
+
+		ShieldActive = true;
+		
+		StartCoroutine(StartCountdown(PowerUpDuration, ShieldEffect, "Shield"));
 	}
 	    
 	// Timer for power-ups
-	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp, Text powerUpTimer, string type)
+	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp, string type)
 	{
-		powerUpTimer.text = ":" + countdownValue;
         
 		while (countdownValue > 0)
 		{
 			yield return new WaitForSeconds(1.0f);
 			countdownValue--;
-			powerUpTimer.text = ":" + countdownValue;
 		}
-		
+
 		if (type == "Slowdown")
 		{
 			Background.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
@@ -420,16 +441,17 @@ public class InLevelManager : MonoBehaviour
 			{
 				Bots.transform.GetChild(i).GetComponent<BotController>().Speed /= _slowdownSpeed;
 			}
+		} 
+		else if (type == "Shield")
+		{
+			ShieldActive = false;
 		}
 
 		for (var i = 0; i < powerUp.Length; i++)
 		{
 			powerUp[i].SetActive(false);
 		}
-
-        AttractionEffect[0].SetActive(false);
-        AttractionEffect[1].SetActive(false);
-    }
+	}
 		
 	void ImpactEffect()
 	{

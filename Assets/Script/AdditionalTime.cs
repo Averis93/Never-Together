@@ -49,6 +49,7 @@ public class AdditionalTime : MonoBehaviour
 		{
 			transform.gameObject.SetActive(false);
 			AppManager.TimeAfterCollision = 20;
+			Destroy(this.gameObject);
 		}
 	}
 }
