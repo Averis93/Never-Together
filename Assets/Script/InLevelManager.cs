@@ -45,13 +45,14 @@ public class InLevelManager : MonoBehaviour
 	
 	// Ending of the level
 	[Header("End level")]
-	public GameObject GameOver;
+	public GameObject GameOverObject;
 	public GameObject Statistics;
 	public Text TotalCoinsCollected;
 	public Text TotalLivesLost;
 	public Text TimerText;
 	public GameObject TotalCoins;
 	public GameObject[] Stars;
+	public bool Gameover;
 	
 	
 	private int _coinsCount;
@@ -61,7 +62,6 @@ public class InLevelManager : MonoBehaviour
 	private int _remainingLives;
 	private int _livesLost;
 	private bool _additionalLife;
-	private bool _gameover;
 	private bool _stopGame;
 	private CameraShake _camShake;
 
@@ -79,7 +79,7 @@ public class InLevelManager : MonoBehaviour
 		_remainingLives = 3;
 		_livesLost = 0;
 		_additionalLife = false;
-		_gameover = false;
+		Gameover = false;
 		TimeAfterCollision = 0;
 		_stopGame = false;
 		_camShake = GetComponent<CameraShake>();
@@ -109,7 +109,7 @@ public class InLevelManager : MonoBehaviour
 			RemoveLife();
 			SetTimeAfterCollision(Cam.WorldToScreenPoint(new Vector3(0.0f, 0.0f, 0.0f)));
 
-			if (!_gameover)
+			if (!Gameover)
 			{
 				Magnets[0].GetComponent<CharacterBehaviour>().JumpedUp = false;
 				Magnets[1].GetComponent<CharacterBehaviour>().JumpedUp = false;
@@ -149,6 +149,12 @@ public class InLevelManager : MonoBehaviour
 	public void BackToLevels()
 	{
 		SceneManager.LoadScene("Levels");
+	}
+	
+	// Repeat current level
+	public void RepeatLevel()
+	{
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 	
 	// Fade in the text 'Level n' at the beginning of a level
@@ -224,12 +230,25 @@ public class InLevelManager : MonoBehaviour
 			
 			if (_remainingLives == 0)
 			{
-				_gameover = true;
-				GameOver.SetActive(true);
-			
+				Gameover = true;
+				GameOverObject.SetActive(true);
+
+				StartCoroutine(FadePanelIn(GameOverObject.transform.GetChild(0), 1.5f));
+
 				// END THE GAME!!!
 			}
 		}
+	}
+
+	IEnumerator FadePanelIn(Transform panel, float t)
+	{
+		var img = panel.GetComponent<Image>();
+		while (img.color.a < 1.0f)
+		{
+			img.color = new Color(img.color.r, img.color.g, img.color.b, img.color.a + (Time.deltaTime / t));
+			yield return null;
+		}
+		yield return new WaitForSeconds(1.0f);
 	}
 	
 	// Add a red heart when the player collects 200 coins
@@ -299,10 +318,11 @@ public class InLevelManager : MonoBehaviour
 		Statistics.SetActive(true);
 		StartCoroutine(CheckStars());
 
-		
+		/*
 		//var levels = SceneManager.GetSceneByName("DontDestroyOnLoad").GetRootGameObjects()[0].GetComponent<LevelsManager>();
 		var currentScene = SceneManager.GetActiveScene().name;
 		LevelsManager.Control.Locked[Int32.Parse(currentScene.Substring(currentScene.Length-1))+1] = false;
+		*/
 	}
 
 	IEnumerator CheckStars()

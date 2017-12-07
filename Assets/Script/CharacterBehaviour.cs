@@ -160,52 +160,55 @@ public class CharacterBehaviour : MonoBehaviour {
     // Pick up coins
     void OnTriggerEnter2D(Collider2D other)
     {
-        // If the object with which the magnets collide is a coin
-        if (other.gameObject.CompareTag("Coin"))
+        if (!AppManager.GetComponent<InLevelManager>().Gameover)
         {
-            // Make the coin disappear
-            other.gameObject.SetActive(false);
-
-            //Play sound
-            audioSource.PlayOneShot(CoinSound);
-
-            // Increment the coins count
-            AppManager.GetComponent<InLevelManager>().SetCount();
-            AppManager.GetComponent<InLevelManager>().SetCountText();
-        }
-        // If the object with which the magnets collide is a power-up
-        else if (other.gameObject.CompareTag("PowerUp"))
-        {
-            other.gameObject.SetActive(false);
-
-            //Play sound
-            audioSource.PlayOneShot(PowerUpSound);
-
-            if (other.gameObject.name == "Attraction")
+            // If the object with which the magnets collide is a coin
+            if (other.gameObject.CompareTag("Coin"))
             {
-                AppManager.GetComponent<InLevelManager>().Attraction();
-            } 
-            else if (other.gameObject.name == "Slowdown")
-            {
-                AppManager.GetComponent<InLevelManager>().Slowdown();
+                // Make the coin disappear
+                other.gameObject.SetActive(false);
+
+                //Play sound
+                audioSource.PlayOneShot(CoinSound);
+
+                // Increment the coins count
+                AppManager.GetComponent<InLevelManager>().SetCount();
+                AppManager.GetComponent<InLevelManager>().SetCountText();
             }
+            // If the object with which the magnets collide is a power-up
+            else if (other.gameObject.CompareTag("PowerUp"))
+            {
+                other.gameObject.SetActive(false);
+
+                //Play sound
+                audioSource.PlayOneShot(PowerUpSound);
+
+                if (other.gameObject.name == "Attraction")
+                {
+                    AppManager.GetComponent<InLevelManager>().Attraction();
+                } 
+                else if (other.gameObject.name == "Slowdown")
+                {
+                    AppManager.GetComponent<InLevelManager>().Slowdown();
+                }
             
-        }
-        // If the object with which the magnets collide is a tree
-        else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
-        {
-            AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
-            StartCoroutine(Blink(3, 0.2f, 0.4f));
-            _camShake.Shake(CamShakeAmt, 0.1f);
-            AppManager.GetComponent<InLevelManager>().RemoveLife();
-        }
-        // If the object with which the magnets collide is the finish line
-        else if (other.gameObject.CompareTag("Finish"))
-        {
-            ChangePos = false;
-            JumpedUp = false;
-            ScreenInput.gameObject.SetActive(false);
-            AppManager.GetComponent<InLevelManager>().ShowStatistics();
+            }
+            // If the object with which the magnets collide is a tree
+            else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
+            {
+                AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
+                StartCoroutine(Blink(3, 0.2f, 0.4f));
+                _camShake.Shake(CamShakeAmt, 0.1f);
+                AppManager.GetComponent<InLevelManager>().RemoveLife();
+            }
+            // If the object with which the magnets collide is the finish line
+            else if (other.gameObject.CompareTag("Finish"))
+            {
+                ChangePos = false;
+                JumpedUp = false;
+                ScreenInput.gameObject.SetActive(false);
+                AppManager.GetComponent<InLevelManager>().ShowStatistics();
+            }
         }
     }
 
