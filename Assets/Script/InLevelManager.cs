@@ -30,18 +30,14 @@ public class InLevelManager : MonoBehaviour
 	public Text Timer;
 	public int TimeAfterCollision;
 	
-	// Particle effect
+	// Particle effects
 	[Header("Effects")]
 	public GameObject[] ParticleEffect;
     public GameObject[] AttractionEffect;
     public GameObject[] ShieldEffect;
+	public bool ShieldActive;
 	public float CamShakeAmt = 0.1f;
-
-    // Handle power-ups
-    [Header("Power-Ups")]
 	public int PowerUpDuration = 20;
-	public GameObject[] AttractionPowerUp;
-	public GameObject[] SlowdownPowerUp;
 	
 	// Ending of the level
 	[Header("End level")]
@@ -80,12 +76,11 @@ public class InLevelManager : MonoBehaviour
 		_livesLost = 0;
 		_additionalLife = false;
 		Gameover = false;
+		ShieldActive = false;
 		TimeAfterCollision = 0;
 		_stopGame = false;
 		_camShake = GetComponent<CameraShake>();
 
-		_attractionTimer = AttractionPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
-		_slowdownTimer = SlowdownPowerUp[0].transform.GetChild(0).gameObject.GetComponent<Text>();
 		_slowdownSpeed = 0.7f;
 		
 		StartCoroutine(StartTimer());
@@ -395,19 +390,16 @@ public class InLevelManager : MonoBehaviour
 	// Enable attraction power-up
 	public void Attraction()
 	{
-		AttractionPowerUp[0].SetActive(true);
-		AttractionPowerUp[1].SetActive(true);
-		AttractionPowerUp[2].SetActive(true);
-
         AttractionEffect[0].SetActive(true);
         AttractionEffect[1].SetActive(true);
-        StartCoroutine(StartCountdown(PowerUpDuration, AttractionPowerUp, _attractionTimer, "Attraction"));
+		AttractionEffect[2].SetActive(true);
+		AttractionEffect[3].SetActive(true);
+        StartCoroutine(StartCountdown(PowerUpDuration, AttractionEffect, "Attraction"));
 	}
 	
 	// Enable slowdown power-up
 	public void Slowdown()
 	{
-		SlowdownPowerUp[0].SetActive(true);
 		Background.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
         InfiniteBackground.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
 
@@ -416,21 +408,30 @@ public class InLevelManager : MonoBehaviour
 			Bots.transform.GetChild(i).GetComponent<BotController>().Speed *= _slowdownSpeed;
 		}
 		
-		StartCoroutine(StartCountdown(PowerUpDuration, SlowdownPowerUp, _slowdownTimer, "Slowdown"));
+		StartCoroutine(StartCountdown(PowerUpDuration, null, "Slowdown"));
+	}
+	
+	// Enable shield power-up
+	public void Shield()
+	{
+		ShieldEffect[0].SetActive(true);
+		ShieldEffect[1].SetActive(true);
+
+		ShieldActive = true;
+		
+		StartCoroutine(StartCountdown(PowerUpDuration, ShieldEffect, "Shield"));
 	}
 	    
 	// Timer for power-ups
-	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp, Text powerUpTimer, string type)
+	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp, string type)
 	{
-		powerUpTimer.text = ":" + countdownValue;
         
 		while (countdownValue > 0)
 		{
 			yield return new WaitForSeconds(1.0f);
 			countdownValue--;
-			powerUpTimer.text = ":" + countdownValue;
 		}
-		
+
 		if (type == "Slowdown")
 		{
 			Background.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
@@ -440,16 +441,17 @@ public class InLevelManager : MonoBehaviour
 			{
 				Bots.transform.GetChild(i).GetComponent<BotController>().Speed /= _slowdownSpeed;
 			}
+		} 
+		else if (type == "Shield")
+		{
+			ShieldActive = false;
 		}
 
 		for (var i = 0; i < powerUp.Length; i++)
 		{
 			powerUp[i].SetActive(false);
 		}
-
-        AttractionEffect[0].SetActive(false);
-        AttractionEffect[1].SetActive(false);
-    }
+	}
 		
 	void ImpactEffect()
 	{

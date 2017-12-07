@@ -191,10 +191,13 @@ public class CharacterBehaviour : MonoBehaviour {
                 {
                     AppManager.GetComponent<InLevelManager>().Slowdown();
                 }
-            
+                else if (other.gameObject.name == "Shield")
+                {
+                    AppManager.GetComponent<InLevelManager>().Shield();
+                }
             }
             // If the object with which the magnets collide is a tree
-            else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
+            else if (_inputAllowed && !AppManager.GetComponent<InLevelManager>().ShieldActive && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
             {
                 AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
                 StartCoroutine(Blink(3, 0.2f, 0.4f));
