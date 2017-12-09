@@ -35,7 +35,8 @@ public class InLevelManager : MonoBehaviour
 	public GameObject[] ParticleEffect;
     public GameObject[] AttractionEffect;
     public GameObject[] ShieldEffect;
-	public bool ShieldActive;
+    public GameObject[] SlowdownEffect;
+    public bool ShieldActive;
 	public float CamShakeAmt = 0.1f;
 	public int PowerUpDuration = 20;
 	
@@ -400,7 +401,12 @@ public class InLevelManager : MonoBehaviour
 	// Enable slowdown power-up
 	public void Slowdown()
 	{
-		Background.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
+        for (var i = 0; i < SlowdownEffect.Length; i++)
+        {
+            SlowdownEffect[i].SetActive(true);
+        }
+
+        Background.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
         InfiniteBackground.GetComponent<BackgroundMove>().Speed *= _slowdownSpeed;
 
         for (var i = 0; i < Bots.transform.childCount; i++)
@@ -408,7 +414,7 @@ public class InLevelManager : MonoBehaviour
 			Bots.transform.GetChild(i).GetComponent<BotController>().Speed *= _slowdownSpeed;
 		}
 		
-		StartCoroutine(StartCountdown(PowerUpDuration, null, "Slowdown"));
+		StartCoroutine(StartCountdown(PowerUpDuration, SlowdownEffect, "Slowdown"));
 	}
 	
 	// Enable shield power-up

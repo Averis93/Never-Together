@@ -16,6 +16,7 @@ public class TriggerController : MonoBehaviour {
     public GameObject[] FirstTutorial;
     public GameObject[] SecondTutorial;
     public GameObject[] ThirdTutorial;
+    public GameObject[] FourthTutorial;
 
     [Header("Effect")]
     public GameObject ExplosionEffect;
@@ -105,7 +106,27 @@ public class TriggerController : MonoBehaviour {
                 _isFreeze = true;
                 StartCoroutine(ShowTutorial(FirstTutorial));
             }
-            
+        }
+        else if (other.gameObject.CompareTag("FourthTutorial"))
+        {
+            _numTutorial = 4;
+            _lenghtTutorial = FourthTutorial.Length - 1;
+
+            if (!_isFreeze && !_showed)
+            {
+                _isFreeze = true;
+                StartCoroutine(ShowTutorial(FourthTutorial));
+            }
+        }
+        else if (other.gameObject.CompareTag("Explosion"))
+        {
+            _numTutorial = 0;
+
+            if (!_isFreeze && !_showed)
+            {
+                _isFreeze = true;
+                StartCoroutine(ShowExplosionTutorial(null, ExplosionEffect));
+            }
         }
     }
 
@@ -127,7 +148,17 @@ public class TriggerController : MonoBehaviour {
             _isFreeze = false;
             _showed = false;
         }
+        else if (other.gameObject.CompareTag("FourthTutorial"))
+        {
+            _isFreeze = false;
+            _showed = false;
+        }
         else if (other.gameObject.CompareTag("EndExplosionEffect"))
+        {
+            _isFreeze = false;
+            _showed = false;
+        }
+        else if (other.gameObject.CompareTag("Explosion"))
         {
             _isFreeze = false;
             _showed = false;
@@ -201,14 +232,40 @@ public class TriggerController : MonoBehaviour {
                     ThirdTutorial[_lenghtTutorial].SetActive(true);
                     ThirdTutorial[_lenghtTutorial - 1].SetActive(false);
                     _lenghtTutorial--;
+                    Debug.Log(_lenghtTutorial);
 
-                }else if(_lenghtTutorial == 0)
+                }
+                else if(_lenghtTutorial == 0)
                 {
+                    Debug.Log(_lenghtTutorial);
                     ThirdTutorial[_lenghtTutorial + 1].SetActive(false);
                     Man.GetComponent<CharacterBehaviour>().SetInput(true);
                     Woman.GetComponent<CharacterBehaviour>().SetInput(true);
                     screenInput[2].SetActive(true);
                     screenInput[3].SetActive(true);
+                    screenInput[4].SetActive(false);
+                    screenInput[5].SetActive(false);
+                    _showed = true;
+                }
+            }
+            else if (_numTutorial == 4)
+            {
+                if (_lenghtTutorial == 1)
+                {
+                    FourthTutorial[_lenghtTutorial].SetActive(true);
+                    FourthTutorial[_lenghtTutorial - 1].SetActive(false);
+                    _lenghtTutorial--;
+
+                }
+                else if (_lenghtTutorial == 0)
+                {
+                    FourthTutorial[_lenghtTutorial + 1].SetActive(false);
+                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                    screenInput[0].SetActive(true);
+                    screenInput[1].SetActive(true);
+                    screenInput[2].SetActive(false);
+                    screenInput[3].SetActive(false);
                     screenInput[4].SetActive(false);
                     screenInput[5].SetActive(false);
                     _showed = true;
@@ -274,8 +331,12 @@ public class TriggerController : MonoBehaviour {
 
         yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2.3f));
         effect.SetActive(false);
-        tutorial[0].SetActive(true);
-        tutorial[1].SetActive(false);
+
+        if (_numTutorial != 0)
+        {
+            tutorial[0].SetActive(true);
+            tutorial[1].SetActive(false);
+        }
 
         //Change input for tutorial
         screenInput[0].SetActive(false);

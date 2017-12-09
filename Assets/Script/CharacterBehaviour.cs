@@ -129,7 +129,7 @@ public class CharacterBehaviour : MonoBehaviour {
         //esegue l'ondeggio
         if (JumpedUp)
         {
-            Index += Time.deltaTime;
+            Index += Time.unscaledDeltaTime;
             float y = Mathf.Abs(VerticalSpeed * Mathf.Sin(Amplitude * Index));
             transform.localPosition += new Vector3(0, y, 0);
         }
@@ -138,8 +138,8 @@ public class CharacterBehaviour : MonoBehaviour {
     // Go up or down
     void ChangePosition(Vector3 newPosition)
     {
-        _trans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 5.5f);
-        _magneticFieldTrans.position = Vector3.Lerp(_trans.position, newPosition, Time.deltaTime * 4f);
+        _trans.position = Vector3.Lerp(_trans.position, newPosition, Time.unscaledDeltaTime * 5.5f);
+        _magneticFieldTrans.position = Vector3.Lerp(_trans.position, newPosition, Time.unscaledDeltaTime * 4f);
 
         if (Mathf.Abs(newPosition.y - _trans.position.y) < 0.02)
         {

@@ -26,7 +26,7 @@ public class PowerUpBehaviour : MonoBehaviour {
 
     IEnumerator floatingUp()
     {
-        _index += Time.deltaTime;
+        _index += Time.unscaledDeltaTime;
         float y = Mathf.Abs(UpSpeed * Mathf.Sin(Amplitude * _index));
         transform.localPosition += new Vector3(0, y, 0);
         yield return new WaitForSeconds(1);
@@ -35,7 +35,7 @@ public class PowerUpBehaviour : MonoBehaviour {
 
     IEnumerator floatingDown()
     {
-        _index += Time.deltaTime;
+        _index += Time.unscaledDeltaTime;
         float y = Mathf.Abs(DownSpeed * Mathf.Sin(Amplitude * _index));
         transform.localPosition -= new Vector3(0, y, 0);
         yield return new WaitForSeconds(1);
