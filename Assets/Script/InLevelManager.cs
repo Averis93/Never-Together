@@ -431,7 +431,9 @@ public class InLevelManager : MonoBehaviour
 	// Timer for power-ups
 	IEnumerator StartCountdown(int countdownValue, GameObject[] powerUp, string type)
 	{
-        
+		Magnets[0].GetComponent<CharacterBehaviour>().Happy.SetActive(true);
+		Magnets[1].GetComponent<CharacterBehaviour>().Happy.SetActive(true);
+		
 		while (countdownValue > 0)
 		{
 			yield return new WaitForSeconds(1.0f);
@@ -457,6 +459,9 @@ public class InLevelManager : MonoBehaviour
 		{
 			powerUp[i].SetActive(false);
 		}
+
+		Magnets[0].GetComponent<CharacterBehaviour>().Happy.SetActive(false);
+		Magnets[1].GetComponent<CharacterBehaviour>().Happy.SetActive(false);
 	}
 		
 	void ImpactEffect()

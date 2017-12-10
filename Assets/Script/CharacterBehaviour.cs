@@ -23,13 +23,16 @@ public class CharacterBehaviour : MonoBehaviour {
     public bool JumpedUp;
     public bool ChangePos;
 
-    // Public Variables
     public Vector3 NewPositionUp; // The target position
     public Vector3 OldPositionDown; // The target position
 
     public float Index;
 
-    //Sounds
+    [Header("States")] 
+    public GameObject Happy;
+    public GameObject Damaged;
+
+    [Header("Sounds")]
     public AudioSource audioSource;
     public AudioClip CoinSound;
     public AudioClip PowerUpSound;
@@ -159,7 +162,7 @@ public class CharacterBehaviour : MonoBehaviour {
 
     // Pick up coins
     void OnTriggerEnter2D(Collider2D other)
-    {
+    {   
         if (!AppManager.GetComponent<InLevelManager>().Gameover)
         {
             // If the object with which the magnets collide is a coin
@@ -199,6 +202,7 @@ public class CharacterBehaviour : MonoBehaviour {
             // If the object with which the magnets collide is a tree
             else if (_inputAllowed && !AppManager.GetComponent<InLevelManager>().ShieldActive && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
             {
+                Damaged.SetActive(true);
                 AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
                 StartCoroutine(Blink(3, 0.2f, 0.4f));
                 _camShake.Shake(CamShakeAmt, 0.1f);
@@ -227,12 +231,18 @@ public class CharacterBehaviour : MonoBehaviour {
         while (nTimes > 0)
         {
             GetComponent<Renderer>().enabled = true;
+            Damaged.GetComponent<Renderer>().enabled = true;
+            Happy.GetComponent<Renderer>().enabled = true;
             yield return new WaitForSeconds(timeOn);
             GetComponent<Renderer>().enabled = false;
+            Damaged.GetComponent<Renderer>().enabled = false;
+            Happy.GetComponent<Renderer>().enabled = false;
             yield return new WaitForSeconds(timeOff);
             nTimes--;
         }
-
+        
         GetComponent<Renderer>().enabled = true;
+        Happy.GetComponent<Renderer>().enabled = true;
+        Damaged.SetActive(false);
     }
 }
