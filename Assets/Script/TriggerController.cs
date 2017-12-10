@@ -20,6 +20,7 @@ public class TriggerController : MonoBehaviour {
 
     [Header("Effect")]
     public GameObject ExplosionEffect;
+    public GameObject EndExplosionEffect;
 
     [Header("Light")]
     public Light[] RedLight;
@@ -31,14 +32,16 @@ public class TriggerController : MonoBehaviour {
     private bool _showed;
     private int _lenghtTutorial;
     private int _numTutorial;
+    public bool _explosion;
 
-    public bool _nextImage;
+    private bool _nextImage;
 
     // Use this for initialization
     void Start () {
         _isFreeze = false;
         _showed = false;
         _nextImage = false;
+        _explosion = false;
 	}
 	
 	// Update is called once per frame
@@ -69,7 +72,7 @@ public class TriggerController : MonoBehaviour {
             if (!_isFreeze && !_showed)
             {
                 _isFreeze = true;
-                StartCoroutine(ShowTutorial(FirstTutorial));
+                StartCoroutine(ShowTutorial(FirstTutorial, null));
             }
         }
         else if (other.gameObject.CompareTag("SecondTutorial"))
@@ -80,7 +83,7 @@ public class TriggerController : MonoBehaviour {
             if (!_isFreeze && !_showed)
             {
                 _isFreeze = true;
-                StartCoroutine(ShowTutorial(SecondTutorial));
+                StartCoroutine(ShowTutorial(SecondTutorial, null));
             }
             
         }
@@ -102,9 +105,9 @@ public class TriggerController : MonoBehaviour {
 
             if (!_isFreeze && !_showed)
             {
-                Debug.Log(_lenghtTutorial);
+                Debug.Log(_numTutorial);
                 _isFreeze = true;
-                StartCoroutine(ShowTutorial(FirstTutorial));
+                StartCoroutine(ShowTutorial(FirstTutorial, EndExplosionEffect));
             }
         }
         else if (other.gameObject.CompareTag("FourthTutorial"))
@@ -115,12 +118,13 @@ public class TriggerController : MonoBehaviour {
             if (!_isFreeze && !_showed)
             {
                 _isFreeze = true;
-                StartCoroutine(ShowTutorial(FourthTutorial));
+                StartCoroutine(ShowTutorial(FourthTutorial, null));
             }
         }
         else if (other.gameObject.CompareTag("Explosion"))
         {
             _numTutorial = 0;
+            _explosion = true;
 
             if (!_isFreeze && !_showed)
             {
@@ -157,6 +161,7 @@ public class TriggerController : MonoBehaviour {
         {
             _isFreeze = false;
             _showed = false;
+            _explosion = false;
         }
         else if (other.gameObject.CompareTag("Explosion"))
         {
@@ -165,11 +170,12 @@ public class TriggerController : MonoBehaviour {
         }
     }
 
-    //Show the several image onClick
+    //Show the several image onClick based on the specific tutorial
     public void NextImageTutorial()
     {
         if (_isFreeze && _nextImage)
         {
+            //First tutorial about magnet's control
             if (_numTutorial == 1)
             {
                 Debug.Log(_lenghtTutorial);
@@ -198,11 +204,14 @@ public class TriggerController : MonoBehaviour {
                     Woman.GetComponent<CharacterBehaviour>().SetInput(true);
                     screenInput[0].SetActive(true);
                     screenInput[1].SetActive(true);
+                    screenInput[2].SetActive(false);
+                    screenInput[3].SetActive(false);
                     screenInput[4].SetActive(false);
                     screenInput[5].SetActive(false);
                     _showed = true;
                 }
             }
+            //second tutorial about the collision agaist a bot
             else if (_numTutorial == 2)
             {
                 if (_lenghtTutorial == 1)
@@ -225,6 +234,7 @@ public class TriggerController : MonoBehaviour {
                     _showed = true;
                 }
             }
+            //Third tutorial about the change of the control in the explosion part
             else if (_numTutorial == 3)
             {
                 if (_lenghtTutorial == 1)
@@ -248,6 +258,7 @@ public class TriggerController : MonoBehaviour {
                     _showed = true;
                 }
             }
+            //Fourth tutorial about the collision agaist obstacles
             else if (_numTutorial == 4)
             {
                 if (_lenghtTutorial == 1)
@@ -297,20 +308,37 @@ public class TriggerController : MonoBehaviour {
     }
 
     //Show the FIRST and the SECOND TUTORIAL
-    IEnumerator ShowTutorial(GameObject[] tutorial)
+    IEnumerator ShowTutorial(GameObject[] tutorial, GameObject effect)
     {
         Man.GetComponent<CharacterBehaviour>().SetInput(false);
         Woman.GetComponent<CharacterBehaviour>().SetInput(false);
-        tutorial[0].SetActive(true);
-        yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
+        if (_numTutorial != 0 && !_explosion)
+        {
+            tutorial[0].SetActive(true);
+            yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
 
-        //Change input for tutorial
-        screenInput[0].SetActive(false);
-        screenInput[1].SetActive(false);
-        screenInput[2].SetActive(false);
-        screenInput[3].SetActive(false);
-        screenInput[4].SetActive(true);
-        screenInput[5].SetActive(true);
+            //Change input for tutorial
+            screenInput[0].SetActive(false);
+            screenInput[1].SetActive(false);
+            screenInput[2].SetActive(false);
+            screenInput[3].SetActive(false);
+            screenInput[4].SetActive(true); //set Tutorial
+            screenInput[5].SetActive(true); //set Tutorial
+        }else if (_explosion)
+        {
+            effect.SetActive(true);
+            yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(3f));
+            effect.SetActive(false);
+            screenInput[0].SetActive(true); //set normal control
+            screenInput[1].SetActive(true); //set normal control
+            screenInput[2].SetActive(false);
+            screenInput[3].SetActive(false);
+            screenInput[4].SetActive(false);
+            screenInput[5].SetActive(false);
+            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+            _showed = true;
+        }
         StopCoroutine("ShowTutorial");
         _nextImage = true;
     }
@@ -336,13 +364,27 @@ public class TriggerController : MonoBehaviour {
         {
             tutorial[0].SetActive(true);
             tutorial[1].SetActive(false);
-        }
+            //Change input for tutorial
+            screenInput[0].SetActive(false);
+            screenInput[1].SetActive(false);
+            screenInput[2].SetActive(false);
+            screenInput[3].SetActive(false);
+            screenInput[4].SetActive(true); //set Tutorial
+            screenInput[5].SetActive(true); //set Tutorial
 
-        //Change input for tutorial
-        screenInput[0].SetActive(false);
-        screenInput[1].SetActive(false);
-        screenInput[4].SetActive(true);
-        screenInput[5].SetActive(true);
+        } else if(_numTutorial == 0) //in case of single explosion without tutorial
+        {
+            screenInput[0].SetActive(false);
+            screenInput[1].SetActive(false);
+            screenInput[2].SetActive(true); //set Explosion control
+            screenInput[3].SetActive(true); //set Explosion control
+            screenInput[4].SetActive(false);
+            screenInput[5].SetActive(false);
+            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+            _showed = true;
+        }
+        
         StopCoroutine("ShowExplosionTutorial");
         _nextImage = true;
     }
