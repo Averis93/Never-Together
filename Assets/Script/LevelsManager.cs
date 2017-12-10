@@ -23,20 +23,22 @@ public class LevelsManager : MonoBehaviour
 	void Start()
 	{
 		
-		Locked = new[] {false, true, true, true, true};
+		//Locked = new[] {false, true, true, true, true, true};
 		
 		var btn1 = Levels[0].GetComponent<Button>();
 		var btn2 = Levels[1].GetComponent<Button>();
 		var btn3 = Levels[2].GetComponent<Button>();
 		var btn4 = Levels[3].GetComponent<Button>();
 		var btn5 = Levels[4].GetComponent<Button>();
-		
-		btn1.onClick.AddListener(StartLevel1);
+        var btn6 = Levels[5].GetComponent<Button>();
+
+        btn1.onClick.AddListener(StartLevel1);
 		btn2.onClick.AddListener(StartLevel2);
 		btn3.onClick.AddListener(StartLevel3);
 		btn4.onClick.AddListener(StartLevel4);
 		btn5.onClick.AddListener(StartLevel5);
-	}
+        btn6.onClick.AddListener(StartLevel6);
+    }
 
 	void StartLevel1()
 	{
@@ -94,9 +96,21 @@ public class LevelsManager : MonoBehaviour
 		
 		SceneManager.LoadScene("Level5");
 	}
-	
-	// Get back to the levels menu
-	public void BackToMenu()
+
+    void StartLevel6()
+    {
+        /*
+		if (!Locked[5])
+		{
+			SceneManager.LoadScene("BonusLevel");
+		}
+		*/
+
+        SceneManager.LoadScene("BonusLevel");
+    }
+
+    // Get back to the levels menu
+    public void BackToMenu()
 	{
 		SceneManager.LoadScene("Menu");
 	}

@@ -135,7 +135,10 @@ public class InLevelManager : MonoBehaviour
 			case "4":
 				SceneManager.LoadScene("Level5");
 				break;
-			default: 
+            case "5":
+                SceneManager.LoadScene("BonusLevel");
+                break;
+            default: 
 				Debug.Log("Couldn't find level");
 				break;
 		}
