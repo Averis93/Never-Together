@@ -176,8 +176,7 @@ public class CharacterBehaviour : MonoBehaviour {
                 audioSource.PlayOneShot(CoinSound);
 
                 // Increment the coins count
-                AppManager.GetComponent<InLevelManager>().SetCount();
-                AppManager.GetComponent<InLevelManager>().SetCountText();
+                AppManager.GetComponent<InLevelManager>().SetCount(true);
             }
             // If the object with which the magnets collide is a power-up
             else if (other.gameObject.CompareTag("PowerUp"))
@@ -201,13 +200,25 @@ public class CharacterBehaviour : MonoBehaviour {
                 }
             }
             // If the object with which the magnets collide is a tree
-            else if (_inputAllowed && !AppManager.GetComponent<InLevelManager>().ShieldActive && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
+            else if (_inputAllowed && (other.gameObject.CompareTag("Branch") || other.gameObject.CompareTag("Bot")))
             {
-                Damaged.SetActive(true);
-                AppManager.GetComponent<InLevelManager>().SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
-                StartCoroutine(Blink(3, 0.2f, 0.4f));
-                _camShake.Shake(CamShakeAmt, 0.1f);
-                AppManager.GetComponent<InLevelManager>().RemoveLife();
+                if (!AppManager.GetComponent<InLevelManager>().ShieldActive)
+                {
+                    Damaged.SetActive(true);
+                    AppManager.GetComponent<InLevelManager>()
+                        .SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
+                    StartCoroutine(Blink(3, 0.2f, 0.4f));
+                    _camShake.Shake(CamShakeAmt, 0.1f);
+                    AppManager.GetComponent<InLevelManager>().RemoveLife();
+                }
+                else
+                {
+                    AppManager.GetComponent<InLevelManager>()
+                        .SetCoinsAfterCollision(Cam.WorldToScreenPoint(transform.position));
+                    
+                    audioSource.PlayOneShot(CoinSound);
+                    
+                }
             }
             // If the object with which the magnets collide is the finish line
             else if (other.gameObject.CompareTag("Finish"))

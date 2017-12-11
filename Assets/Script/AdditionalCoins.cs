@@ -1,17 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 
-public class AdditionalTime : MonoBehaviour
-{	
-	public GameObject Timer;
-	/*
-	public GameObject Canvas;
-	public Camera Cam;
-	*/
+public class AdditionalCoins : MonoBehaviour {
+
+	public GameObject Coins;
 	
-	private float ControlPointX = 950.0f;
+	private float ControlPointX = 400.0f;
 	private float ControlPointY = 1000.0f;
 
 	private float _startPointX;
@@ -23,38 +18,18 @@ public class AdditionalTime : MonoBehaviour
 	private float BezierTime = 0.0f;
 	private InLevelManager AppManager;
 
-	private Vector3 _timerPos;
+	private Vector3 _coinsCountPos;
 	private Vector3 _startPos;
 	
 	void Start ()
 	{
-		//_startPos = Cam.WorldToScreenPoint(StartPoint.transform.position);
 		_startPointX = transform.localPosition.x;
 		_startPointY = transform.localPosition.y;
 
-		_timerPos = Timer.transform.position;
-		
-		/*
-		var rt = Canvas.transform.GetComponent<RectTransform>();
-		
-		Vector3[] v = new Vector3[4];
-		rt.GetWorldCorners(v);
-
-		for (var i = 0; i < 4; i++)
-		{
-			Debug.Log("World Corner " + i + " : " + v[i]);
-			Debug.Log("World Corner " + i + " : " + Cam.ViewportToScreenPoint(v[i]));
-		}
-		
-		*/
-		
-		_endPointX = _timerPos.x;
-		_endPointY = _timerPos.y;
-
-		/*
-		ControlPointX = (_endPointX - _startPointX) / 2;
-		ControlPointY = _endPointY;
-		*/
+		_coinsCountPos = Coins.transform.position;
+		Debug.Log("Coins posotion:" + _coinsCountPos);
+		_endPointX = _coinsCountPos.x;
+		_endPointY = _coinsCountPos.y;
 
 		AppManager = GameObject.Find("Application Manager").GetComponent<InLevelManager>();
 	}
@@ -69,11 +44,15 @@ public class AdditionalTime : MonoBehaviour
 		         ((BezierTime * BezierTime) * _endPointY);
 		transform.position = new Vector3(CurveX, CurveY, 0.0f);
 
-		if (transform.position.x >= 1700.0f)
-		{
-			//transform.gameObject.SetActive(false);
-			AppManager.TimeAfterCollision = 20;
-			Destroy(this.gameObject);
+		if (transform.position.x <= 140.0f)
+		{	
+			for (var i = 0; i < 5; i++)
+			{                        
+				// Increment the coins count
+				AppManager.GetComponent<InLevelManager>().SetCount(false);
+			}
+			
+			Destroy(gameObject);
 		}
 	}
 }

@@ -11,6 +11,7 @@ public class InLevelManager : MonoBehaviour
 	public Text LevelNumber;
 
 	public Transform AdditionalTime;
+	public Transform AdditionalCoins;
 	public Canvas Canvas;
 	public Camera Cam;
 
@@ -179,17 +180,21 @@ public class InLevelManager : MonoBehaviour
 	}
 	
 	// Sets the text string specifying the number of collected coins
-	public void SetCountText()
+	void SetCountText()
 	{
 		CoinsCountText.text = _coinsCount.ToString();
 	}
 	
 	// Sets the number of collected coins
-	public void SetCount()
+	public void SetCount(bool addCoinsToTotal)
 	{
 		_coinsCount++;
-		_totalCoinsCollected++;
 		
+		if (addCoinsToTotal)
+		{
+			_totalCoinsCollected++;
+		}
+
 		// If the player collects 200 coins, add a life and reset the coins count
 		if (_coinsCount == _maxCoins)
 		{
@@ -207,10 +212,10 @@ public class InLevelManager : MonoBehaviour
 			{
 				AddLife(Lives[_remainingLives]);
 				_remainingLives = _remainingLives + 1;
-			}
-			
-			SetCountText();
+			}	
 		}
+		
+		SetCountText();
 	}
 	
 	// When the 2 magnets collide or when they hit a tree remove a life. If no more lives are available, gameover.
@@ -327,8 +332,9 @@ public class InLevelManager : MonoBehaviour
 	IEnumerator CheckStars()
 	{
 		var activeStars = new List<GameObject>();
+		var coinsThreshold = _totalCoins * 2 / 3;
 		
-		if (_totalCoinsCollected < _totalCoins) // Valore da cambiare
+		if (_totalCoinsCollected < coinsThreshold) 
 		{
 			activeStars.Add(Stars[0].transform.GetChild(1).gameObject);
 		}
@@ -337,7 +343,7 @@ public class InLevelManager : MonoBehaviour
 			activeStars.Add(Stars[0].transform.GetChild(0).gameObject);
 		}
 
-		if (_livesLost != 0) // Valore da cambiare
+		if (_livesLost != 0) 
 		{
 			activeStars.Add(Stars[1].transform.GetChild(1).gameObject);
 		}
@@ -346,9 +352,7 @@ public class InLevelManager : MonoBehaviour
 			activeStars.Add(Stars[1].transform.GetChild(0).gameObject);
 		}
 
-		var time = 0.0f;
-		float.TryParse(Timer.text, out time);
-		if (time > 1.22f) // Valore da cambiare
+		if (_livesLost >= 2)
 		{
 			activeStars.Add(Stars[2].transform.GetChild(1).gameObject);
 		}
@@ -365,6 +369,14 @@ public class InLevelManager : MonoBehaviour
 			i++;
 			yield return new WaitForSeconds(0.5f);
 		}
+	}
+	
+	// Add 5 coins to the coins text after every collision with a branch or a bot when the shield is active
+	public void SetCoinsAfterCollision(Vector3 position)
+	{
+		var testo = AdditionalCoins.GetComponent<Text>();
+		var addCoins = Instantiate(testo, position, Quaternion.identity);
+		addCoins.transform.SetParent(Canvas.transform, false);
 	}
 
 	// Add 20 seconds to the total time after every collision with a branch or a bot
