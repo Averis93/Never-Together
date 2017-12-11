@@ -31,6 +31,7 @@ public class CharacterBehaviour : MonoBehaviour {
     [Header("States")] 
     public GameObject Happy;
     public GameObject Damaged;
+    public GameObject Hat;
 
     [Header("Sounds")]
     public AudioSource audioSource;
@@ -233,16 +234,19 @@ public class CharacterBehaviour : MonoBehaviour {
             GetComponent<Renderer>().enabled = true;
             Damaged.GetComponent<Renderer>().enabled = true;
             Happy.GetComponent<Renderer>().enabled = true;
+            Hat.GetComponent<Renderer>().enabled = true;
             yield return new WaitForSeconds(timeOn);
             GetComponent<Renderer>().enabled = false;
             Damaged.GetComponent<Renderer>().enabled = false;
             Happy.GetComponent<Renderer>().enabled = false;
+            Hat.GetComponent<Renderer>().enabled = false;
             yield return new WaitForSeconds(timeOff);
             nTimes--;
         }
         
         GetComponent<Renderer>().enabled = true;
         Happy.GetComponent<Renderer>().enabled = true;
+        Hat.GetComponent<Renderer>().enabled = true;
         Damaged.SetActive(false);
     }
 }
