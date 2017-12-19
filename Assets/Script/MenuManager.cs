@@ -8,16 +8,34 @@ public class MenuManager : MonoBehaviour
 	public enum Menu
 	{
 		Main,
-		Settings,
-		Credits
+		Tutorial,
+		Credits,
+        General,
+        Controls,
+        PowerUp,
+        Second
 	}
 
 	[Header("Menu Screens")] 
 	public GameObject MainMenu;
-	public GameObject SettingsMenu;
+	public GameObject TutorialMenu;
 	public GameObject CreditsMenu;
-	
-	public Menu CurrentMenu { get; private set; }
+
+    [Header("Tutorial Screens")]
+    public GameObject GeneralMenu;
+    public GameObject ControlsMenu;
+    public GameObject PowerUpMenu;
+
+    [Header("Controls Pages")]
+    public GameObject SecondPageControls;
+
+    [Header("General Pages")]
+    public GameObject FirstPageGeneral;
+    public GameObject SecondPageGeneral;
+
+    public Menu CurrentMenu { get; private set; }
+
+    private bool _next;
 	
 	// Use this for initialization
 	void Start ()
@@ -35,21 +53,33 @@ public class MenuManager : MonoBehaviour
 			case Menu.Main:
 				MainMenu.SetActive(true);
 				break;
-			case Menu.Settings:
-				SettingsMenu.SetActive(true);
+			case Menu.Tutorial:
+				TutorialMenu.SetActive(true);
 				break;
 			case Menu.Credits:
 				CreditsMenu.SetActive(true);
 				break;
-		} 
+            case Menu.General:
+                GeneralMenu.SetActive(true);
+                break;
+            case Menu.Controls:
+                ControlsMenu.SetActive(true);
+                break;
+            case Menu.PowerUp:
+                PowerUpMenu.SetActive(true);
+                break;
+        } 
 	}
 
 	void DisableMenus()
 	{
 		MainMenu.SetActive(false);	
-		SettingsMenu.SetActive(false);	
-		CreditsMenu.SetActive(false);	
-	}
+		TutorialMenu.SetActive(false);	
+		CreditsMenu.SetActive(false);
+        GeneralMenu.SetActive(false);
+        ControlsMenu.SetActive(false);
+        PowerUpMenu.SetActive(false);
+    }
 /*
 	// Update is called once per frame
 	void Update () {
@@ -81,9 +111,9 @@ public class MenuManager : MonoBehaviour
 		SceneManager.LoadScene("Levels");
 	}
 	
-	public void OnClickSettings()
+	public void OnClickTutorial()
 	{
-		SwitchMenu(Menu.Settings);
+		SwitchMenu(Menu.Tutorial);
 	}
 	
 	public void OnClickCredits()
@@ -97,4 +127,41 @@ public class MenuManager : MonoBehaviour
 	{
 		SwitchMenu(Menu.Main);
 	}
+
+    public void OnClickGeneral()
+    {
+        SwitchMenu(Menu.General);
+        FirstPageGeneral.SetActive(true);
+        SecondPageGeneral.SetActive(false);
+    }
+
+    // Get to the next page
+    public void NextToSecondPageGeneral()
+    {
+        FirstPageGeneral.SetActive(false);
+        SecondPageGeneral.SetActive(true);
+    }
+
+    public void OnClickControls()
+    {
+        SwitchMenu(Menu.Controls);
+        SecondPageControls.SetActive(false);
+    }
+
+    // Get to the next page
+    public void NextToSecondPageControls()
+    {
+        SecondPageControls.SetActive(true);
+    }
+
+    public void OnClickPowerUp()
+    {
+        SwitchMenu(Menu.PowerUp);
+    }
+
+    // Get back to the levels menu
+    public void BackToTutorial()
+    {
+        SwitchMenu(Menu.Tutorial);
+    }
 }
