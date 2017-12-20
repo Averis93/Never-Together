@@ -178,7 +178,6 @@ public class TriggerController : MonoBehaviour {
             //First tutorial about magnet's control
             if (_numTutorial == 1)
             {
-                Debug.Log(_lenghtTutorial);
                 if (_lenghtTutorial == 3)
                 {
                     FirstTutorial[_lenghtTutorial - 2].SetActive(true);
