@@ -87,6 +87,8 @@ public class InLevelManager : MonoBehaviour
 		
 		StartCoroutine(StartTimer());
 		StartCoroutine(FadeTextIn(0.7f));
+
+        Time.timeScale = 1f;
 	}
 	
 	void LateUpdate()
