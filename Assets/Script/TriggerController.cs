@@ -17,10 +17,14 @@ public class TriggerController : MonoBehaviour {
     public GameObject[] SecondTutorial;
     public GameObject[] ThirdTutorial;
     public GameObject[] FourthTutorial;
+    public GameObject[] FifthTutorial;
 
-    [Header("Effect")]
+    [Header("Explosion Effect")]
     public GameObject ExplosionEffect;
     public GameObject EndExplosionEffect;
+
+    [Header("Interference Effect")]
+    public GameObject[] InvisibleObstacle;
 
     [Header("Light")]
     public Light[] RedLight;
@@ -32,9 +36,9 @@ public class TriggerController : MonoBehaviour {
     public bool _showed;
     private int _lenghtTutorial;
     private int _numTutorial;
-    public bool _explosion;
-
     private bool _nextImage;
+
+    public bool _explosion;
 
     // Use this for initialization
     void Start () {
@@ -57,13 +61,14 @@ public class TriggerController : MonoBehaviour {
         }
     }
     
-
+    //Avvia un effetto o un tutorial in base all'entrata in uno specifico trigger
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("StartLevel"))
         {
             StartCoroutine(FadeTextIn(0.7f));
         }
+        //the magnet control
         else if (other.gameObject.CompareTag("FirstTutorial"))
         {
             _numTutorial = 1;
@@ -75,6 +80,7 @@ public class TriggerController : MonoBehaviour {
                 StartCoroutine(ShowTutorial(FirstTutorial, null));
             }
         }
+        //against an obstacle
         else if (other.gameObject.CompareTag("SecondTutorial"))
         {
             _numTutorial = 2;
@@ -87,6 +93,7 @@ public class TriggerController : MonoBehaviour {
             }
             
         }
+        //against a bot
         else if (other.gameObject.CompareTag("ThirdTutorial"))
         {
             _numTutorial = 3;
@@ -98,18 +105,7 @@ public class TriggerController : MonoBehaviour {
                 StartCoroutine(ShowExplosionTutorial(ThirdTutorial, ExplosionEffect));
             }
         }
-        else if (other.gameObject.CompareTag("EndExplosionEffect"))
-        {
-            _numTutorial = 1;
-            _lenghtTutorial = FirstTutorial.Length - 1;
-
-            if (!_isFreeze && !_showed)
-            {
-                Debug.Log(_numTutorial);
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(FirstTutorial, EndExplosionEffect));
-            }
-        }
+        //Inversion of magnet control
         else if (other.gameObject.CompareTag("FourthTutorial"))
         {
             _numTutorial = 4;
@@ -121,6 +117,34 @@ public class TriggerController : MonoBehaviour {
                 StartCoroutine(ShowTutorial(FourthTutorial, null));
             }
         }
+        //Interference part
+        else if (other.gameObject.CompareTag("Interference"))
+        {
+            _numTutorial = 5;
+            _lenghtTutorial = FifthTutorial.Length - 1;
+
+            if (!_isFreeze && !_showed)
+            {
+                _isFreeze = true;
+                StartCoroutine(ShowTutorial(FifthTutorial, null));
+            }
+        }
+        //End Interference part
+        else if (other.gameObject.CompareTag("EndInterference"))
+        {
+            //_numTutorial = 5;
+            //_lenghtTutorial = FifthTutorial.Length - 1;
+
+            /*if (!_isFreeze && !_showed)
+            {
+                _isFreeze = true;
+                StartCoroutine(ShowTutorial(FifthTutorial, null));
+            }*/
+
+            //DEVONO ESSERE REIMPOSTATI GLI OSTACOLI ALLO STATO PRECEDENTE
+            Debug.Log("Fine interferenza");
+        }
+        //useful to play the explosion effect
         else if (other.gameObject.CompareTag("Explosion"))
         {
             _numTutorial = 0;
@@ -130,6 +154,18 @@ public class TriggerController : MonoBehaviour {
             {
                 _isFreeze = true;
                 StartCoroutine(ShowExplosionTutorial(null, ExplosionEffect));
+            }
+        }
+        //End explosion part
+        else if (other.gameObject.CompareTag("EndExplosionEffect"))
+        {
+            _numTutorial = 1;
+            _lenghtTutorial = FirstTutorial.Length - 1;
+
+            if (!_isFreeze && !_showed)
+            {
+                _isFreeze = true;
+                StartCoroutine(ShowTutorial(FirstTutorial, EndExplosionEffect));
             }
         }
     }
@@ -168,6 +204,16 @@ public class TriggerController : MonoBehaviour {
             _isFreeze = false;
             _showed = false;
         }
+        else if (other.gameObject.CompareTag("Interference"))
+        {
+            _isFreeze = false;
+            _showed = false;
+        }
+        else if (other.gameObject.CompareTag("EndInterference"))
+        {
+            _isFreeze = false;
+            _showed = false;
+        }
     }
 
     //Show the several image onClick based on the specific tutorial
@@ -184,19 +230,19 @@ public class TriggerController : MonoBehaviour {
                     FirstTutorial[_lenghtTutorial - 3].SetActive(false);
                     _lenghtTutorial--;
                 }
-                else if(_lenghtTutorial == 2)
+                else if (_lenghtTutorial == 2)
                 {
                     FirstTutorial[_lenghtTutorial].SetActive(true);
                     FirstTutorial[_lenghtTutorial - 1].SetActive(false);
                     _lenghtTutorial--;
                 }
-                else if(_lenghtTutorial == 1)
+                else if (_lenghtTutorial == 1)
                 {
                     FirstTutorial[_lenghtTutorial + 2].SetActive(true);
                     FirstTutorial[_lenghtTutorial + 1].SetActive(false);
                     _lenghtTutorial--;
                 }
-                else if(_lenghtTutorial == 0)
+                else if (_lenghtTutorial == 0)
                 {
                     FirstTutorial[_lenghtTutorial + 3].SetActive(false);
                     Man.GetComponent<CharacterBehaviour>().SetInput(true);
@@ -219,7 +265,8 @@ public class TriggerController : MonoBehaviour {
                     SecondTutorial[_lenghtTutorial - 1].SetActive(false);
                     _lenghtTutorial--;
 
-                }else if(_lenghtTutorial == 0)
+                }
+                else if (_lenghtTutorial == 0)
                 {
                     SecondTutorial[_lenghtTutorial + 1].SetActive(false);
                     Man.GetComponent<CharacterBehaviour>().SetInput(true);
@@ -241,12 +288,10 @@ public class TriggerController : MonoBehaviour {
                     ThirdTutorial[_lenghtTutorial].SetActive(true);
                     ThirdTutorial[_lenghtTutorial - 1].SetActive(false);
                     _lenghtTutorial--;
-                    Debug.Log(_lenghtTutorial);
 
                 }
-                else if(_lenghtTutorial == 0)
+                else if (_lenghtTutorial == 0)
                 {
-                    Debug.Log(_lenghtTutorial);
                     ThirdTutorial[_lenghtTutorial + 1].SetActive(false);
                     Man.GetComponent<CharacterBehaviour>().SetInput(true);
                     Woman.GetComponent<CharacterBehaviour>().SetInput(true);
@@ -281,6 +326,31 @@ public class TriggerController : MonoBehaviour {
                     _showed = true;
                 }
             }
+            //Fifth tutorial about the collision agaist obstacles
+            else if (_numTutorial == 5)
+            {
+                if (_lenghtTutorial == 1)
+                {
+                    FifthTutorial[_lenghtTutorial].SetActive(true);
+                    FifthTutorial[_lenghtTutorial - 1].SetActive(false);
+                    _lenghtTutorial--;
+
+                }
+                else if (_lenghtTutorial == 0)
+                {
+                    FifthTutorial[_lenghtTutorial + 1].SetActive(false);
+                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                    screenInput[0].SetActive(true);
+                    screenInput[1].SetActive(true);
+                    screenInput[2].SetActive(false);
+                    screenInput[3].SetActive(false);
+                    screenInput[4].SetActive(false);
+                    screenInput[5].SetActive(false);
+                    _showed = true;
+                }
+            }
+
         }
     }
 
