@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class Pause : MonoBehaviour {
 
+    public TriggerController tutorial;
+
     [Header("Pause Interface")]
     public GameObject PauseInterface;
 
-    private bool _isPause;
-    private bool _showed;
+    public bool _isPause;
+    public bool _resume;
 
     // Use this for initialization
     void Start () {
         _isPause = false;
-        _showed = false;
+        _resume = false;
 	}
 	
 	// Update is called once per frame
@@ -23,9 +25,16 @@ public class Pause : MonoBehaviour {
             Time.timeScale = 0f;
         }
 
-        if (_showed)
+        if (_resume)
         {
-            Time.timeScale = 1f;
+            if (tutorial._isFreeze)
+            {
+                PauseInterface.SetActive(false);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
         }
     }
 
@@ -33,13 +42,13 @@ public class Pause : MonoBehaviour {
     {
         PauseInterface.SetActive(true);
         _isPause = true;
-        _showed = false;
+        _resume = false;
     }
 
     public void Resume()
     {
         PauseInterface.SetActive(false);
-        _showed = true;
+        _resume = true;
         _isPause = false;
     }
 }

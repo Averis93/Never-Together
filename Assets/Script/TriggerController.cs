@@ -28,8 +28,8 @@ public class TriggerController : MonoBehaviour {
     [Header("Screen Inputs")]
     public GameObject[] screenInput;
 
-    private bool _isFreeze;
-    private bool _showed;
+    public bool _isFreeze;
+    public bool _showed;
     private int _lenghtTutorial;
     private int _numTutorial;
     public bool _explosion;
