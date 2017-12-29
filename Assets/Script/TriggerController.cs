@@ -132,17 +132,9 @@ public class TriggerController : MonoBehaviour {
         //End Interference part
         else if (other.gameObject.CompareTag("EndInterference"))
         {
-            //_numTutorial = 5;
-            //_lenghtTutorial = FifthTutorial.Length - 1;
-
-            /*if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(FifthTutorial, null));
-            }*/
-
-            //DEVONO ESSERE REIMPOSTATI GLI OSTACOLI ALLO STATO PRECEDENTE
-            Debug.Log("Fine interferenza");
+            InvisibleObstacle[1].SetActive(false);
+            RedLight[RedLight.Length].color = Color.white;
+            Debug.Log("Fine interferenza " + RedLight.Length);
         }
         //useful to play the explosion effect
         else if (other.gameObject.CompareTag("Explosion"))
@@ -381,8 +373,21 @@ public class TriggerController : MonoBehaviour {
     {
         Man.GetComponent<CharacterBehaviour>().SetInput(false);
         Woman.GetComponent<CharacterBehaviour>().SetInput(false);
+
         if (_numTutorial != 0 && !_explosion)
         {
+            if (_numTutorial == 5)
+            {
+                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
+
+                for (int i = 0; i < RedLight.Length; i++)
+                {
+                    RedLight[i].color = Color.red;
+                }
+
+                InvisibleObstacle[0].SetActive(true);
+            }
+
             tutorial[0].SetActive(true);
             yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
 
@@ -393,7 +398,8 @@ public class TriggerController : MonoBehaviour {
             screenInput[3].SetActive(false);
             screenInput[4].SetActive(true); //set Tutorial
             screenInput[5].SetActive(true); //set Tutorial
-        }else if (_explosion)
+        }
+        else if (_explosion)
         {
             effect.SetActive(true);
             yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(3f));
@@ -441,7 +447,8 @@ public class TriggerController : MonoBehaviour {
             screenInput[4].SetActive(true); //set Tutorial
             screenInput[5].SetActive(true); //set Tutorial
 
-        } else if(_numTutorial == 0) //in case of single explosion without tutorial
+        }
+        else if(_numTutorial == 0) //in case of single explosion without tutorial
         {
             screenInput[0].SetActive(false);
             screenInput[1].SetActive(false);
