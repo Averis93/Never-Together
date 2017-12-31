@@ -139,6 +139,12 @@ public class InLevelManager : MonoBehaviour
 				SceneManager.LoadScene("Level5");
 				break;
             case "5":
+                SceneManager.LoadScene("Level6");
+                break;
+            case "6":
+                SceneManager.LoadScene("Level7");
+                break;
+            case "8":
                 SceneManager.LoadScene("BonusLevel");
                 break;
             default: 

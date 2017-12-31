@@ -24,7 +24,7 @@ public class TriggerController : MonoBehaviour {
     public GameObject EndExplosionEffect;
 
     [Header("Interference Effect")]
-    public GameObject[] InvisibleObstacle;
+    public GameObject[] InvisibleEffect;
 
     [Header("Light")]
     public Light[] RedLight;
@@ -36,6 +36,7 @@ public class TriggerController : MonoBehaviour {
     public bool _showed;
     private int _lenghtTutorial;
     private int _numTutorial;
+    private int _lenghtRedLight;
     private bool _nextImage;
 
     public bool _explosion;
@@ -122,6 +123,7 @@ public class TriggerController : MonoBehaviour {
         {
             _numTutorial = 5;
             _lenghtTutorial = FifthTutorial.Length - 1;
+            _lenghtRedLight = RedLight.Length - 1;
 
             if (!_isFreeze && !_showed)
             {
@@ -132,9 +134,10 @@ public class TriggerController : MonoBehaviour {
         //End Interference part
         else if (other.gameObject.CompareTag("EndInterference"))
         {
-            InvisibleObstacle[1].SetActive(false);
-            RedLight[RedLight.Length].color = Color.white;
-            Debug.Log("Fine interferenza " + RedLight.Length);
+            InvisibleEffect[0].SetActive(false);
+            InvisibleEffect[2].SetActive(false);
+            RedLight[_lenghtRedLight].color = Color.white;
+            Debug.Log("Fine interferenza " + _lenghtRedLight);
         }
         //useful to play the explosion effect
         else if (other.gameObject.CompareTag("Explosion"))
@@ -385,7 +388,9 @@ public class TriggerController : MonoBehaviour {
                     RedLight[i].color = Color.red;
                 }
 
-                InvisibleObstacle[0].SetActive(true);
+                InvisibleEffect[0].SetActive(true);
+                InvisibleEffect[1].SetActive(true);
+                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
             }
 
             tutorial[0].SetActive(true);
