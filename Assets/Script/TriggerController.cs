@@ -388,8 +388,9 @@ public class TriggerController : MonoBehaviour {
                     RedLight[i].color = Color.red;
                 }
 
-                InvisibleEffect[0].SetActive(true);
                 InvisibleEffect[1].SetActive(true);
+                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
+                InvisibleEffect[0].SetActive(true);
                 yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
             }
 
