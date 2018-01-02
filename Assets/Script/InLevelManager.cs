@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class InLevelManager : MonoBehaviour
 {
-	//public Button NextLevel;
 	public Text LevelNumber;
 
 	public Transform AdditionalTime;
@@ -26,10 +25,6 @@ public class InLevelManager : MonoBehaviour
 	// Lives
 	public GameObject[] Lives;
 	public GameObject AdditionalLife;
-	
-	// Timer
-	public Text Timer;
-	public int TimeAfterCollision;
 	
 	// Particle effects
 	[Header("Effects")]
@@ -51,8 +46,8 @@ public class InLevelManager : MonoBehaviour
 	public GameObject TotalCoins;
 	public GameObject[] Stars;
 	public bool Gameover;
-	
-	
+
+	private float _timer;
 	private int _coinsCount;
 	private int _maxCoins;
 	private int _totalCoinsCollected;
@@ -79,7 +74,7 @@ public class InLevelManager : MonoBehaviour
 		_additionalLife = false;
 		Gameover = false;
 		ShieldActive = false;
-		TimeAfterCollision = 0;
+		_timer = 0;
 		_stopGame = false;
 		_camShake = GetComponent<CameraShake>();
 
@@ -272,59 +267,19 @@ public class InLevelManager : MonoBehaviour
 	
 	// Timer for the level
 	IEnumerator StartTimer()
-	{
-		var seconds = 0;
-		var minutes = 0;
-
-		Timer.text = "0.00";
-		
+	{	
 		while (!_stopGame)
-		{
-			while (TimeAfterCollision != 0)
-			{
-				yield return new WaitForSeconds(0.05f);
-				seconds ++;
-				TimeAfterCollision--;
-				
-				if (seconds < 10)
-				{
-					Timer.text = minutes + ".0" + seconds;
-				}
-				else if (seconds == 60)
-				{
-					minutes++;
-					seconds = 0;
-
-					Timer.text = minutes + ".0" + seconds;
-				}
-				else
-				{
-					Timer.text = minutes + "." + seconds;
-				}
-			}
-			
+		{	
 			yield return new WaitForSeconds(1.0f);
-			seconds++;
-			
-			if (seconds < 10)
-			{
-				Timer.text = minutes + ".0" + seconds;
-			}
-			else if (seconds == 60)
-			{
-				minutes++;
-				seconds = 0;
+			_timer++;
+		}
 
-				Timer.text = minutes + ".0" + seconds;
-			}
-			else
-			{
-				Timer.text = minutes + "." + seconds;
-			}
-		}	
+		var minutes = Math.Floor(_timer/60);
+		var seconds = _timer - (minutes * 60);
 		
-		TimerText.transform.GetComponent<Text>().text = Timer.text;
+		TimerText.transform.GetComponent<Text>().text = minutes + "." + seconds;
 		TotalCoinsCollected.text = _totalCoinsCollected + "/" + _totalCoins;
+		TotalLivesLost.text = _livesLost.ToString();
 		TotalLivesLost.text = _livesLost.ToString();
 		Statistics.SetActive(true);
 		StartCoroutine(CheckStars());
@@ -386,6 +341,11 @@ public class InLevelManager : MonoBehaviour
 		addCoins.GetComponent<RectTransform>().anchorMin = viewportPosition;
 		addCoins.GetComponent<RectTransform>().anchorMax = viewportPosition;
 		addCoins.transform.SetParent(Canvas.transform, false);
+
+		for (var i = 0; i < 5; i++)
+		{
+			SetCount(false);
+		}
 	}
 
 	// Add 20 seconds to the total time after every collision with a branch or a bot
@@ -396,6 +356,7 @@ public class InLevelManager : MonoBehaviour
 		addTime.GetComponent<RectTransform>().anchorMin = viewportPosition;
 		addTime.GetComponent<RectTransform>().anchorMax = viewportPosition;
 		addTime.transform.SetParent(Canvas.transform, false);
+		_timer += 20;
 	}
 
 	// Displays the statistics on the screen at the end of a level

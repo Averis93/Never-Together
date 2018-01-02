@@ -35,10 +35,14 @@ public class Life : MonoBehaviour
 		}
 		else
 		{
-			if (_tempScale.x > _finalScale)
+			if (_tempScale.x > _finalScale + 0.5f)
 			{
 				_tempScale -= new Vector3(0.5f, 0.5f, 0.5f) * Time.deltaTime * Speed;
 				transform.localScale = _tempScale;
+			}
+			else
+			{
+				transform.localScale = new Vector3(_finalScale, _finalScale, _finalScale);
 			}
 		}	
 	}
