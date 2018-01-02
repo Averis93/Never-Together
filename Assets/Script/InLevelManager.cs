@@ -439,12 +439,18 @@ public class InLevelManager : MonoBehaviour
 		} 
 		else if (type == "Shield")
 		{
+			powerUp[0].GetComponent<Shield>().ShrinkShield();
+			powerUp[1].GetComponent<Shield>().ShrinkShield();
+			
 			ShieldActive = false;
 		}
 
-		for (var i = 0; i < powerUp.Length; i++)
+		if (type != "Shield")
 		{
-			powerUp[i].SetActive(false);
+			for (var i = 0; i < powerUp.Length; i++)
+			{
+				powerUp[i].SetActive(false);
+			}
 		}
 
 		Magnets[0].GetComponent<CharacterBehaviour>().Happy.SetActive(false);
