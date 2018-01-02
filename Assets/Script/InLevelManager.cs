@@ -106,7 +106,6 @@ public class InLevelManager : MonoBehaviour
 			
 			//Remove a life, add time and gameover in case lives = 0
 			RemoveLife();
-			SetTimeAfterCollision(Cam.WorldToScreenPoint(new Vector3(0.0f, 0.0f, 0.0f)));
 
 			if (!Gameover)
 			{
@@ -388,10 +387,12 @@ public class InLevelManager : MonoBehaviour
 	}
 
 	// Add 20 seconds to the total time after every collision with a branch or a bot
-	public void SetTimeAfterCollision(Vector3 position)
+	public void SetTimeAfterCollision(Vector3 viewportPosition)
 	{
 		var testo = AdditionalTime.GetComponent<Text>();
-		var addTime = Instantiate(testo, position, Quaternion.identity);
+		var addTime = Instantiate(testo);
+		addTime.GetComponent<RectTransform>().anchorMin = viewportPosition;
+		addTime.GetComponent<RectTransform>().anchorMax = viewportPosition;
 		addTime.transform.SetParent(Canvas.transform, false);
 	}
 
@@ -494,6 +495,9 @@ public class InLevelManager : MonoBehaviour
 
 		//Shake the camera
 		_camShake.Shake(CamShakeAmt, 0.1f);
+		
+		// Add 0.20 to time
+		SetTimeAfterCollision(Cam.WorldToViewportPoint(new Vector3(Magnets[0].transform.position.x, 0.0f, 0.0f)));
 	}
 
 	// Move the magnets back on the surface when they collide

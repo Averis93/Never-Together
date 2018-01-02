@@ -206,7 +206,7 @@ public class CharacterBehaviour : MonoBehaviour {
                 {
                     Damaged.SetActive(true);
                     AppManager.GetComponent<InLevelManager>()
-                        .SetTimeAfterCollision(Cam.WorldToScreenPoint(transform.position));
+                        .SetTimeAfterCollision(Cam.WorldToViewportPoint(transform.position));
                     StartCoroutine(Blink(3, 0.2f, 0.4f));
                     _camShake.Shake(CamShakeAmt, 0.1f);
                     AppManager.GetComponent<InLevelManager>().RemoveLife();
