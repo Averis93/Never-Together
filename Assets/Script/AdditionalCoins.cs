@@ -59,20 +59,29 @@ public class AdditionalCoins : MonoBehaviour {
 	*/
 	
 	private float _finalPosY;
-	private Vector3 _tempPos;
+	private Vector3 _coinPosText;
+	private Vector3 _coinPosImg;
+	private Transform _coinText;
+	private Transform _coinImg;
 	
 	void Start ()
 	{	
-		_tempPos = transform.localPosition;	
-		_finalPosY = _tempPos.y + 40.0f;
+		_coinText = transform.GetChild(0);
+		_coinImg = transform.GetChild(1);
+		
+		_coinPosText = _coinText.localPosition;
+		_coinPosImg = _coinImg.localPosition;
+		_finalPosY = _coinPosText.y + 40.0f;
 	}
 
 	void Update()
 	{
-		_tempPos += new Vector3(0.0f, 5.0f, 0.0f) * Time.deltaTime * 40.0f;
-		transform.localPosition = _tempPos;
+		_coinPosText += new Vector3(0.0f, 5.0f, 0.0f) * Time.deltaTime * 40.0f;
+		_coinPosImg += new Vector3(0.0f, 5.0f, 0.0f) * Time.deltaTime * 40.0f;
+		_coinText.localPosition = _coinPosText;
+		_coinImg.localPosition = _coinPosImg;
 
-		if (_tempPos.y >= _finalPosY)
+		if (_coinPosText.y >= _finalPosY)
 		{
 			StartCoroutine(FadeOut());
 		}
@@ -80,12 +89,23 @@ public class AdditionalCoins : MonoBehaviour {
 
 	IEnumerator FadeOut()
 	{
-		var textColor = transform.GetComponent<Text>().color;
+		var textColor = _coinText.GetComponent<Text>().color;
+		var imgColor = _coinImg.GetComponent<Image>().color;
 		
-		while (textColor.a > 0.0f)
+		while (textColor.a > 0.0f || imgColor.a > 0.0f)
 		{
-			textColor = new Color(textColor.r, textColor.g, textColor.b, textColor.a - (Time.deltaTime));
-			transform.GetComponent<Text>().color = textColor;
+			if (textColor.a > 0.0f)
+			{
+				textColor = new Color(textColor.r, textColor.g, textColor.b, textColor.a - (Time.deltaTime));
+				_coinText.GetComponent<Text>().color = textColor;
+			}
+
+			if (imgColor.a > 0.0f)
+			{
+				imgColor = new Color(imgColor.r, imgColor.g, imgColor.b, imgColor.a - (Time.deltaTime));
+				_coinImg.GetComponent<Image>().color = imgColor;
+			}
+			
 			yield return null;
 		}
 		
