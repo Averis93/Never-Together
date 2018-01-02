@@ -34,6 +34,8 @@ public class TriggerController : MonoBehaviour {
 
     public bool _isFreeze;
     public bool _showed;
+    public bool _interferenceStart;
+    public bool _interferenceEnd;
     private int _lenghtTutorial;
     private int _numTutorial;
     private int _lenghtRedLight;
@@ -47,7 +49,9 @@ public class TriggerController : MonoBehaviour {
         _showed = false;
         _nextImage = false;
         _explosion = false;
-	}
+        _interferenceStart = false;
+        _interferenceEnd = false;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -136,8 +140,8 @@ public class TriggerController : MonoBehaviour {
         {
             InvisibleEffect[0].SetActive(false);
             InvisibleEffect[2].SetActive(false);
+            _interferenceEnd = true;
             RedLight[_lenghtRedLight].color = Color.white;
-            Debug.Log("Fine interferenza " + _lenghtRedLight);
         }
         //useful to play the explosion effect
         else if (other.gameObject.CompareTag("Explosion"))
@@ -379,6 +383,7 @@ public class TriggerController : MonoBehaviour {
 
         if (_numTutorial != 0 && !_explosion)
         {
+            //Settaggio Effetto Interferenza
             if (_numTutorial == 5)
             {
                 yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
@@ -389,7 +394,8 @@ public class TriggerController : MonoBehaviour {
                 }
 
                 InvisibleEffect[1].SetActive(true);
-                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
+                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.25f));
+                _interferenceStart = true;
                 InvisibleEffect[0].SetActive(true);
                 yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
             }

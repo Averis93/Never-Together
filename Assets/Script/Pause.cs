@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Pause : MonoBehaviour {
 
-    public TriggerController tutorial;
+    public TriggerController InputTutorial;
 
     [Header("Pause Interface")]
     public GameObject PauseInterface;
@@ -27,7 +27,7 @@ public class Pause : MonoBehaviour {
 
         if (_resume)
         {
-            if (tutorial._isFreeze)
+            if (InputTutorial._isFreeze)
             {
                 PauseInterface.SetActive(false);
             }

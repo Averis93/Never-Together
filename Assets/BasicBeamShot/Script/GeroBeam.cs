@@ -4,6 +4,7 @@ using System.Collections;
 public class GeroBeam : MonoBehaviour {
 	public GameObject HitEffect;
 	private ShotParticleEmitter SHP_Emitter;
+    public TriggerController soundInterf;
 
 	private float NowLength;
 	public float MaxLength = 16.0f;
@@ -20,6 +21,11 @@ public class GeroBeam : MonoBehaviour {
     private Vector3 HitObjSize;
     private GameObject Flash;
     private float FlashSize;
+
+    public AudioSource audioSource;
+    public AudioClip InterferenceSound_start;
+    public AudioClip InterferenceSound_during;
+
     // Use this for initialization
     void Start () {
 		BP = GetComponent<BeamParam>();
@@ -36,7 +42,8 @@ public class GeroBeam : MonoBehaviour {
 		{
 			F_Vec[i] = transform.forward;
 		}
-	}
+        audioSource.PlayOneShot(InterferenceSound_start);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -119,5 +126,14 @@ public class GeroBeam : MonoBehaviour {
         Flash.GetComponent<Renderer>().material.SetColor("_Color", BP.BeamColor*2);
         SHP_Emitter.col = BP.BeamColor*2;
         HitObj.col = BP.BeamColor*2;
+
+        if (soundInterf._interferenceStart)
+        {
+            audioSource.PlayOneShot(InterferenceSound_during);
+        }
+        if (soundInterf._interferenceEnd)
+        {
+            audioSource.Stop();
+        }
     }
 }
