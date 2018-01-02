@@ -439,9 +439,10 @@ public class InLevelManager : MonoBehaviour
 		} 
 		else if (type == "Shield")
 		{
+			powerUp[0].GetComponent<Shield>().ShrinkShield();
+			powerUp[1].GetComponent<Shield>().ShrinkShield();
+			
 			ShieldActive = false;
-			
-			
 		}
 
 		if (type != "Shield")
