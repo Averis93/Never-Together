@@ -401,7 +401,7 @@ public class TriggerController : MonoBehaviour {
             }
 
             tutorial[0].SetActive(true);
-            yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
+            yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
 
             //Change input for tutorial
             screenInput[0].SetActive(false);
