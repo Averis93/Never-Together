@@ -379,10 +379,12 @@ public class InLevelManager : MonoBehaviour
 	}
 	
 	// Add 5 coins to the coins text after every collision with a branch or a bot when the shield is active
-	public void SetCoinsAfterCollision(Vector3 position)
+	public void SetCoinsAfterCollision(Vector3 viewportPosition)
 	{
 		var testo = AdditionalCoins.GetComponent<Text>();
-		var addCoins = Instantiate(testo, position, Quaternion.identity);
+		var addCoins = Instantiate(testo);
+		addCoins.GetComponent<RectTransform>().anchorMin = viewportPosition;
+		addCoins.GetComponent<RectTransform>().anchorMax = viewportPosition;
 		addCoins.transform.SetParent(Canvas.transform, false);
 	}
 

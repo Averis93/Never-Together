@@ -9,10 +9,7 @@ public class AdditionalTime : MonoBehaviour
 	
 	void Start ()
 	{	
-		_tempPos = transform.localPosition;
-		
-		Debug.Log("Position in AdditionalTime: " + _tempPos);
-		
+		_tempPos = transform.localPosition;		
 		_finalPosY = _tempPos.y + 40.0f;
 	}
 

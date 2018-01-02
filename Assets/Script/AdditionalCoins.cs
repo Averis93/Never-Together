@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AdditionalCoins : MonoBehaviour {
-
+/*
 	public GameObject Coins;
 	
 	private float ControlPointX = 400.0f;
@@ -27,7 +28,7 @@ public class AdditionalCoins : MonoBehaviour {
 		_startPointY = transform.localPosition.y;
 
 		_coinsCountPos = Coins.transform.position;
-		Debug.Log("Coins posotion:" + _coinsCountPos);
+		Debug.Log("Coins position:" + _coinsCountPos);
 		_endPointX = _coinsCountPos.x;
 		_endPointY = _coinsCountPos.y;
 
@@ -54,5 +55,40 @@ public class AdditionalCoins : MonoBehaviour {
 			
 			Destroy(gameObject);
 		}
+	}
+	*/
+	
+	private float _finalPosY;
+	private Vector3 _tempPos;
+	
+	void Start ()
+	{	
+		_tempPos = transform.localPosition;	
+		_finalPosY = _tempPos.y + 40.0f;
+	}
+
+	void Update()
+	{
+		_tempPos += new Vector3(0.0f, 5.0f, 0.0f) * Time.deltaTime * 40.0f;
+		transform.localPosition = _tempPos;
+
+		if (_tempPos.y >= _finalPosY)
+		{
+			StartCoroutine(FadeOut());
+		}
+	}
+
+	IEnumerator FadeOut()
+	{
+		var textColor = transform.GetComponent<Text>().color;
+		
+		while (textColor.a > 0.0f)
+		{
+			textColor = new Color(textColor.r, textColor.g, textColor.b, textColor.a - (Time.deltaTime));
+			transform.GetComponent<Text>().color = textColor;
+			yield return null;
+		}
+		
+		Destroy(gameObject);
 	}
 }

@@ -214,7 +214,7 @@ public class CharacterBehaviour : MonoBehaviour {
                 else
                 {
                     AppManager.GetComponent<InLevelManager>()
-                        .SetCoinsAfterCollision(Cam.WorldToScreenPoint(transform.position));
+                        .SetCoinsAfterCollision(Cam.WorldToViewportPoint(transform.position));
                     
                     audioSource.PlayOneShot(CoinSound);
                     
