@@ -381,7 +381,7 @@ public class TriggerController : MonoBehaviour {
         {
             if (_numTutorial == 5)
             {
-                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(1f));
+                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
 
                 for (int i = 0; i < RedLight.Length; i++)
                 {
@@ -389,7 +389,7 @@ public class TriggerController : MonoBehaviour {
                 }
 
                 InvisibleEffect[1].SetActive(true);
-                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
+                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
                 InvisibleEffect[0].SetActive(true);
                 yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
             }
