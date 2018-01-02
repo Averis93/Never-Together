@@ -381,8 +381,8 @@ public class InLevelManager : MonoBehaviour
 	// Add 5 coins to the coins text after every collision with a branch or a bot when the shield is active
 	public void SetCoinsAfterCollision(Vector3 viewportPosition)
 	{
-		var testo = AdditionalCoins.GetComponent<Text>();
-		var addCoins = Instantiate(testo);
+		//var testo = AdditionalCoins.GetComponent<Text>();
+		var addCoins = Instantiate(AdditionalCoins);
 		addCoins.GetComponent<RectTransform>().anchorMin = viewportPosition;
 		addCoins.GetComponent<RectTransform>().anchorMax = viewportPosition;
 		addCoins.transform.SetParent(Canvas.transform, false);
@@ -391,8 +391,8 @@ public class InLevelManager : MonoBehaviour
 	// Add 20 seconds to the total time after every collision with a branch or a bot
 	public void SetTimeAfterCollision(Vector3 viewportPosition)
 	{
-		var testo = AdditionalTime.GetComponent<Text>();
-		var addTime = Instantiate(testo);
+		//var testo = AdditionalTime.GetComponent<Text>();
+		var addTime = Instantiate(AdditionalTime);
 		addTime.GetComponent<RectTransform>().anchorMin = viewportPosition;
 		addTime.GetComponent<RectTransform>().anchorMax = viewportPosition;
 		addTime.transform.SetParent(Canvas.transform, false);
