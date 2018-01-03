@@ -22,6 +22,7 @@ public class LevelsManager : MonoBehaviour
 	
 	void Start()
 	{
+        Time.timeScale = 1f;
 		
 		//Locked = new[] {false, true, true, true, true, true};
 		

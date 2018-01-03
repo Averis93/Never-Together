@@ -40,6 +40,7 @@ public class MenuManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+        Time.timeScale = 1f;
 		CurrentMenu = Menu.Main;
 		SwitchMenu(CurrentMenu);
 	}
