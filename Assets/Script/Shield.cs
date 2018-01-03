@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-	public float ShrinkSpeed = 12.0f;
-
 	private Vector3 _startScale;
 	private Vector3 _tempScale;
 	private float _endScale;

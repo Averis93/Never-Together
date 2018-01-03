@@ -89,7 +89,7 @@ public class InLevelManager : MonoBehaviour
 	void LateUpdate()
 	{
 		// If the two magnets collide, remove 1 heart
-		if (Magnets[0].GetComponent<CharacterBehaviour>().JumpedUp &&
+		if (!Gameover && Magnets[0].GetComponent<CharacterBehaviour>().JumpedUp &&
 		    Magnets[1].GetComponent<CharacterBehaviour>().JumpedUp)
 		{	
 			// Disable keyboard input
