@@ -69,149 +69,225 @@ public class TriggerController : MonoBehaviour {
     //Avvia un effetto o un tutorial in base all'entrata in uno specifico trigger
     void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("StartLevel"))
-        {
-            StartCoroutine(FadeTextIn(0.7f));
-        }
-        //the magnet control
-        else if (other.gameObject.CompareTag("FirstTutorial"))
-        {
-            _numTutorial = 1;
-            _lenghtTutorial = FirstTutorial.Length - 1;
+        var TriggerName = other.gameObject.tag;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(FirstTutorial, null));
-            }
-        }
-        //against an obstacle
-        else if (other.gameObject.CompareTag("SecondTutorial"))
+        switch (TriggerName)
         {
-            _numTutorial = 2;
-            _lenghtTutorial = SecondTutorial.Length - 1;
+            case "StartLevel":
+                {
+                    StartCoroutine(FadeTextIn(0.7f));
+                }
+                break;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(SecondTutorial, null));
-            }
-            
-        }
-        //against a bot
-        else if (other.gameObject.CompareTag("ThirdTutorial"))
-        {
-            _numTutorial = 3;
-            _lenghtTutorial = ThirdTutorial.Length - 1;
+            //the magnet control
+            case "FirstTutorial":
+                {
+                    _numTutorial = 1;
+                    _lenghtTutorial = FirstTutorial.Length - 1;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowExplosionTutorial(ThirdTutorial, ExplosionEffect));
-            }
-        }
-        //Inversion of magnet control
-        else if (other.gameObject.CompareTag("FourthTutorial"))
-        {
-            _numTutorial = 4;
-            _lenghtTutorial = FourthTutorial.Length - 1;
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowTutorial(FirstTutorial, null));
+                    }
+                }
+                break;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(FourthTutorial, null));
-            }
-        }
-        //Interference part
-        else if (other.gameObject.CompareTag("Interference"))
-        {
-            _numTutorial = 5;
-            _lenghtTutorial = FifthTutorial.Length - 1;
-            _lenghtRedLight = RedLight.Length - 1;
+            //against an obstacle
+            case "SecondTutorial":
+                {
+                    _numTutorial = 2;
+                    _lenghtTutorial = SecondTutorial.Length - 1;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(FifthTutorial, null));
-            }
-        }
-        //End Interference part
-        else if (other.gameObject.CompareTag("EndInterference"))
-        {
-            InvisibleEffect[0].SetActive(false);
-            InvisibleEffect[2].SetActive(false);
-            _interferenceEnd = true;
-            RedLight[_lenghtRedLight].color = Color.white;
-        }
-        //useful to play the explosion effect
-        else if (other.gameObject.CompareTag("Explosion"))
-        {
-            _numTutorial = 0;
-            _explosion = true;
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowTutorial(SecondTutorial, null));
+                    }
+                }
+                break;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowExplosionTutorial(null, ExplosionEffect));
-            }
-        }
-        //End explosion part
-        else if (other.gameObject.CompareTag("EndExplosionEffect"))
-        {
-            _numTutorial = 1;
-            _lenghtTutorial = FirstTutorial.Length - 1;
+            //against a bot
+            case "ThirdTutorial":
+                {
+                    _numTutorial = 3;
+                    _lenghtTutorial = ThirdTutorial.Length - 1;
 
-            if (!_isFreeze && !_showed)
-            {
-                _isFreeze = true;
-                StartCoroutine(ShowTutorial(FirstTutorial, EndExplosionEffect));
-            }
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowExplosionTutorial(ThirdTutorial, ExplosionEffect));
+                    }
+                }
+                break;
+
+            //Inversion of magnet control
+            case "FourthTutorial":
+                {
+                    _numTutorial = 4;
+                    _lenghtTutorial = FourthTutorial.Length - 1;
+
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowTutorial(FourthTutorial, null));
+                    }
+                }
+                break;
+
+            //Interference part
+            case "Interference":
+                {
+                    _numTutorial = 5;
+                    _lenghtTutorial = FifthTutorial.Length - 1;
+                    _lenghtRedLight = RedLight.Length - 1;
+
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowTutorial(FifthTutorial, null));
+                    }
+                }
+                break;
+
+            //End Interference part
+            case "EndInterference":
+                {
+                    InvisibleEffect[0].SetActive(false);
+                    InvisibleEffect[2].SetActive(false);
+                    _interferenceEnd = true;
+                    RedLight[_lenghtRedLight].color = Color.white;
+                }
+                break;
+
+            //useful to play the explosion effect
+            case "Explosion":
+                {
+                    _numTutorial = 0;
+                    _explosion = true;
+                    _lenghtRedLight = RedLight.Length - 1;
+
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowExplosionTutorial(null, ExplosionEffect));
+                    }
+                }
+                break;
+
+            //End explosion part in the fourth level
+            case "EndExplosionEffect_First":
+                {
+                    _numTutorial = 1;
+                    _explosion = true;
+                    _lenghtTutorial = FirstTutorial.Length - 1;
+
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowExplosionTutorial(FirstTutorial, EndExplosionEffect));
+                        RedLight[_lenghtRedLight].color = Color.white;
+                    }
+                }
+                break;
+
+            //End explosion part in the rest of the level
+            case "EndExplosionEffect":
+                {
+                    _numTutorial = 0;
+                    _explosion = true;
+                    _lenghtTutorial = FirstTutorial.Length - 1;
+
+                    if (!_isFreeze && !_showed)
+                    {
+                        _isFreeze = true;
+                        StartCoroutine(ShowExplosionTutorial(null, EndExplosionEffect));
+                        RedLight[_lenghtRedLight].color = Color.white;
+                    }
+                }
+                break;
+
+            default:
+                Debug.Log("Unknown trigger name");
+                break;
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("FirstTutorial"))
-        {
-            _isFreeze = false;
-            _showed = false;
-        }
-        else if (other.gameObject.CompareTag("SecondTutorial"))
-        {
-            _isFreeze = false;
-            _showed = false;
+        var TriggerName = other.gameObject.tag;
 
-        }
-        else if (other.gameObject.CompareTag("ThirdTutorial"))
+        switch (TriggerName)
         {
-            _isFreeze = false;
-            _showed = false;
-        }
-        else if (other.gameObject.CompareTag("FourthTutorial"))
-        {
-            _isFreeze = false;
-            _showed = false;
-        }
-        else if (other.gameObject.CompareTag("EndExplosionEffect"))
-        {
-            _isFreeze = false;
-            _showed = false;
-            _explosion = false;
-        }
-        else if (other.gameObject.CompareTag("Explosion"))
-        {
-            _isFreeze = false;
-            _showed = false;
-        }
-        else if (other.gameObject.CompareTag("Interference"))
-        {
-            _isFreeze = false;
-            _showed = false;
-        }
-        else if (other.gameObject.CompareTag("EndInterference"))
-        {
-            _isFreeze = false;
-            _showed = false;
+            case "FirstTutorial":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
+            case "SecondTutorial":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
+            case "ThirdTutorial":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
+            case "FourthTutorial":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
+            case "EndExplosionEffect":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                    _explosion = false;
+                }
+                break;
+
+            case "EndExplosionEffect_First":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                    _explosion = false;
+                }
+                break;
+
+            case "Explosion":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                    _explosion = false;
+                }
+                break;
+
+            case "Interference":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
+            case "EndInterference":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
+            default:
+                Debug.Log("Unknown trigger name");
+                break;
         }
     }
 
@@ -220,136 +296,151 @@ public class TriggerController : MonoBehaviour {
     {
         if (_isFreeze && _nextImage)
         {
-            //First tutorial about magnet's control
-            if (_numTutorial == 1)
+            switch (_numTutorial)
             {
-                if (_lenghtTutorial == 3)
-                {
-                    FirstTutorial[_lenghtTutorial - 2].SetActive(true);
-                    FirstTutorial[_lenghtTutorial - 3].SetActive(false);
-                    _lenghtTutorial--;
-                }
-                else if (_lenghtTutorial == 2)
-                {
-                    FirstTutorial[_lenghtTutorial].SetActive(true);
-                    FirstTutorial[_lenghtTutorial - 1].SetActive(false);
-                    _lenghtTutorial--;
-                }
-                else if (_lenghtTutorial == 1)
-                {
-                    FirstTutorial[_lenghtTutorial + 2].SetActive(true);
-                    FirstTutorial[_lenghtTutorial + 1].SetActive(false);
-                    _lenghtTutorial--;
-                }
-                else if (_lenghtTutorial == 0)
-                {
-                    FirstTutorial[_lenghtTutorial + 3].SetActive(false);
-                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
-                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-                    screenInput[0].SetActive(true);
-                    screenInput[1].SetActive(true);
-                    screenInput[2].SetActive(false);
-                    screenInput[3].SetActive(false);
-                    screenInput[4].SetActive(false);
-                    screenInput[5].SetActive(false);
-                    _showed = true;
-                }
-            }
-            //second tutorial about the collision agaist a bot
-            else if (_numTutorial == 2)
-            {
-                if (_lenghtTutorial == 1)
-                {
-                    SecondTutorial[_lenghtTutorial].SetActive(true);
-                    SecondTutorial[_lenghtTutorial - 1].SetActive(false);
-                    _lenghtTutorial--;
+                //First tutorial about magnet's control
+                case 1:
+                    {
+                        if (_lenghtTutorial == 3)
+                        {
+                            FirstTutorial[_lenghtTutorial - 2].SetActive(true);
+                            FirstTutorial[_lenghtTutorial - 3].SetActive(false);
+                            _lenghtTutorial--;
+                        }
+                        else if (_lenghtTutorial == 2)
+                        {
+                            FirstTutorial[_lenghtTutorial].SetActive(true);
+                            FirstTutorial[_lenghtTutorial - 1].SetActive(false);
+                            _lenghtTutorial--;
+                        }
+                        else if (_lenghtTutorial == 1)
+                        {
+                            FirstTutorial[_lenghtTutorial + 2].SetActive(true);
+                            FirstTutorial[_lenghtTutorial + 1].SetActive(false);
+                            _lenghtTutorial--;
+                        }
+                        else if (_lenghtTutorial == 0)
+                        {
+                            FirstTutorial[_lenghtTutorial + 3].SetActive(false);
+                            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                            screenInput[0].SetActive(true);
+                            screenInput[1].SetActive(true);
+                            screenInput[2].SetActive(false);
+                            screenInput[3].SetActive(false);
+                            screenInput[4].SetActive(false);
+                            screenInput[5].SetActive(false);
+                            _showed = true;
+                        }
+                    }
+                    break;
 
-                }
-                else if (_lenghtTutorial == 0)
-                {
-                    SecondTutorial[_lenghtTutorial + 1].SetActive(false);
-                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
-                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-                    screenInput[0].SetActive(true);
-                    screenInput[1].SetActive(true);
-                    screenInput[2].SetActive(false);
-                    screenInput[3].SetActive(false);
-                    screenInput[4].SetActive(false);
-                    screenInput[5].SetActive(false);
-                    _showed = true;
-                }
-            }
-            //Third tutorial about the change of the control in the explosion part
-            else if (_numTutorial == 3)
-            {
-                if (_lenghtTutorial == 1)
-                {
-                    ThirdTutorial[_lenghtTutorial].SetActive(true);
-                    ThirdTutorial[_lenghtTutorial - 1].SetActive(false);
-                    _lenghtTutorial--;
+                //second tutorial about the collision agaist a bot
+                case 2:
+                    {
+                        if (_lenghtTutorial == 1)
+                        {
+                            SecondTutorial[_lenghtTutorial].SetActive(true);
+                            SecondTutorial[_lenghtTutorial - 1].SetActive(false);
+                            _lenghtTutorial--;
 
-                }
-                else if (_lenghtTutorial == 0)
-                {
-                    ThirdTutorial[_lenghtTutorial + 1].SetActive(false);
-                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
-                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-                    screenInput[2].SetActive(true);
-                    screenInput[3].SetActive(true);
-                    screenInput[4].SetActive(false);
-                    screenInput[5].SetActive(false);
-                    _showed = true;
-                }
-            }
-            //Fourth tutorial about the collision agaist obstacles
-            else if (_numTutorial == 4)
-            {
-                if (_lenghtTutorial == 1)
-                {
-                    FourthTutorial[_lenghtTutorial].SetActive(true);
-                    FourthTutorial[_lenghtTutorial - 1].SetActive(false);
-                    _lenghtTutorial--;
+                        }
+                        else if (_lenghtTutorial == 0)
+                        {
+                            SecondTutorial[_lenghtTutorial + 1].SetActive(false);
+                            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                            screenInput[0].SetActive(true);
+                            screenInput[1].SetActive(true);
+                            screenInput[2].SetActive(false);
+                            screenInput[3].SetActive(false);
+                            screenInput[4].SetActive(false);
+                            screenInput[5].SetActive(false);
+                            _showed = true;
+                        }
+                    }
+                    break;
 
-                }
-                else if (_lenghtTutorial == 0)
-                {
-                    FourthTutorial[_lenghtTutorial + 1].SetActive(false);
-                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
-                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-                    screenInput[0].SetActive(true);
-                    screenInput[1].SetActive(true);
-                    screenInput[2].SetActive(false);
-                    screenInput[3].SetActive(false);
-                    screenInput[4].SetActive(false);
-                    screenInput[5].SetActive(false);
-                    _showed = true;
-                }
-            }
-            //Fifth tutorial about the collision agaist obstacles
-            else if (_numTutorial == 5)
-            {
-                if (_lenghtTutorial == 1)
-                {
-                    FifthTutorial[_lenghtTutorial].SetActive(true);
-                    FifthTutorial[_lenghtTutorial - 1].SetActive(false);
-                    _lenghtTutorial--;
+                //Third tutorial about the change of the control in the explosion part
+                case 3:
+                    {
+                        if (_lenghtTutorial == 1)
+                        {
+                            ThirdTutorial[_lenghtTutorial].SetActive(true);
+                            ThirdTutorial[_lenghtTutorial - 1].SetActive(false);
+                            _lenghtTutorial--;
 
-                }
-                else if (_lenghtTutorial == 0)
-                {
-                    FifthTutorial[_lenghtTutorial + 1].SetActive(false);
-                    Man.GetComponent<CharacterBehaviour>().SetInput(true);
-                    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-                    screenInput[0].SetActive(true);
-                    screenInput[1].SetActive(true);
-                    screenInput[2].SetActive(false);
-                    screenInput[3].SetActive(false);
-                    screenInput[4].SetActive(false);
-                    screenInput[5].SetActive(false);
-                    _showed = true;
-                }
-            }
+                        }
+                        else if (_lenghtTutorial == 0)
+                        {
+                            ThirdTutorial[_lenghtTutorial + 1].SetActive(false);
+                            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                            screenInput[2].SetActive(true);
+                            screenInput[3].SetActive(true);
+                            screenInput[4].SetActive(false);
+                            screenInput[5].SetActive(false);
+                            _showed = true;
+                        }
+                    }
+                    break;
 
+                //Fourth tutorial about the collision agaist obstacles
+                case 4:
+                    {
+                        if (_lenghtTutorial == 1)
+                        {
+                            FourthTutorial[_lenghtTutorial].SetActive(true);
+                            FourthTutorial[_lenghtTutorial - 1].SetActive(false);
+                            _lenghtTutorial--;
+
+                        }
+                        else if (_lenghtTutorial == 0)
+                        {
+                            FourthTutorial[_lenghtTutorial + 1].SetActive(false);
+                            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                            screenInput[0].SetActive(true);
+                            screenInput[1].SetActive(true);
+                            screenInput[2].SetActive(false);
+                            screenInput[3].SetActive(false);
+                            screenInput[4].SetActive(false);
+                            screenInput[5].SetActive(false);
+                            _showed = true;
+                        }
+                    }
+                    break;
+
+                //Fifth tutorial about the the interference part
+                case 5:
+                    {
+                        if (_lenghtTutorial == 1)
+                        {
+                            FifthTutorial[_lenghtTutorial].SetActive(true);
+                            FifthTutorial[_lenghtTutorial - 1].SetActive(false);
+                            _lenghtTutorial--;
+
+                        }
+                        else if (_lenghtTutorial == 0)
+                        {
+                            FifthTutorial[_lenghtTutorial + 1].SetActive(false);
+                            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+                            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+                            screenInput[0].SetActive(true);
+                            screenInput[1].SetActive(true);
+                            screenInput[2].SetActive(false);
+                            screenInput[3].SetActive(false);
+                            screenInput[4].SetActive(false);
+                            screenInput[5].SetActive(false);
+                            _showed = true;
+                        }
+                    }
+                    break;
+
+                default:
+                    Debug.Log("Unknown num tutorial");
+                    break;
+            }
         }
     }
 
@@ -411,21 +502,22 @@ public class TriggerController : MonoBehaviour {
             screenInput[4].SetActive(true); //set Tutorial
             screenInput[5].SetActive(true); //set Tutorial
         }
-        else if (_explosion)
-        {
-            effect.SetActive(true);
-            yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(3f));
-            effect.SetActive(false);
-            screenInput[0].SetActive(true); //set normal control
-            screenInput[1].SetActive(true); //set normal control
-            screenInput[2].SetActive(false);
-            screenInput[3].SetActive(false);
-            screenInput[4].SetActive(false);
-            screenInput[5].SetActive(false);
-            Man.GetComponent<CharacterBehaviour>().SetInput(true);
-            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-            _showed = true;
-        }
+        //else if (_explosion)
+        //{
+        //    effect.SetActive(true);
+        //    yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(3f));
+        //    effect.SetActive(false);
+        //    screenInput[0].SetActive(true); //set normal control
+        //    screenInput[1].SetActive(true); //set normal control
+        //    screenInput[2].SetActive(false);
+        //    screenInput[3].SetActive(false);
+        //    screenInput[4].SetActive(false);
+        //    screenInput[5].SetActive(false);
+        //    Man.GetComponent<CharacterBehaviour>().SetInput(true);
+        //    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+        //    _showed = true;
+        //}
+
         StopCoroutine("ShowTutorial");
         _nextImage = true;
     }
