@@ -38,6 +38,7 @@ public class TriggerController : MonoBehaviour {
     public bool _interferenceEnd;
     private int _lenghtTutorial;
     private int _numTutorial;
+    private int _numExplosion;
     private int _lenghtRedLight;
     private bool _nextImage;
 
@@ -156,14 +157,14 @@ public class TriggerController : MonoBehaviour {
                     InvisibleEffect[0].SetActive(false);
                     InvisibleEffect[2].SetActive(false);
                     _interferenceEnd = true;
-                    RedLight[_lenghtRedLight].color = Color.white;
+                    RedLight[_lenghtRedLight].color = Color.grey;
                 }
                 break;
 
             //useful to play the explosion effect
             case "Explosion":
                 {
-                    _numTutorial = 0;
+                    _numExplosion = 0;
                     _explosion = true;
                     _lenghtRedLight = RedLight.Length - 1;
 
@@ -186,7 +187,6 @@ public class TriggerController : MonoBehaviour {
                     {
                         _isFreeze = true;
                         StartCoroutine(ShowExplosionTutorial(FirstTutorial, EndExplosionEffect));
-                        RedLight[_lenghtRedLight].color = Color.white;
                     }
                 }
                 break;
@@ -194,7 +194,7 @@ public class TriggerController : MonoBehaviour {
             //End explosion part in the rest of the level
             case "EndExplosionEffect":
                 {
-                    _numTutorial = 0;
+                    _numExplosion = 1;
                     _explosion = true;
                     _lenghtTutorial = FirstTutorial.Length - 1;
 
@@ -202,7 +202,6 @@ public class TriggerController : MonoBehaviour {
                     {
                         _isFreeze = true;
                         StartCoroutine(ShowExplosionTutorial(null, EndExplosionEffect));
-                        RedLight[_lenghtRedLight].color = Color.white;
                     }
                 }
                 break;
@@ -502,21 +501,6 @@ public class TriggerController : MonoBehaviour {
             screenInput[4].SetActive(true); //set Tutorial
             screenInput[5].SetActive(true); //set Tutorial
         }
-        //else if (_explosion)
-        //{
-        //    effect.SetActive(true);
-        //    yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(3f));
-        //    effect.SetActive(false);
-        //    screenInput[0].SetActive(true); //set normal control
-        //    screenInput[1].SetActive(true); //set normal control
-        //    screenInput[2].SetActive(false);
-        //    screenInput[3].SetActive(false);
-        //    screenInput[4].SetActive(false);
-        //    screenInput[5].SetActive(false);
-        //    Man.GetComponent<CharacterBehaviour>().SetInput(true);
-        //    Woman.GetComponent<CharacterBehaviour>().SetInput(true);
-        //    _showed = true;
-        //}
 
         StopCoroutine("ShowTutorial");
         _nextImage = true;
@@ -539,7 +523,7 @@ public class TriggerController : MonoBehaviour {
         yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(2.3f));
         effect.SetActive(false);
 
-        if (_numTutorial != 0)
+        if (_numTutorial != 0) //in every explosion with tutorial
         {
             tutorial[0].SetActive(true);
             tutorial[1].SetActive(false);
@@ -552,7 +536,7 @@ public class TriggerController : MonoBehaviour {
             screenInput[5].SetActive(true); //set Tutorial
 
         }
-        else if(_numTutorial == 0) //in case of single explosion without tutorial
+        else if (_numExplosion == 0) //at the start of the explosion without tutorial
         {
             screenInput[0].SetActive(false);
             screenInput[1].SetActive(false);
@@ -564,7 +548,20 @@ public class TriggerController : MonoBehaviour {
             Woman.GetComponent<CharacterBehaviour>().SetInput(true);
             _showed = true;
         }
-        
+        else if (_numExplosion == 1) //at the end of the explosion without tutorial
+        {
+            RedLight[_lenghtRedLight].color = Color.grey;
+            screenInput[0].SetActive(true);
+            screenInput[1].SetActive(true);
+            screenInput[2].SetActive(false);
+            screenInput[3].SetActive(false);
+            screenInput[4].SetActive(false);
+            screenInput[5].SetActive(false);
+            Man.GetComponent<CharacterBehaviour>().SetInput(true);
+            Woman.GetComponent<CharacterBehaviour>().SetInput(true);
+            _showed = true;
+        }
+
         StopCoroutine("ShowExplosionTutorial");
         _nextImage = true;
     }
