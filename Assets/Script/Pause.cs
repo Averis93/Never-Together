@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Pause : MonoBehaviour {
 
@@ -9,7 +8,6 @@ public class Pause : MonoBehaviour {
 
     [Header("Pause Interface")]
     public GameObject PauseInterface;
-    public GameObject PauseButton;
 
     public bool _isPause;
     public bool _resume;
@@ -43,7 +41,6 @@ public class Pause : MonoBehaviour {
     public void PauseOn()
     {
         PauseInterface.SetActive(true);
-        PauseButton.SetActive(false);
         _isPause = true;
         _resume = false;
     }
@@ -51,16 +48,7 @@ public class Pause : MonoBehaviour {
     public void Resume()
     {
         PauseInterface.SetActive(false);
-        PauseButton.SetActive(true);
         _resume = true;
         _isPause = false;
-    }
-
-    public void Restart()
-    {
-        PauseInterface.SetActive(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //_resume = true;
-        //_isPause = false;
     }
 }

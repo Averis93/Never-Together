@@ -8,6 +8,7 @@ public class Shield : MonoBehaviour
 	private Vector3 _tempScale;
 	private float _endScale;
 	private bool _shrink;
+	private InLevelManager _appManager;
 	
 	// Use this for initialization
 	void Start ()
@@ -15,6 +16,9 @@ public class Shield : MonoBehaviour
 		_startScale = transform.localScale;
 		_tempScale = transform.localScale;
 		_endScale = 0.0f;
+		_shrink = false;
+		
+		_appManager = GameObject.Find("Application Manager").GetComponent<InLevelManager>();
 	}
 	
 	// Update is called once per frame
@@ -32,6 +36,7 @@ public class Shield : MonoBehaviour
 				gameObject.SetActive(false);
 				_shrink = false;
 				transform.localScale = _startScale;
+				_appManager.ShieldActive = false;
 			}
 		}
 	}

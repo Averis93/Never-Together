@@ -427,30 +427,49 @@ public class InLevelManager : MonoBehaviour
 			countdownValue--;
 		}
 
-		if (type == "Slowdown")
+		switch (type)
 		{
-			Background.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
-            InfiniteBackground.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
-
-            for (var i = 0; i < Bots.transform.childCount; i++)
+			case "Attraction":
 			{
-				Bots.transform.GetChild(i).GetComponent<BotController>().Speed /= _slowdownSpeed;
+				powerUp[2].GetComponent<Attraction>().DisableAttraction();
+				powerUp[3].GetComponent<Attraction>().DisableAttraction();
 			}
-		} 
-		else if (type == "Shield")
-		{
-			powerUp[0].GetComponent<Shield>().ShrinkShield();
-			powerUp[1].GetComponent<Shield>().ShrinkShield();
-			
-			ShieldActive = false;
-		}
-
-		if (type != "Shield")
-		{
-			for (var i = 0; i < powerUp.Length; i++)
+				break;
+				
+			case "Slowdown":
 			{
-				powerUp[i].SetActive(false);
+				Background.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
+				InfiniteBackground.GetComponent<BackgroundMove>().Speed /= _slowdownSpeed;
+
+				for (var i = 0; i < Bots.transform.childCount; i++)
+				{
+					Bots.transform.GetChild(i).GetComponent<BotController>().Speed /= _slowdownSpeed;
+				}
+				
+				for (var i = 0; i < powerUp.Length; i++)
+				{
+					powerUp[i].SetActive(false);
+				}
 			}
+				break;
+				
+			case "Shield":
+			{
+				if (SceneManager.GetActiveScene().name == "BonusLevel")
+				{
+					powerUp[0].GetComponent<ChristmasShield>().BlinkShield();
+					powerUp[1].GetComponent<ChristmasShield>().BlinkShield();
+				}
+				else
+				{
+					powerUp[0].GetComponent<Shield>().ShrinkShield();
+					powerUp[1].GetComponent<Shield>().ShrinkShield();
+				}
+			}
+				break;
+				
+			default: Debug.Log("Unknown power-up type");
+				break;
 		}
 
 		Magnets[0].GetComponent<CharacterBehaviour>().Happy.SetActive(false);
