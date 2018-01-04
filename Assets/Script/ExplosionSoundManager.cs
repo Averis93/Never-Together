@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ExplosionSoundManager : MonoBehaviour {
 
-    public AudioSource audioSource;
+    public AudioSource audioSource_Bang0;
+    public AudioSource audioSource_Bang1;
 
     [Header("Explosion sounds")]
     public AudioClip[] explosions;
@@ -23,11 +24,11 @@ public class ExplosionSoundManager : MonoBehaviour {
     {
         while (true)
         {
-            audioSource.PlayOneShot(explosions[1]);
+            audioSource_Bang1.PlayOneShot(explosions[1]);
             yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.1f));
-            audioSource.PlayOneShot(explosions[0]);
+            audioSource_Bang0.PlayOneShot(explosions[0]);
             yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.1f));
-            audioSource.PlayOneShot(explosions[1]);
+            audioSource_Bang1.PlayOneShot(explosions[1]);
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
@@ -20,6 +21,8 @@ public class MenuManager : MonoBehaviour
 	public GameObject MainMenu;
 	public GameObject TutorialMenu;
 	public GameObject CreditsMenu;
+    public GameObject AudioPlay;
+    public GameObject AudioMute;
 
     [Header("Tutorial Screens")]
     public GameObject GeneralMenu;
@@ -33,14 +36,27 @@ public class MenuManager : MonoBehaviour
     public GameObject FirstPageGeneral;
     public GameObject SecondPageGeneral;
 
+    [Header("Audio Mixer")]
+    public AudioMixer mixer;
+
     public Menu CurrentMenu { get; private set; }
 
     private bool _next;
-	
-	// Use this for initialization
-	void Start ()
+    public bool _audioMute;
+
+    //void Awake()
+    //{
+    //    if (_audioMute)
+    //    {
+    //        DontDestroyOnLoad(gameObject);
+    //    }
+    //}
+
+    // Use this for initialization
+    void Start ()
 	{
         Time.timeScale = 1f;
+        _audioMute = false;
 		CurrentMenu = Menu.Main;
 		SwitchMenu(CurrentMenu);
 	}
@@ -81,32 +97,51 @@ public class MenuManager : MonoBehaviour
         ControlsMenu.SetActive(false);
         PowerUpMenu.SetActive(false);
     }
-/*
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.P))
-		{
-			//SoundManager.Instance.GameplaySoundtrack();
-			SceneManager.LoadScene("Levels");
-		}
+    /*
+        // Update is called once per frame
+        void Update () {
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                //SoundManager.Instance.GameplaySoundtrack();
+                SceneManager.LoadScene("Levels");
+            }
 
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-		{
-			SwitchMenu(Menu.Main);
-		} 
-		
-		if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-			SwitchMenu(Menu.Settings);
-		} 
-		
-		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			SwitchMenu(Menu.Credits);
-		} 
-	}
-*/
-	public void OnClickPlay()
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SwitchMenu(Menu.Main);
+            } 
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SwitchMenu(Menu.Settings);
+            } 
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                SwitchMenu(Menu.Credits);
+            } 
+        }
+    */
+    
+
+
+    public void ClickAudioMute()
+    {
+        mixer.SetFloat("Volume", -80f);
+        AudioPlay.SetActive(false);
+        AudioMute.SetActive(true);
+        _audioMute = true;
+    }
+
+    public void ClickAudioPlay()
+    {
+        mixer.SetFloat("Volume", 0f);
+        AudioPlay.SetActive(true);
+        AudioMute.SetActive(false);
+        _audioMute = false;
+    }
+
+    public void OnClickPlay()
 	{
 		//SoundManager.Instance.GameplaySoundtrack();
 		SceneManager.LoadScene("Levels");

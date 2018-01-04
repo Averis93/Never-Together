@@ -22,7 +22,8 @@ public class GeroBeam : MonoBehaviour {
     private GameObject Flash;
     private float FlashSize;
 
-    public AudioSource audioSource;
+    public AudioSource audioSource_Effect0;
+    public AudioSource audioSource_Effect1;
     public AudioClip InterferenceSound_start;
     public AudioClip InterferenceSound_during;
 
@@ -42,7 +43,7 @@ public class GeroBeam : MonoBehaviour {
 		{
 			F_Vec[i] = transform.forward;
 		}
-        audioSource.PlayOneShot(InterferenceSound_start);
+        audioSource_Effect0.PlayOneShot(InterferenceSound_start);
     }
 	
 	// Update is called once per frame
@@ -129,11 +130,11 @@ public class GeroBeam : MonoBehaviour {
 
         if (soundInterf._interferenceStart)
         {
-            audioSource.PlayOneShot(InterferenceSound_during);
+            audioSource_Effect1.PlayOneShot(InterferenceSound_during);
         }
         if (soundInterf._interferenceEnd)
         {
-            audioSource.Stop();
+            audioSource_Effect1.Stop();
         }
     }
 }
