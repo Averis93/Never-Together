@@ -92,6 +92,10 @@ public class InLevelManager : MonoBehaviour
 		if (!Gameover && Magnets[0].GetComponent<CharacterBehaviour>().JumpedUp &&
 		    Magnets[1].GetComponent<CharacterBehaviour>().JumpedUp)
 		{	
+			// Remove christmas hats
+			Magnets[0].GetComponent<CharacterBehaviour>().Hat.SetActive(false);
+			Magnets[1].GetComponent<CharacterBehaviour>().Hat.SetActive(false);
+			
 			// Disable keyboard input
 			Magnets[0].GetComponent<CharacterBehaviour>().SetInput(false);
 			Magnets[1].GetComponent<CharacterBehaviour>().SetInput(false);
@@ -495,6 +499,10 @@ public class InLevelManager : MonoBehaviour
 		ParticleEffect[1].SetActive(false);
 		Magnets[0].GetComponent<CharacterBehaviour>().ChangePos = false;
 		Magnets[1].GetComponent<CharacterBehaviour>().ChangePos = false;
+		
+		// Add christmas hats
+		Magnets[0].GetComponent<CharacterBehaviour>().Hat.SetActive(true);
+		Magnets[1].GetComponent<CharacterBehaviour>().Hat.SetActive(true);
 		
 		// Enable keyboard input
 		Invoke("EnableKeyboardInput", 0.8f);
