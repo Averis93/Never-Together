@@ -6,25 +6,34 @@ using UnityEngine.SceneManagement;
 
 public class LevelsManager : MonoBehaviour
 {
+	public static LevelsManager Instance { get; private set; }
 
 	[Header("Levels Btn")] 
 	public Button[] Levels;
 
 	public bool[] Locked;
 
-	public static LevelsManager Control;
+	public Canvas Canvas;
+
 
 	void Awake()
 	{
-		Control = this;                          // linking the self-reference
-		DontDestroyOnLoad(transform.gameObject); // set to dont destroy
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
 	}
 	
 	void Start()
 	{
         Time.timeScale = 1f;
 		
-		//Locked = new[] {false, true, true, true, true, true};
+		Locked = new[] {false, true, true, true, true, true, true, true};
 		
 		var btn1 = Levels[0].GetComponent<Button>();
 		var btn2 = Levels[1].GetComponent<Button>();
@@ -42,105 +51,111 @@ public class LevelsManager : MonoBehaviour
 		btn5.onClick.AddListener(StartLevel5);
         btn6.onClick.AddListener(StartLevel6);
         btn7.onClick.AddListener(StartLevel7);
-        btn8.onClick.AddListener(StartLevel8);
+        btn8.onClick.AddListener(StartBonusLevel);
     }
 
 	void StartLevel1()
 	{
-		//Debug.Log("Level1: " + Locked[0]);
 		SceneManager.LoadScene("Level1");	
+		//Canvas.gameObject.SetActive(false);
 	}
 	
 	void StartLevel2()
 	{
-		/*
+
 		Debug.Log("Level2: " + Locked[1]);
 		if (!Locked[1])
 		{
 			SceneManager.LoadScene("Level2");
 		}
-		*/
+	
 		
-		SceneManager.LoadScene("Level2");
+		//SceneManager.LoadScene("Level2");
 	}
 	
 	void StartLevel3()
 	{
 		
-		/*
+	
 		Debug.Log("Level3: " + Locked[2]);
 		if (!Locked[2])
 		{
 			SceneManager.LoadScene("Level3");
 		}
-		*/
 		
-		SceneManager.LoadScene("Level3");
+		
+		//SceneManager.LoadScene("Level3");
 	}
 	
 	void StartLevel4()
 	{
-		/*
+		
 		if (!Locked[3])
 		{
 			SceneManager.LoadScene("Level4");
 		}
-		*/
 		
-		SceneManager.LoadScene("Level4");
+		
+		//SceneManager.LoadScene("Level4");
 	}
 	
 	void StartLevel5()
 	{
-		/*
+		
 		if (!Locked[4])
 		{
 			SceneManager.LoadScene("Level5");
 		}
-		*/
 		
-		SceneManager.LoadScene("Level5");
+		
+		//SceneManager.LoadScene("Level5");
 	}
 
     void StartLevel6()
     {
-        /*
+        
 		if (!Locked[5])
 		{
 			SceneManager.LoadScene("Level6");
 		}
-		*/
+		
 
-        SceneManager.LoadScene("Level6");
+        //SceneManager.LoadScene("Level6");
     }
 
     void StartLevel7()
     {
-        /*
+        
 		if (!Locked[6])
 		{
 			SceneManager.LoadScene("Level7");
 		}
-		*/
+		
 
-        SceneManager.LoadScene("Level7");
+        //SceneManager.LoadScene("Level7");
     }
 
-    void StartLevel8()
+    void StartBonusLevel()
     {
-        /*
+        
 		if (!Locked[7])
 		{
 			SceneManager.LoadScene("BonusLevel");
 		}
-		*/
+		
 
-        SceneManager.LoadScene("BonusLevel");
+        //SceneManager.LoadScene("BonusLevel");
     }
 
     // Get back to the levels menu
     public void BackToMenu()
 	{
 		SceneManager.LoadScene("Menu");
+	}
+
+	public void UnlockLevel(int index)
+	{
+		Locked[index] = false;
+		Levels[index].transform.Find("Locked").gameObject.SetActive(false);
 	}
 }

@@ -64,6 +64,9 @@ public class InLevelManager : MonoBehaviour
 	
 	// Use this for initialization
 	void Start () {
+		
+		LevelsManager.Instance.Canvas.gameObject.SetActive(false);
+		
 		_coinsCount = 0;
 		_maxCoins = 150;
 		_totalCoinsCollected = 0;
@@ -155,6 +158,7 @@ public class InLevelManager : MonoBehaviour
 	public void BackToLevels()
 	{
 		SceneManager.LoadScene("Levels");
+		LevelsManager.Instance.Canvas.gameObject.SetActive(true);
 	}
 	
 	// Repeat current level
@@ -288,11 +292,12 @@ public class InLevelManager : MonoBehaviour
 		Statistics.SetActive(true);
 		StartCoroutine(CheckStars());
 
-		/*
+
 		//var levels = SceneManager.GetSceneByName("DontDestroyOnLoad").GetRootGameObjects()[0].GetComponent<LevelsManager>();
 		var currentScene = SceneManager.GetActiveScene().name;
-		LevelsManager.Control.Locked[Int32.Parse(currentScene.Substring(currentScene.Length-1))+1] = false;
-		*/
+		var index = Int32.Parse(currentScene.Substring(currentScene.Length - 1));
+		Debug.Log("Level index: " + index);
+		LevelsManager.Instance.UnlockLevel(index);
 	}
 
 	IEnumerator CheckStars()

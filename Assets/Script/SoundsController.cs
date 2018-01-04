@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundsController : MonoBehaviour {
-
-    public AudioSource audioSource;
+    
+    public AudioSource AudioSource;
     public AudioClip Click;
 
-
+    
     public void ClickSoundPlay()
     {
-        audioSource.PlayOneShot(Click);
+        AudioSource.PlayOneShot(Click);
     }
 }
