@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class InLevelManager : MonoBehaviour
-{
+{	
 	public Text LevelNumber;
 
 	public Transform AdditionalTime;
@@ -61,6 +62,9 @@ public class InLevelManager : MonoBehaviour
 	private Text _attractionTimer;
 	private Text _slowdownTimer;
 	private float _slowdownSpeed;
+
+	private String _currentScene;
+	private int _currentLevel;
 	
 	// Use this for initialization
 	void Start () {
@@ -82,6 +86,9 @@ public class InLevelManager : MonoBehaviour
 		_camShake = GetComponent<CameraShake>();
 
 		_slowdownSpeed = 0.7f;
+		
+		_currentScene = SceneManager.GetActiveScene().name;
+		_currentLevel = Int32.Parse(_currentScene.Substring(_currentScene.Length - 1));
 		
 		StartCoroutine(StartTimer());
 		StartCoroutine(FadeTextIn(0.7f));
@@ -122,31 +129,28 @@ public class InLevelManager : MonoBehaviour
 	// Start next level when the player taps the right arrow at the end of a level
 	public void StartNextLevel()
 	{
-		var sceneName = SceneManager.GetActiveScene().name;
-		var levelNumber = sceneName.Substring(sceneName.Length - 1);
-
-		switch (levelNumber)
+		switch (_currentLevel.ToString())
 		{
 			case "1":
-				SceneManager.LoadScene("Level2");
+				LevelsManager.Instance.StartLevel2();
 				break;
 			case "2":
-				SceneManager.LoadScene("Level3");
+				LevelsManager.Instance.StartLevel3();
 				break;
 			case "3":
-				SceneManager.LoadScene("Level4"); 
+				LevelsManager.Instance.StartLevel4();
 				break;
 			case "4":
-				SceneManager.LoadScene("Level5");
+				LevelsManager.Instance.StartLevel5();
 				break;
             case "5":
-                SceneManager.LoadScene("Level6");
+	            LevelsManager.Instance.StartLevel6();
                 break;
             case "6":
-                SceneManager.LoadScene("Level7");
+	            LevelsManager.Instance.StartLevel7();
                 break;
-            case "8":
-                SceneManager.LoadScene("BonusLevel");
+            case "7":
+	            LevelsManager.Instance.StartBonusLevel();
                 break;
             default: 
 				Debug.Log("Couldn't find level");
@@ -290,18 +294,18 @@ public class InLevelManager : MonoBehaviour
 		TotalLivesLost.text = _livesLost.ToString();
 		TotalLivesLost.text = _livesLost.ToString();
 		Statistics.SetActive(true);
+		
 		StartCoroutine(CheckStars());
 
-
-		//var levels = SceneManager.GetSceneByName("DontDestroyOnLoad").GetRootGameObjects()[0].GetComponent<LevelsManager>();
-		var currentScene = SceneManager.GetActiveScene().name;
-		var index = Int32.Parse(currentScene.Substring(currentScene.Length - 1));
-		Debug.Log("Level index: " + index);
-		LevelsManager.Instance.UnlockLevel(index);
+		if (_currentLevel < 7)
+		{
+			LevelsManager.Instance.UnlockNewLevel(_currentLevel);
+		}	
 	}
 
 	IEnumerator CheckStars()
 	{
+		var yellowStars = 0;
 		var activeStars = new List<GameObject>();
 		var coinsThreshold = _totalCoins * 2 / 3;
 		
@@ -311,6 +315,7 @@ public class InLevelManager : MonoBehaviour
 		}
 		else
 		{
+			yellowStars++;
 			activeStars.Add(Stars[0].transform.GetChild(0).gameObject);
 		}
 
@@ -320,6 +325,7 @@ public class InLevelManager : MonoBehaviour
 		}
 		else
 		{
+			yellowStars++;
 			activeStars.Add(Stars[1].transform.GetChild(0).gameObject);
 		}
 
@@ -329,6 +335,7 @@ public class InLevelManager : MonoBehaviour
 		}
 		else
 		{
+			yellowStars++;
 			activeStars.Add(Stars[2].transform.GetChild(0).gameObject);
 		}
 
@@ -339,6 +346,13 @@ public class InLevelManager : MonoBehaviour
 			activeStars[i].GetComponent<Star>().ChangeShape();
 			i++;
 			yield return new WaitForSeconds(0.5f);
+		}
+		
+		var cancelArrow = LevelsManager.Instance.SetStars(yellowStars, _currentLevel);
+		
+		if (cancelArrow)
+		{
+			Statistics.transform.Find("Next Level").gameObject.SetActive(false);
 		}
 	}
 	
