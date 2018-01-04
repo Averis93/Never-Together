@@ -8,13 +8,21 @@ public class LevelsManager : MonoBehaviour
 {
 	public static LevelsManager Instance { get; private set; }
 
+	[Header("StarsNum")] 
+	public Text StarsText;
+	
 	[Header("Levels Btn")] 
 	public Button[] Levels;
+
+	public GameObject[] LevelStars;
+	public int[] StarsForLevel;
 
 	public bool[] Locked;
 
 	public Canvas Canvas;
 
+
+	private int _starsCollected;
 
 	void Awake()
 	{
@@ -34,6 +42,11 @@ public class LevelsManager : MonoBehaviour
         Time.timeScale = 1f;
 		
 		Locked = new[] {false, true, true, true, true, true, true, true};
+		
+		LevelStars = new GameObject[3];
+		StarsForLevel = new[] {0, 0, 0, 0, 0, 0, 0, 0};
+		StarsText.text = "0";
+		_starsCollected = 0;
 		
 		var btn1 = Levels[0].GetComponent<Button>();
 		var btn2 = Levels[1].GetComponent<Button>();
@@ -56,95 +69,101 @@ public class LevelsManager : MonoBehaviour
 
 	void StartLevel1()
 	{
-		SceneManager.LoadScene("Level1");	
-		//Canvas.gameObject.SetActive(false);
+		SceneManager.LoadScene("Level1");
+		AssignStars(0);
 	}
 	
-	void StartLevel2()
+	public void StartLevel2()
 	{
-
-		Debug.Log("Level2: " + Locked[1]);
 		if (!Locked[1])
 		{
 			SceneManager.LoadScene("Level2");
 		}
+		
+		AssignStars(1);
 	
 		
 		//SceneManager.LoadScene("Level2");
 	}
 	
-	void StartLevel3()
+	public void StartLevel3()
 	{
-		
-	
-		Debug.Log("Level3: " + Locked[2]);
 		if (!Locked[2])
 		{
 			SceneManager.LoadScene("Level3");
 		}
 		
+		AssignStars(2);
+		
 		
 		//SceneManager.LoadScene("Level3");
 	}
 	
-	void StartLevel4()
+	public void StartLevel4()
 	{
-		
 		if (!Locked[3])
 		{
 			SceneManager.LoadScene("Level4");
 		}
 		
+		AssignStars(3);
+		
 		
 		//SceneManager.LoadScene("Level4");
 	}
 	
-	void StartLevel5()
+	public void StartLevel5()
 	{
-		
 		if (!Locked[4])
 		{
 			SceneManager.LoadScene("Level5");
 		}
 		
+		AssignStars(4);
+		
 		
 		//SceneManager.LoadScene("Level5");
 	}
 
-    void StartLevel6()
+	public void StartLevel6()
     {
-        
 		if (!Locked[5])
 		{
 			SceneManager.LoadScene("Level6");
 		}
 		
+	    AssignStars(5);
+	    
 
         //SceneManager.LoadScene("Level6");
     }
 
-    void StartLevel7()
+	public void StartLevel7()
     {
         
 		if (!Locked[6])
 		{
 			SceneManager.LoadScene("Level7");
 		}
+	    
+	    AssignStars(6);
 		
 
         //SceneManager.LoadScene("Level7");
     }
 
-    void StartBonusLevel()
+	public void StartBonusLevel()
     {
         
 		if (!Locked[7])
 		{
 			SceneManager.LoadScene("BonusLevel");
 		}
-		
 
-        //SceneManager.LoadScene("BonusLevel");
+	    AssignStars(7);
+
+
+	    //SceneManager.LoadScene("BonusLevel");
     }
 
     // Get back to the levels menu
@@ -153,9 +172,41 @@ public class LevelsManager : MonoBehaviour
 		SceneManager.LoadScene("Menu");
 	}
 
-	public void UnlockLevel(int index)
+	void AssignStars(int index)
+	{
+		LevelStars[0] = Levels[index].transform.Find("Stars_2").gameObject;
+		LevelStars[1] = Levels[index].transform.Find("Stars_3").gameObject;
+		LevelStars[2] = Levels[index].transform.Find("Stars_4").gameObject;
+	}
+
+	public void UnlockNewLevel(int index)
 	{
 		Locked[index] = false;
 		Levels[index].transform.Find("Locked").gameObject.SetActive(false);
+	}
+
+	// Returns true if the arrow to start the next level has to be canceled
+	public bool SetStars(int starsNum, int level)
+	{
+		if (starsNum > StarsForLevel[level - 1])
+		{
+			_starsCollected = _starsCollected - StarsForLevel[level - 1] + starsNum;
+			StarsText.text = "" + _starsCollected; 
+			StarsForLevel[level - 1] = starsNum;
+			LevelStars[starsNum - 1].SetActive(true);
+			
+			if (_starsCollected == 21)
+			{
+				UnlockNewLevel(7);
+				return false;
+			}
+			
+			if (level == 7)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
