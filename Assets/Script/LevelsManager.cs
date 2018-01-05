@@ -39,7 +39,7 @@ public class LevelsManager : MonoBehaviour
 	
 	void Start()
 	{
-        Time.timeScale = 1f;
+		Time.timeScale = 1f;
 		
 		Locked = new[] {false, true, true, true, true, true, true, true};
 		
@@ -169,7 +169,21 @@ public class LevelsManager : MonoBehaviour
     // Get back to the levels menu
     public void BackToMenu()
 	{
-		SceneManager.LoadScene("Menu");
+		StartCoroutine(LoadMenuAsync());
+		//SceneManager.LoadScene("Menu");
+	}
+
+	IEnumerator LoadMenuAsync()
+	{
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Menu");
+
+		//Wait until the last operation fully loads to return anything
+		while (!asyncLoad.isDone)
+		{
+			yield return null;
+		}
+		
+		Canvas.gameObject.SetActive(false);
 	}
 
 	void AssignStars(int index)

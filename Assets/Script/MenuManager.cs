@@ -145,6 +145,11 @@ public class MenuManager : MonoBehaviour
 	{
 		//SoundManager.Instance.GameplaySoundtrack();
 		SceneManager.LoadScene("Levels");
+
+		if (LevelsManager.Instance != null)
+		{
+			LevelsManager.Instance.Canvas.gameObject.SetActive(true);
+		}
 	}
 	
 	public void OnClickTutorial()
