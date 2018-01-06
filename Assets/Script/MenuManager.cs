@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+	public static MenuManager Instance { get; private set; }
+	
+	public Canvas Canvas;
+	
 	public enum Menu
 	{
 		Main,
@@ -38,11 +42,13 @@ public class MenuManager : MonoBehaviour
 
     [Header("Audio Mixer")]
     public AudioMixer mixer;
+	public bool AudioDisabled;
 
     public Menu CurrentMenu { get; private set; }
 
+
     private bool _next;
-    public bool _audioMute;
+    
 
     //void Awake()
     //{
@@ -53,10 +59,24 @@ public class MenuManager : MonoBehaviour
     //}
 
     // Use this for initialization
+	
+	void Awake()
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+	}
+	
     void Start ()
 	{
         Time.timeScale = 1f;
-        _audioMute = false;
+		AudioDisabled = false;
 		CurrentMenu = Menu.Main;
 		SwitchMenu(CurrentMenu);
 	}
@@ -96,41 +116,14 @@ public class MenuManager : MonoBehaviour
         GeneralMenu.SetActive(false);
         ControlsMenu.SetActive(false);
         PowerUpMenu.SetActive(false);
-    }
-    /*
-        // Update is called once per frame
-        void Update () {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                //SoundManager.Instance.GameplaySoundtrack();
-                SceneManager.LoadScene("Levels");
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                SwitchMenu(Menu.Main);
-            } 
-
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                SwitchMenu(Menu.Settings);
-            } 
-
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                SwitchMenu(Menu.Credits);
-            } 
-        }
-    */
-    
-
+    }	
 
     public void ClickAudioMute()
     {
-        mixer.SetFloat("Volume", -80f);
-        AudioPlay.SetActive(false);
-        AudioMute.SetActive(true);
-        _audioMute = true;
+	    mixer.SetFloat("Volume", -80f);
+	    AudioPlay.SetActive(false);
+	    AudioMute.SetActive(true);
+	    AudioDisabled = true;
     }
 
     public void ClickAudioPlay()
@@ -138,14 +131,27 @@ public class MenuManager : MonoBehaviour
         mixer.SetFloat("Volume", 0f);
         AudioPlay.SetActive(true);
         AudioMute.SetActive(false);
-        _audioMute = false;
+	    AudioDisabled = false;
     }
 
     public void OnClickPlay()
 	{
 		//SoundManager.Instance.GameplaySoundtrack();
-		SceneManager.LoadScene("Levels");
+		StartCoroutine(LoadLevelsAsync());
+	}
+	
+	IEnumerator LoadLevelsAsync()
+	{
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("Levels");
 
+		//Wait until the last operation fully loads to return anything
+		while (!asyncLoad.isDone)
+		{
+			yield return null;
+		}
+		
+		Canvas.gameObject.SetActive(false);
+		
 		if (LevelsManager.Instance != null)
 		{
 			LevelsManager.Instance.Canvas.gameObject.SetActive(true);
@@ -167,6 +173,7 @@ public class MenuManager : MonoBehaviour
 	public void BackToMenu()
 	{
 		SwitchMenu(Menu.Main);
+		Canvas.gameObject.SetActive(true);
 	}
 
     public void OnClickGeneral()

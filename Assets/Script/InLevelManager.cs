@@ -252,8 +252,6 @@ public class InLevelManager : MonoBehaviour
 				GameOverObject.SetActive(true);
 
 				StartCoroutine(FadePanelIn(GameOverObject.transform.GetChild(0), 1.5f));
-
-				// END THE GAME!!!
 			}
 		}
 	}

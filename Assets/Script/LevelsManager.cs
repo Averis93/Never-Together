@@ -183,6 +183,7 @@ public class LevelsManager : MonoBehaviour
 			yield return null;
 		}
 		
+		MenuManager.Instance.Canvas.gameObject.SetActive(true);
 		Canvas.gameObject.SetActive(false);
 	}
 
