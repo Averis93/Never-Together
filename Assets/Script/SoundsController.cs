@@ -6,8 +6,8 @@ public class SoundsController : MonoBehaviour {
     
     public AudioSource audioSource;
     public AudioClip Click;
-
     
+
     public void ClickSoundPlay()
     {
         audioSource.PlayOneShot(Click);
