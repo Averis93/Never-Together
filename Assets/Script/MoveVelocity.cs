@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MoveVelocity : MonoBehaviour {
 
+    public float NewSpeed;
+
     [Header("Total Background")]
     public GameObject[] Background;
 
@@ -26,8 +28,8 @@ public class MoveVelocity : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("Velocity"))
         {
-            _velocityBack.Speed = 4.9f;
-            _velocityLastBack.Speed = 4.9f;
+            _velocityBack.Speed = NewSpeed;
+            _velocityLastBack.Speed = NewSpeed;
         }
     }
 }

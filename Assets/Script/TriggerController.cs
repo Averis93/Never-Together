@@ -24,6 +24,7 @@ public class TriggerController : MonoBehaviour {
     public GameObject EndExplosionEffect;
 
     [Header("Interference Effect")]
+    public Text StartInterference;
     public GameObject[] InvisibleEffect;
 
     [Header("Light")]
@@ -76,7 +77,7 @@ public class TriggerController : MonoBehaviour {
         {
             case "StartLevel":
                 {
-                    StartCoroutine(FadeTextIn(0.7f));
+                    StartCoroutine(FadeTextIn(LevelNumber, 0.7f));
                 }
                 break;
 
@@ -136,18 +137,32 @@ public class TriggerController : MonoBehaviour {
                 }
                 break;
 
-            //Interference part
-            case "Interference":
+            //Inversion of magnet control
+            case "FifthTutorial":
                 {
                     _numTutorial = 5;
                     _lenghtTutorial = FifthTutorial.Length - 1;
-                    _lenghtRedLight = RedLight.Length - 1;
 
                     if (!_isFreeze && !_showed)
                     {
                         _isFreeze = true;
                         StartCoroutine(ShowTutorial(FifthTutorial, null));
                     }
+                }
+                break;
+
+            //Interference part
+            case "Interference":
+                {
+                    StartCoroutine(FadeTextIn(StartInterference, 0.7f));
+                    for (int i = 0; i < RedLight.Length; i++)
+                    {
+                        RedLight[i].color = Color.red;
+                    }
+
+                    InvisibleEffect[1].SetActive(true);
+                    _interferenceStart = true;
+                    InvisibleEffect[0].SetActive(true);
                 }
                 break;
 
@@ -246,6 +261,13 @@ public class TriggerController : MonoBehaviour {
                 }
                 break;
 
+            case "FifthTutorial":
+                {
+                    _isFreeze = false;
+                    _showed = false;
+                }
+                break;
+
             case "EndExplosionEffect":
                 {
                     _isFreeze = false;
@@ -267,20 +289,6 @@ public class TriggerController : MonoBehaviour {
                     _isFreeze = false;
                     _showed = false;
                     _explosion = false;
-                }
-                break;
-
-            case "Interference":
-                {
-                    _isFreeze = false;
-                    _showed = false;
-                }
-                break;
-
-            case "EndInterference":
-                {
-                    _isFreeze = false;
-                    _showed = false;
                 }
                 break;
 
@@ -410,7 +418,7 @@ public class TriggerController : MonoBehaviour {
                     }
                     break;
 
-                //Fifth tutorial about the the interference part
+                //Fifth tutorial about the collision between the two magnets
                 case 5:
                     {
                         if (_lenghtTutorial == 1)
@@ -444,7 +452,7 @@ public class TriggerController : MonoBehaviour {
     }
 
     // Fade in the text 
-    IEnumerator FadeTextIn(float t)
+    IEnumerator FadeTextIn(Text LevelNumber, float t)
     {
         while (LevelNumber.color.a < 1.0f)
         {
@@ -452,11 +460,11 @@ public class TriggerController : MonoBehaviour {
             yield return null;
         }
         yield return new WaitForSeconds(1.0f);
-        StartCoroutine(FadeTextOut());
+        StartCoroutine(FadeTextOut(LevelNumber));
     }
 
     // Fade out the text l
-    IEnumerator FadeTextOut()
+    IEnumerator FadeTextOut(Text LevelNumber)
     {
         while (LevelNumber.color.a > 0.0f)
         {
@@ -473,23 +481,6 @@ public class TriggerController : MonoBehaviour {
 
         if (_numTutorial != 0 && !_explosion)
         {
-            //Settaggio Effetto Interferenza
-            if (_numTutorial == 5)
-            {
-                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
-
-                for (int i = 0; i < RedLight.Length; i++)
-                {
-                    RedLight[i].color = Color.red;
-                }
-
-                InvisibleEffect[1].SetActive(true);
-                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.25f));
-                _interferenceStart = true;
-                InvisibleEffect[0].SetActive(true);
-                yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.7f));
-            }
-
             tutorial[0].SetActive(true);
             yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
 
