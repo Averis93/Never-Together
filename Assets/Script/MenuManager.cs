@@ -17,8 +17,7 @@ public class MenuManager : MonoBehaviour
 		Credits,
         General,
         Controls,
-        PowerUp,
-        Second
+        PowerUp
 	}
 
 	[Header("Menu Screens")] 
@@ -39,6 +38,7 @@ public class MenuManager : MonoBehaviour
     [Header("General Pages")]
     public GameObject FirstPageGeneral;
     public GameObject SecondPageGeneral;
+    public GameObject ThirdPageGeneral;
 
     [Header("Audio Mixer")]
     public AudioMixer mixer;
@@ -181,6 +181,7 @@ public class MenuManager : MonoBehaviour
         SwitchMenu(Menu.General);
         FirstPageGeneral.SetActive(true);
         SecondPageGeneral.SetActive(false);
+        ThirdPageGeneral.SetActive(false);
     }
 
     // Get to the next page
@@ -188,6 +189,20 @@ public class MenuManager : MonoBehaviour
     {
         FirstPageGeneral.SetActive(false);
         SecondPageGeneral.SetActive(true);
+    }
+
+    // Back to the previous page
+    public void BackToSecondPageGeneral()
+    {
+        SecondPageGeneral.SetActive(true);
+        ThirdPageGeneral.SetActive(false);
+    }
+
+    // Get to the next page
+    public void NextToThirdPageGeneral()
+    {
+        SecondPageGeneral.SetActive(false);
+        ThirdPageGeneral.SetActive(true);
     }
 
     public void OnClickControls()
