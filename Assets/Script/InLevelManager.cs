@@ -33,6 +33,7 @@ public class InLevelManager : MonoBehaviour
     public GameObject[] AttractionEffect;
     public GameObject[] ShieldEffect;
     public GameObject[] SlowdownEffect;
+	public GameObject RandomPowerup;
     public bool ShieldActive;
 	public float CamShakeAmt = 0.1f;
 	public int PowerUpDuration = 20;
@@ -69,7 +70,8 @@ public class InLevelManager : MonoBehaviour
 	// Use this for initialization
 	void Start () {
 		
-		LevelsManager.Instance.Canvas.gameObject.SetActive(false);
+		if(LevelsManager.Instance != null)
+			LevelsManager.Instance.Canvas.gameObject.SetActive(false);
 		
 		_coinsCount = 0;
 		_maxCoins = 150;
@@ -434,6 +436,12 @@ public class InLevelManager : MonoBehaviour
 		ShieldActive = true;
 		
 		StartCoroutine(StartCountdown(PowerUpDuration, ShieldEffect, "Shield"));
+	}
+	
+	// Enable random power-up
+	public void Random()
+	{
+		RandomPowerup.SetActive(true);
 	}
 	    
 	// Timer for power-ups
