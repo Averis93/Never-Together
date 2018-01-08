@@ -23,14 +23,14 @@ public class RotationPowerUp : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Speed > 2)
+        if (Speed > 1.5)
         {
-            Speed -= 2 * Time.deltaTime;
+            Speed -= 4 * Time.deltaTime;
             transform.Translate((new Vector3(0, -1, 0)) * Speed * Time.deltaTime);
         }
         else
         {
-            Speed = 2;
+            Speed = 1.5f;
             transform.Translate((new Vector3(0, -1, 0)) * Speed * Time.deltaTime);
 
             //effetto di luce
@@ -47,11 +47,11 @@ public class RotationPowerUp : MonoBehaviour {
     IEnumerator FadePanelIn(GameObject panel, float t)
     {
         var img = panel.GetComponent<SpriteRenderer>();
-        while (img.color.a < 4.0f)
+        while (img.color.a < 1.0f)
         {
             img.color = new Color(img.color.r, img.color.g, img.color.b, img.color.a + (Time.deltaTime / t));
             yield return null;
         }
-        yield return new WaitForSeconds(4.5f);
+        yield return new WaitForSeconds(1.0f);
     }
 }
