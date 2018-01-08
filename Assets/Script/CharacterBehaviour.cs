@@ -186,17 +186,23 @@ public class CharacterBehaviour : MonoBehaviour {
                 //Play sound
                 audioSource.PlayOneShot(PowerUpSound);
 
-                if (other.gameObject.name == "Attraction")
+                switch (other.gameObject.name)
                 {
-                    AppManager.GetComponent<InLevelManager>().Attraction();
-                } 
-                else if (other.gameObject.name == "Slowdown")
-                {
-                    AppManager.GetComponent<InLevelManager>().Slowdown();
-                }
-                else if (other.gameObject.name == "Shield")
-                {
-                    AppManager.GetComponent<InLevelManager>().Shield();
+                    case "Attraction":
+                        AppManager.GetComponent<InLevelManager>().Attraction();
+                        break;
+                        
+                    case "Slowdown":
+                        AppManager.GetComponent<InLevelManager>().Slowdown();
+                        break;
+                    
+                    case "Shield":
+                        AppManager.GetComponent<InLevelManager>().Shield();
+                        break;
+                        
+                    case "Random":
+                        AppManager.GetComponent<InLevelManager>().Random();
+                        break;
                 }
             }
             // If the object with which the magnets collide is a tree
