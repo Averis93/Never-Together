@@ -12,7 +12,7 @@ public class LevelsManager : MonoBehaviour
 	public Text StarsText;
 	
 	[Header("Levels Btn")] 
-	public Button[] Levels;
+	public Button[] Levels;    
 
 	public GameObject[] LevelStars;
 	public int[] StarsForLevel;
@@ -20,9 +20,7 @@ public class LevelsManager : MonoBehaviour
 	public bool[] Locked;
 
 	public Canvas Canvas;
-
-
-	private int _starsCollected;
+    private int _starsCollected;
 
 	void Awake()
 	{
@@ -184,7 +182,9 @@ public class LevelsManager : MonoBehaviour
 		}
 		
 		MenuManager.Instance.Canvas.gameObject.SetActive(true);
-		Canvas.gameObject.SetActive(false);
+        MenuManager.Instance.GetComponent<AnimationControl>().enabled = true;
+        
+        Canvas.gameObject.SetActive(false);
 	}
 
 	void AssignStars(int index)

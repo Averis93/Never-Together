@@ -19,8 +19,8 @@ public class MenuManager : MonoBehaviour
         Controls,
         PowerUp
 	}
-
-	[Header("Menu Screens")] 
+    
+    [Header("Menu Screens")] 
 	public GameObject MainMenu;
 	public GameObject TutorialMenu;
 	public GameObject CreditsMenu;
@@ -44,8 +44,8 @@ public class MenuManager : MonoBehaviour
     public AudioMixer mixer;
 	public bool AudioDisabled;
 
+    public bool _animOff;
     public Menu CurrentMenu { get; private set; }
-
 
     private bool _next;
     
@@ -76,9 +76,10 @@ public class MenuManager : MonoBehaviour
     void Start ()
 	{
         Time.timeScale = 1f;
-		AudioDisabled = false;
+        AudioDisabled = false;
+        _animOff = false;
 		CurrentMenu = Menu.Main;
-		SwitchMenu(CurrentMenu);
+        SwitchMenu(CurrentMenu);
 	}
 
 	void SwitchMenu(Menu menu)
@@ -136,8 +137,10 @@ public class MenuManager : MonoBehaviour
 
     public void OnClickPlay()
 	{
-		//SoundManager.Instance.GameplaySoundtrack();
-		StartCoroutine(LoadLevelsAsync());
+        //SoundManager.Instance.GameplaySoundtrack();
+        GetComponent<AnimationControl>().enabled = false;
+        _animOff = true;
+        StartCoroutine(LoadLevelsAsync());
 	}
 	
 	IEnumerator LoadLevelsAsync()
@@ -173,7 +176,7 @@ public class MenuManager : MonoBehaviour
 	public void BackToMenu()
 	{
 		SwitchMenu(Menu.Main);
-		Canvas.gameObject.SetActive(true);
+        Canvas.gameObject.SetActive(true);
 	}
 
     public void OnClickGeneral()

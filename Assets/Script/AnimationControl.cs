@@ -11,10 +11,11 @@ public class AnimationControl : MonoBehaviour {
     
     public bool _horizontalPlaying;
 
+    private MenuManager MenuManager;
 
 	void Start()
 	{
-		_horizontalPlaying = true;
+        MenuManager = gameObject.GetComponent<MenuManager>();        
 	}
 	
 	void Update()
@@ -23,45 +24,39 @@ public class AnimationControl : MonoBehaviour {
 		{
 			if (!_horizontalPlaying && !MagnetsAnim[1].isPlaying)
 			{
-				MagnetsAnim[0].Play();
-				_horizontalPlaying = true;
-			}
+                if (!MenuManager._animOff)
+                {
+                    _horizontalPlaying = true;
+                    MagnetsAnim[0].Play();
+                    MagnetsAnim[1].Stop();
+                    MenuManager._animOff = false;
+                }
+                else
+                {
+                    MagnetsAnim[1].Play();
+                    MagnetsAnim[0].Stop();
+                    _horizontalPlaying = false;
+                    MenuManager._animOff = false;
+                }
+            }
 			
 			if (_horizontalPlaying && !MagnetsAnim[0].isPlaying)
 			{
-				MagnetsAnim[1].Play();
-				_horizontalPlaying = false;
-			}
-		}
-	}
-	
-	/*
-	// Update is called once per frame
-	void Update () {
-		
-	    if (SceneManager.GetActiveScene().name == "Menu")
-	    {
-		    Debug.Log(_horizontalAnimation);
-		    StartCoroutine(AnimController());
-	    }
-	}
-
-    IEnumerator AnimController()
-    {
-        if (_horizontalAnimation)
-        {
-            MagnetsAnim[0].Play();
-            MagnetsAnim[1].Stop();
-            yield return new WaitForSeconds(WaitTime);
-            _horizontalAnimation = false;
-        }
-		else
-        {
-            MagnetsAnim[1].Play();
-            MagnetsAnim[0].Stop();
-            yield return new WaitForSeconds(WaitTime);
-	        _horizontalAnimation = true;
+                if (!MenuManager._animOff)
+                {
+                    MagnetsAnim[1].Play();
+                    MagnetsAnim[0].Stop();
+                    _horizontalPlaying = false;
+                    MenuManager._animOff = false;
+                }
+                else
+                {
+                    MagnetsAnim[1].Play();
+                    MagnetsAnim[0].Stop();
+                    _horizontalPlaying = true;
+                    MenuManager._animOff = false;
+                }
+            }
         }
     }
-    */
-}
+ }
