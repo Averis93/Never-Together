@@ -160,9 +160,11 @@ public class TriggerController : MonoBehaviour {
                         RedLight[i].color = Color.red;
                     }
 
-                    InvisibleEffect[1].SetActive(true);
-                    _interferenceStart = true;
                     InvisibleEffect[0].SetActive(true);
+                    _interferenceStart = true;
+                    InvisibleEffect[1].SetActive(true);
+                    InvisibleEffect[3].SetActive(true);
+                    InvisibleEffect[4].SetActive(true);
                 }
                 break;
 
@@ -170,7 +172,11 @@ public class TriggerController : MonoBehaviour {
             case "EndInterference":
                 {
                     InvisibleEffect[0].SetActive(false);
+                    InvisibleEffect[1].SetActive(false);
                     InvisibleEffect[2].SetActive(false);
+                    InvisibleEffect[3].SetActive(false);
+                    InvisibleEffect[4].SetActive(false);
+                    InvisibleEffect[5].SetActive(false);
                     _interferenceEnd = true;
                     RedLight[_lenghtRedLight].color = Color.grey;
                 }

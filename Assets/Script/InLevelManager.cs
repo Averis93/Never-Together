@@ -90,7 +90,10 @@ public class InLevelManager : MonoBehaviour
 		_slowdownSpeed = 0.7f;
 		
 		_currentScene = SceneManager.GetActiveScene().name;
-		_currentLevel = Int32.Parse(_currentScene.Substring(_currentScene.Length - 1));
+        if (_currentScene != "BonusLevel")
+        {
+            _currentLevel = Int32.Parse(_currentScene.Substring(_currentScene.Length - 1));
+        }
 		
 		StartCoroutine(StartTimer());
 		StartCoroutine(FadeTextIn(0.7f));
@@ -279,8 +282,8 @@ public class InLevelManager : MonoBehaviour
 	
 	// Timer for the level
 	IEnumerator StartTimer()
-	{	
-		while (!_stopGame)
+	{
+        while (!_stopGame)
 		{	
 			yield return new WaitForSeconds(1.0f);
 			_timer++;
