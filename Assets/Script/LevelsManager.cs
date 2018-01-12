@@ -65,12 +65,7 @@ public class LevelsManager : MonoBehaviour
         btn7.onClick.AddListener(StartLevel7);
         btn8.onClick.AddListener(StartBonusLevel);
     }
-
-    void Update()
-    {
-        
-    }
-
+    
     void StartLevel1()
 	{
 		SceneManager.LoadScene("Level1");

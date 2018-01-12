@@ -68,8 +68,6 @@ public class TriggerController : MonoBehaviour {
         _interferenceStart = false;
         _interferenceEnd = false;
         _tutorialLenght = TutorialTriggers.Length;
-        Debug.Log("TutorialSeen del LVL1 è: " + _TutorialSeen_LVL1);
-        Debug.Log("TutorialSeen del LVL4 è: " + _TutorialSeen_LVL4);
 
     }
 	
@@ -287,7 +285,6 @@ public class TriggerController : MonoBehaviour {
                     _isFreeze = false;
                     _showed = false;
                     _TutorialSeen_LVL1 = true;
-                    Debug.Log("TutorialSeen del LVL1 è: " + _TutorialSeen_LVL1);
                 }
                 break;
 
@@ -326,7 +323,6 @@ public class TriggerController : MonoBehaviour {
                     _showed = false;
                     _explosion = false;
                     _TutorialSeen_LVL4 = true;
-                    Debug.Log("TutorialSeen del LVL4 è: " + _TutorialSeen_LVL4);
                 }
                 break;
 
