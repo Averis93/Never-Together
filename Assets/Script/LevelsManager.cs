@@ -22,24 +22,25 @@ public class LevelsManager : MonoBehaviour
 	public Canvas Canvas;
     private int _starsCollected;
 
-	void Awake()
+    void Awake()
 	{
 		if (Instance == null)
 		{
 			Instance = this;
-			DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
 		}
 		else
 		{
 			Destroy(gameObject);
 		}
-	}
+               
+    }
 	
 	void Start()
 	{
 		Time.timeScale = 1f;
-		
-		Locked = new[] {false, true, true, true, true, true, true, true};
+
+        Locked = new[] {false, true, true, true, true, true, true, true};
 		
 		LevelStars = new GameObject[3];
 		StarsForLevel = new[] {0, 0, 0, 0, 0, 0, 0, 0};
@@ -65,10 +66,15 @@ public class LevelsManager : MonoBehaviour
         btn8.onClick.AddListener(StartBonusLevel);
     }
 
-	void StartLevel1()
+    void Update()
+    {
+        
+    }
+
+    void StartLevel1()
 	{
 		SceneManager.LoadScene("Level1");
-		AssignStars(0);
+        AssignStars(0);
 	}
 	
 	public void StartLevel2()
@@ -103,8 +109,8 @@ public class LevelsManager : MonoBehaviour
 		{
 			SceneManager.LoadScene("Level4");
 		}
-		
-		AssignStars(3);
+        
+        AssignStars(3);
 		
 		
 		//SceneManager.LoadScene("Level4");

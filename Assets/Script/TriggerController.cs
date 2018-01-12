@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class TriggerController : MonoBehaviour {
-
+    
+    public Text LearningPart;
     public Text LevelNumber;
 
     [Header("Characters")]
@@ -13,11 +15,16 @@ public class TriggerController : MonoBehaviour {
     public GameObject Woman;
 
     [Header("Tutorial Images")]
+    public GameObject BlackBackground;
     public GameObject[] FirstTutorial;
     public GameObject[] SecondTutorial;
     public GameObject[] ThirdTutorial;
     public GameObject[] FourthTutorial;
     public GameObject[] FifthTutorial;
+
+    [Header("Props without Tutorial")]
+    public GameObject Props;
+    public GameObject[] TutorialTriggers;
 
     [Header("Explosion Effect")]
     public GameObject ExplosionEffect;
@@ -42,9 +49,16 @@ public class TriggerController : MonoBehaviour {
     private int _numExplosion;
     private int _lenghtRedLight;
     private bool _nextImage;
+    private int _tutorialLenght;
 
     public bool _explosion;
+    
+    private String _currentScene;
+    private int _currentLevel;
 
+    public static bool _TutorialSeen_LVL1;
+    public static bool _TutorialSeen_LVL4;
+    
     // Use this for initialization
     void Start () {
         _isFreeze = false;
@@ -53,18 +67,40 @@ public class TriggerController : MonoBehaviour {
         _explosion = false;
         _interferenceStart = false;
         _interferenceEnd = false;
+        _tutorialLenght = TutorialTriggers.Length;
+        Debug.Log("TutorialSeen del LVL1 è: " + _TutorialSeen_LVL1);
+        Debug.Log("TutorialSeen del LVL4 è: " + _TutorialSeen_LVL4);
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if(_isFreeze)
+        if (_isFreeze)
         {
-            Time.timeScale = 0f;
+            Time.timeScale = 0f;            
         }
 
         if (_showed)
         {
             Time.timeScale = 1f;
+            BlackBackground.SetActive(false);
+        }
+
+        if (_TutorialSeen_LVL1)
+        {
+            LearningPart.text = "LEVEL 1";
+            Props.SetActive(true);
+            for (int i = 0; i < _tutorialLenght; i++)
+                TutorialTriggers[i].SetActive(false);
+
+        }
+
+        if (_TutorialSeen_LVL4)
+        {
+            TutorialTriggers[0].tag = "Explosion";
+            TutorialTriggers[0].GetComponent<SpriteRenderer>().enabled = false;
+            TutorialTriggers[1].tag = "EndExplosionEffect";
+            TutorialTriggers[1].GetComponent<SpriteRenderer>().enabled = false;
         }
     }
     
@@ -137,7 +173,7 @@ public class TriggerController : MonoBehaviour {
                 }
                 break;
 
-            //Inversion of magnet control
+            //Avoid the collision between them
             case "FifthTutorial":
                 {
                     _numTutorial = 5;
@@ -250,6 +286,8 @@ public class TriggerController : MonoBehaviour {
                 {
                     _isFreeze = false;
                     _showed = false;
+                    _TutorialSeen_LVL1 = true;
+                    Debug.Log("TutorialSeen del LVL1 è: " + _TutorialSeen_LVL1);
                 }
                 break;
 
@@ -278,7 +316,7 @@ public class TriggerController : MonoBehaviour {
                 {
                     _isFreeze = false;
                     _showed = false;
-                    _explosion = false;
+                    _explosion = false;                    
                 }
                 break;
 
@@ -287,6 +325,8 @@ public class TriggerController : MonoBehaviour {
                     _isFreeze = false;
                     _showed = false;
                     _explosion = false;
+                    _TutorialSeen_LVL4 = true;
+                    Debug.Log("TutorialSeen del LVL4 è: " + _TutorialSeen_LVL4);
                 }
                 break;
 
@@ -487,6 +527,7 @@ public class TriggerController : MonoBehaviour {
 
         if (_numTutorial != 0 && !_explosion)
         {
+            BlackBackground.SetActive(true);
             tutorial[0].SetActive(true);
             yield return StartCoroutine(CoroutineUtilities.WaitForRealTime(0.2f));
 
@@ -522,6 +563,7 @@ public class TriggerController : MonoBehaviour {
 
         if (_numTutorial != 0) //in every explosion with tutorial
         {
+            BlackBackground.SetActive(true);
             tutorial[0].SetActive(true);
             tutorial[1].SetActive(false);
             //Change input for tutorial

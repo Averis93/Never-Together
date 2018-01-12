@@ -10,7 +10,7 @@ public class InLevelManager : MonoBehaviour
 {	
 	public Text LevelNumber;
 
-	public Transform AdditionalTime;
+    public Transform AdditionalTime;
 	public Transform AdditionalCoins;
 	public Canvas Canvas;
 	public Camera Cam;
@@ -66,9 +66,9 @@ public class InLevelManager : MonoBehaviour
 
 	private String _currentScene;
 	private int _currentLevel;
-	
-	// Use this for initialization
-	void Start () {
+        
+    // Use this for initialization
+    void Start () {
 		
 		if(LevelsManager.Instance != null)
 			LevelsManager.Instance.Canvas.gameObject.SetActive(false);
@@ -99,9 +99,11 @@ public class InLevelManager : MonoBehaviour
 		StartCoroutine(FadeTextIn(0.7f));
 
         Time.timeScale = 1f;
-	}
-	
-	void LateUpdate()
+        
+    }
+    
+
+    void LateUpdate()
 	{
 		// If the two magnets collide, remove 1 heart
 		if (!Gameover && Magnets[0].GetComponent<CharacterBehaviour>().JumpedUp &&
