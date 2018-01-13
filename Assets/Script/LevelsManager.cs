@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
+
 
 public class LevelsManager : MonoBehaviour
 {
@@ -68,7 +70,8 @@ public class LevelsManager : MonoBehaviour
     
     void StartLevel1()
 	{
-		SceneManager.LoadScene("Level1");
+        StartCoroutine(Load("Level1"));
+        //SceneManager.LoadScene("Level1");
         AssignStars(0);
 	}
 	
@@ -76,7 +79,8 @@ public class LevelsManager : MonoBehaviour
 	{
 		if (!Locked[1])
 		{
-			SceneManager.LoadScene("Level2");
+            StartCoroutine(Load("Level2"));
+            //SceneManager.LoadScene("Level2");
 		}
 		
 		AssignStars(1);
@@ -89,8 +93,9 @@ public class LevelsManager : MonoBehaviour
 	{
 		if (!Locked[2])
 		{
-			SceneManager.LoadScene("Level3");
-		}
+            StartCoroutine(Load("Level3"));
+            //SceneManager.LoadScene("Level3");
+        }
 		
 		AssignStars(2);
 		
@@ -102,7 +107,8 @@ public class LevelsManager : MonoBehaviour
 	{
 		if (!Locked[3])
 		{
-			SceneManager.LoadScene("Level4");
+            StartCoroutine(Load("Level4"));
+            //SceneManager.LoadScene("Level4");
 		}
         
         AssignStars(3);
@@ -115,7 +121,8 @@ public class LevelsManager : MonoBehaviour
 	{
 		if (!Locked[4])
 		{
-			SceneManager.LoadScene("Level5");
+            StartCoroutine(Load("Level5"));
+            //SceneManager.LoadScene("Level5");
 		}
 		
 		AssignStars(4);
@@ -128,8 +135,9 @@ public class LevelsManager : MonoBehaviour
     {
 		if (!Locked[5])
 		{
-			SceneManager.LoadScene("Level6");
-		}
+            StartCoroutine(Load("Level6"));
+            //SceneManager.LoadScene("Level6");
+        }
 		
 	    AssignStars(5);
 	    
@@ -142,7 +150,8 @@ public class LevelsManager : MonoBehaviour
         
 		if (!Locked[6])
 		{
-			SceneManager.LoadScene("Level7");
+            StartCoroutine(Load("Level7"));
+            //SceneManager.LoadScene("Level7");
 		}
 	    
 	    AssignStars(6);
@@ -156,8 +165,9 @@ public class LevelsManager : MonoBehaviour
         
 		if (!Locked[7])
 		{
-			SceneManager.LoadScene("BonusLevel");
-		}
+            StartCoroutine(Load("BonusLevel"));
+            //SceneManager.LoadScene("BonusLevel");
+        }
 
 	    AssignStars(7);
 
@@ -188,7 +198,20 @@ public class LevelsManager : MonoBehaviour
         Canvas.gameObject.SetActive(false);
 	}
 
-	void AssignStars(int index)
+    IEnumerator Load(String nameLevel)
+    {
+        #if UNITY_IPHONE
+            Handheld.SetActivityIndicatorStyle(iOS.ActivityIndicatorStyle.Gray);
+        #elif UNITY_ANDROID
+            Handheld.SetActivityIndicatorStyle(AndroidActivityIndicatorStyle.Large);
+        #endif
+
+        Handheld.StartActivityIndicator();
+        yield return new WaitForSeconds(0);
+        SceneManager.LoadScene(nameLevel);
+    }
+
+    void AssignStars(int index)
 	{
 		LevelStars[0] = Levels[index].transform.Find("Stars_2").gameObject;
 		LevelStars[1] = Levels[index].transform.Find("Stars_3").gameObject;

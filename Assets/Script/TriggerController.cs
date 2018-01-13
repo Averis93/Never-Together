@@ -54,7 +54,6 @@ public class TriggerController : MonoBehaviour {
     public bool _explosion;
     
     private String _currentScene;
-    private int _currentLevel;
 
     public static bool _TutorialSeen_LVL1;
     public static bool _TutorialSeen_LVL4;
@@ -67,6 +66,7 @@ public class TriggerController : MonoBehaviour {
         _explosion = false;
         _interferenceStart = false;
         _interferenceEnd = false;
+        _currentScene = SceneManager.GetActiveScene().name;
         _tutorialLenght = TutorialTriggers.Length;
 
     }
@@ -84,7 +84,7 @@ public class TriggerController : MonoBehaviour {
             BlackBackground.SetActive(false);
         }
 
-        if (_TutorialSeen_LVL1)
+        if (_TutorialSeen_LVL1 && _currentScene == "Level1")
         {
             LearningPart.text = "LEVEL 1";
             Props.SetActive(true);
@@ -93,7 +93,7 @@ public class TriggerController : MonoBehaviour {
 
         }
 
-        if (_TutorialSeen_LVL4)
+        if (_TutorialSeen_LVL1 && _TutorialSeen_LVL4 && _currentScene == "Level4")
         {
             TutorialTriggers[0].tag = "Explosion";
             TutorialTriggers[0].GetComponent<SpriteRenderer>().enabled = false;
