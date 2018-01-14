@@ -10,7 +10,7 @@ public class LevelsManager : MonoBehaviour
 {
 	public static LevelsManager Instance { get; private set; }
 
-	[Header("StarsNum")] 
+    [Header("StarsNum")] 
 	public Text StarsText;
 	
 	[Header("Levels Btn")] 
@@ -20,9 +20,10 @@ public class LevelsManager : MonoBehaviour
 	public int[] StarsForLevel;
 
 	public bool[] Locked;
+    private bool[] LockedArray;
 
 	public Canvas Canvas;
-    private int _starsCollected;
+    private int _starsCollected;    
 
     void Awake()
 	{
@@ -42,14 +43,27 @@ public class LevelsManager : MonoBehaviour
 	{
 		Time.timeScale = 1f;
 
-        Locked = new[] {false, true, true, true, true, true, true, true};
-		
-		LevelStars = new GameObject[3];
-		StarsForLevel = new[] {0, 0, 0, 0, 0, 0, 0, 0};
-		StarsText.text = "0";
-		_starsCollected = 0;
-		
-		var btn1 = Levels[0].GetComponent<Button>();
+        if (MenuManager.Instance._countUseGame == 0)
+        {
+            Locked = new[] { false, true, true, true, true, true, true, true };
+            StarsForLevel = new[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        }
+        else if (MenuManager.Instance._countUseGame == 1)
+        {
+            Locked = PlayerPrefsX.GetBoolArray("LockedLevel");
+            StarsForLevel = PlayerPrefsX.GetIntArray("StarsForLevels");
+        }        
+
+        LevelStars = new GameObject[3];
+
+        _starsCollected = 0;
+        _starsCollected = PlayerPrefs.GetInt("StarsCollected");
+
+        StarsText.text = "0";
+        StarsText.text = _starsCollected.ToString();
+
+        var btn1 = Levels[0].GetComponent<Button>();
 		var btn2 = Levels[1].GetComponent<Button>();
 		var btn3 = Levels[2].GetComponent<Button>();
 		var btn4 = Levels[3].GetComponent<Button>();
@@ -67,7 +81,40 @@ public class LevelsManager : MonoBehaviour
         btn7.onClick.AddListener(StartLevel7);
         btn8.onClick.AddListener(StartBonusLevel);
     }
-    
+
+    void Update()
+    {
+        //per togliere l'immagine di blocco ai livelli ormai sbloccati e visualizzare stelle una volta riavviato gioco
+        for (int i = 0; i < Locked.Length; i++)
+        {
+            if (!Locked[i])
+            {
+                if (StarsForLevel[i] > 0)
+                {
+                    var StarsObtained = StarsForLevel[i];
+                    switch (StarsObtained) {
+
+                        case 1:
+                            Levels[i].transform.Find("Stars_2").gameObject.SetActive(true);
+                            break;
+                        case 2:
+                            Levels[i].transform.Find("Stars_3").gameObject.SetActive(true);
+                            break;
+                        case 3:
+                            Levels[i].transform.Find("Stars_4").gameObject.SetActive(true);
+                            break;
+                    }
+                }
+            }
+
+            if (!Locked[i] && i != 0)
+            {
+                Levels[i].transform.Find("Locked").gameObject.SetActive(false);
+            }            
+        }
+
+    }
+
     void StartLevel1()
 	{
         StartCoroutine(Load("Level1"));
@@ -221,18 +268,38 @@ public class LevelsManager : MonoBehaviour
 	public void UnlockNewLevel(int index)
 	{
 		Locked[index] = false;
-		Levels[index].transform.Find("Locked").gameObject.SetActive(false);
-	}
+        for(int i = 0; i == index; i++)
+        {
+            PlayerPrefsX.SetBoolArray("LockedLevel", Locked);
+        }
+        for (int i = 0; i < Locked.Length ; i++)
+        {
+            PlayerPrefsX.SetBoolArray("LockedLevel", Locked);
+        }
+
+        Levels[index].transform.Find("Locked").gameObject.SetActive(false);
+    }
 
 	// Returns true if the arrow to start the next level has to be canceled
 	public bool SetStars(int starsNum, int level)
 	{
+        MenuManager.Instance._countUseGame = 1;
+        PlayerPrefs.SetInt("CountOpenGame", MenuManager.Instance._countUseGame);
+
 		if (starsNum > StarsForLevel[level - 1])
 		{
 			_starsCollected = _starsCollected - StarsForLevel[level - 1] + starsNum;
-			StarsText.text = "" + _starsCollected; 
+            PlayerPrefs.SetInt("StarsCollected", _starsCollected);
+
+            StarsText.text = "" + _starsCollected; 
 			StarsForLevel[level - 1] = starsNum;
-			LevelStars[starsNum - 1].SetActive(true);
+
+            for (int i = 0; i < StarsForLevel.Length; i++)
+            {
+                PlayerPrefsX.SetIntArray("StarsForLevels", StarsForLevel);
+            }
+
+            LevelStars[starsNum - 1].SetActive(true);
 			
 			if (_starsCollected == 21)
 			{

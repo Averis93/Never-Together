@@ -9,8 +9,9 @@ public class MenuManager : MonoBehaviour
 	public static MenuManager Instance { get; private set; }
 	
 	public Canvas Canvas;
-	
-	public enum Menu
+    public int _countUseGame;
+
+    public enum Menu
 	{
 		Main,
 		Tutorial,
@@ -76,13 +77,31 @@ public class MenuManager : MonoBehaviour
     void Start ()
 	{
         Time.timeScale = 1f;
-        AudioDisabled = false;
+        _countUseGame = PlayerPrefs.GetInt("CountOpenGame");
+        AudioDisabled = PlayerPrefs.GetInt("AudioMute") == 1 ? true : false;
         _animOff = false;
 		CurrentMenu = Menu.Main;
         SwitchMenu(CurrentMenu);
 	}
 
-	void SwitchMenu(Menu menu)
+    void Update()
+    {
+        if (AudioDisabled)
+        {
+            mixer.SetFloat("Volume", -80f);
+            AudioPlay.SetActive(false);
+            AudioMute.SetActive(true);
+        }
+
+        if (!AudioDisabled)
+        {
+            mixer.SetFloat("Volume", 0f);
+            AudioPlay.SetActive(true);
+            AudioMute.SetActive(false);
+        }
+    }
+
+    void SwitchMenu(Menu menu)
 	{
 		DisableMenus();
 
@@ -121,18 +140,14 @@ public class MenuManager : MonoBehaviour
 
     public void ClickAudioMute()
     {
-	    mixer.SetFloat("Volume", -80f);
-	    AudioPlay.SetActive(false);
-	    AudioMute.SetActive(true);
 	    AudioDisabled = true;
+        PlayerPrefs.SetInt("AudioMute", AudioDisabled ? 1 : 0);
     }
 
     public void ClickAudioPlay()
     {
-        mixer.SetFloat("Volume", 0f);
-        AudioPlay.SetActive(true);
-        AudioMute.SetActive(false);
 	    AudioDisabled = false;
+        PlayerPrefs.SetInt("AudioMute", AudioDisabled ? 1 : 0);
     }
 
     public void OnClickPlay()

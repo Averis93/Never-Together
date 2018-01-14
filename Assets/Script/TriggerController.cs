@@ -68,8 +68,9 @@ public class TriggerController : MonoBehaviour {
         _interferenceEnd = false;
         _currentScene = SceneManager.GetActiveScene().name;
         _tutorialLenght = TutorialTriggers.Length;
-
-    }
+        _TutorialSeen_LVL1 = PlayerPrefs.GetInt("LVL1_TutorialOff") == 1 ? true : false;
+        _TutorialSeen_LVL4 = PlayerPrefs.GetInt("LVL4_TutorialOff") == 1 ? true : false;
+}
 	
 	// Update is called once per frame
 	void Update () {
@@ -285,6 +286,7 @@ public class TriggerController : MonoBehaviour {
                     _isFreeze = false;
                     _showed = false;
                     _TutorialSeen_LVL1 = true;
+                    PlayerPrefs.SetInt("LVL1_TutorialOff", _TutorialSeen_LVL1 ? 1 : 0);
                 }
                 break;
 
@@ -323,6 +325,7 @@ public class TriggerController : MonoBehaviour {
                     _showed = false;
                     _explosion = false;
                     _TutorialSeen_LVL4 = true;
+                    PlayerPrefs.SetInt("LVL4_TutorialOff", _TutorialSeen_LVL4 ? 1 : 0);
                 }
                 break;
 
