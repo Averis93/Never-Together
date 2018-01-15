@@ -10,6 +10,9 @@ public class TriggerController : MonoBehaviour {
     public Text LearningPart;
     public Text LevelNumber;
 
+    [Header("Hint text")]
+    public Text[] Hint;
+
     [Header("Characters")]
     public GameObject Man;
     public GameObject Woman;
@@ -113,6 +116,30 @@ public class TriggerController : MonoBehaviour {
             case "StartLevel":
                 {
                     StartCoroutine(FadeTextIn(LevelNumber, 0.7f));
+                }
+                break;
+
+            case "FirstHint":
+                {
+                    StartCoroutine(FadeTextIn(Hint[0], 0.7f));
+                }
+                break;
+
+            case "SecondHint":
+                {
+                    StartCoroutine(FadeTextIn(Hint[1], 0.7f));
+                }
+                break;
+
+            case "ThirdHint":
+                {
+                    StartCoroutine(FadeTextIn(Hint[2], 0.7f));
+                }
+                break;
+
+            case "FourthHint":
+                {
+                    StartCoroutine(FadeTextIn(Hint[3], 0.7f));
                 }
                 break;
 

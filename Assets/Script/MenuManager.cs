@@ -76,6 +76,7 @@ public class MenuManager : MonoBehaviour
 	
     void Start ()
 	{
+        //PlayerPrefs.DeleteAll();
         Time.timeScale = 1f;
         _countUseGame = PlayerPrefs.GetInt("CountOpenGame");
         AudioDisabled = PlayerPrefs.GetInt("AudioMute") == 1 ? true : false;
