@@ -87,10 +87,8 @@ public class LevelsManager : MonoBehaviour
         //per togliere l'immagine di blocco ai livelli ormai sbloccati e visualizzare stelle una volta riavviato gioco
         for (int i = 0; i < Locked.Length; i++)
         {
-            if (!Locked[i])
-            {
-                if (StarsForLevel[i] > 0)
-                {
+            if (!Locked[i] && StarsForLevel[i] > 0)
+            {                
                     var StarsObtained = StarsForLevel[i];
                     switch (StarsObtained) {
 
@@ -104,7 +102,6 @@ public class LevelsManager : MonoBehaviour
                             Levels[i].transform.Find("Stars_4").gameObject.SetActive(true);
                             break;
                     }
-                }
             }
 
             if (!Locked[i] && i != 0)
@@ -284,7 +281,7 @@ public class LevelsManager : MonoBehaviour
 	public bool SetStars(int starsNum, int level)
 	{
         MenuManager.Instance._countUseGame = 1;
-        PlayerPrefs.SetInt("CountOpenGame", MenuManager.Instance._countUseGame);
+        PlayerPrefs.SetInt("CountOpenGame", MenuManager.Instance._countUseGame);            
 
 		if (starsNum > StarsForLevel[level - 1])
 		{

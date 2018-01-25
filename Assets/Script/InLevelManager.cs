@@ -94,6 +94,10 @@ public class InLevelManager : MonoBehaviour
         {
             _currentLevel = Int32.Parse(_currentScene.Substring(_currentScene.Length - 1));
         }
+        else
+        {
+            _currentLevel = 8;
+        }
 		
 		StartCoroutine(StartTimer());
 		StartCoroutine(FadeTextIn(0.7f));
@@ -156,8 +160,8 @@ public class InLevelManager : MonoBehaviour
             case "6":
 	            LevelsManager.Instance.StartLevel7();
                 break;
-            case "7":
-	            LevelsManager.Instance.StartBonusLevel();
+            //case "7":
+	           // LevelsManager.Instance.StartBonusLevel();
                 break;
             default: 
 				Debug.Log("Couldn't find level");

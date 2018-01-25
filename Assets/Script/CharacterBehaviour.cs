@@ -38,6 +38,12 @@ public class CharacterBehaviour : MonoBehaviour {
     public AudioClip CoinSound;
     public AudioClip PowerUpSound;
 
+    [Header("Trigger PowerUp")]
+    public bool ShieldTrigger;
+    public bool AttractionTrigger;
+    public bool SlowdownTrigger;
+    public bool RandomTrigger;
+
     // Private Variables
     private Transform _trans;	// Will hold this.transform.
     private CameraShake _camShake;
@@ -53,6 +59,10 @@ public class CharacterBehaviour : MonoBehaviour {
         _inputAllowed = true;
         _camShake = AppManager.gameObject.GetComponent<CameraShake>();
         _magneticFieldTrans = MagneticField.transform;
+        ShieldTrigger = false;
+        AttractionTrigger = false;
+        SlowdownTrigger = false;
+        RandomTrigger = false;
     }
 
     void Awake()
@@ -190,18 +200,22 @@ public class CharacterBehaviour : MonoBehaviour {
                 {
                     case "Attraction":
                         AppManager.GetComponent<InLevelManager>().Attraction();
+                        AttractionTrigger = true;
                         break;
                         
                     case "Slowdown":
                         AppManager.GetComponent<InLevelManager>().Slowdown();
+                        SlowdownTrigger = true;
                         break;
                     
                     case "Shield":
                         AppManager.GetComponent<InLevelManager>().Shield();
+                        ShieldTrigger = true;
                         break;
                         
                     case "Random":
                         AppManager.GetComponent<InLevelManager>().Random();
+                        RandomTrigger = true;
                         break;
                 }
             }

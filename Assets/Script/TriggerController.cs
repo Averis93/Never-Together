@@ -12,6 +12,10 @@ public class TriggerController : MonoBehaviour {
 
     [Header("Hint text")]
     public Text[] Hint;
+    public Text ShieldText;
+    public Text AttractionText;
+    public Text SlowdownText;
+    public Text RandomText;
 
     [Header("Characters")]
     public GameObject Man;
@@ -53,6 +57,8 @@ public class TriggerController : MonoBehaviour {
     private int _lenghtRedLight;
     private bool _nextImage;
     private int _tutorialLenght;
+    private CharacterBehaviour PowerUpOnTrigger_Man;
+    private CharacterBehaviour PowerUpOnTrigger_Woman;
 
     public bool _explosion;
     
@@ -69,6 +75,8 @@ public class TriggerController : MonoBehaviour {
         _explosion = false;
         _interferenceStart = false;
         _interferenceEnd = false;
+        PowerUpOnTrigger_Man = Man.GetComponent<CharacterBehaviour>();
+        PowerUpOnTrigger_Woman = Woman.GetComponent<CharacterBehaviour>();
         _currentScene = SceneManager.GetActiveScene().name;
         _tutorialLenght = TutorialTriggers.Length;
         _TutorialSeen_LVL1 = PlayerPrefs.GetInt("LVL1_TutorialOff") == 1 ? true : false;
@@ -140,6 +148,34 @@ public class TriggerController : MonoBehaviour {
             case "FourthHint":
                 {
                     StartCoroutine(FadeTextIn(Hint[3], 0.7f));
+                }
+                break;
+
+            case "Shield":
+                {
+                    if(PowerUpOnTrigger_Man.ShieldTrigger || PowerUpOnTrigger_Woman.ShieldTrigger)
+                        StartCoroutine(FadeTextIn(ShieldText, 1.3f));
+                }
+                break;
+
+            case "Attraction":
+                {
+                    if(PowerUpOnTrigger_Man.AttractionTrigger || PowerUpOnTrigger_Woman.AttractionTrigger)
+                        StartCoroutine(FadeTextIn(AttractionText, 0.7f));
+                }
+                break;
+
+            case "Slowdown":
+                {
+                    if(PowerUpOnTrigger_Man.SlowdownTrigger || PowerUpOnTrigger_Woman.SlowdownTrigger)
+                        StartCoroutine(FadeTextIn(SlowdownText, 1f));
+                }
+                break;
+
+            case "Random":
+                {
+                    if (PowerUpOnTrigger_Man.RandomTrigger || PowerUpOnTrigger_Woman.RandomTrigger)
+                        StartCoroutine(FadeTextIn(RandomText, 0.7f));
                 }
                 break;
 
@@ -225,8 +261,10 @@ public class TriggerController : MonoBehaviour {
                     InvisibleEffect[0].SetActive(true);
                     _interferenceStart = true;
                     InvisibleEffect[1].SetActive(true);
+                    InvisibleEffect[2].SetActive(true);
                     InvisibleEffect[3].SetActive(true);
                     InvisibleEffect[4].SetActive(true);
+                    InvisibleEffect[5].SetActive(true);
                 }
                 break;
 
