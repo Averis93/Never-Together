@@ -37,6 +37,7 @@ public class InLevelManager : MonoBehaviour
     public bool ShieldActive;
 	public float CamShakeAmt = 0.1f;
 	public int PowerUpDuration = 20;
+    public GameObject Fireworks;
 	
 	// Ending of the level
 	[Header("End level")]
@@ -303,6 +304,8 @@ public class InLevelManager : MonoBehaviour
 		TotalLivesLost.text = _livesLost.ToString();
 		TotalLivesLost.text = _livesLost.ToString();
 		Statistics.SetActive(true);
+
+        Fireworks.SetActive(true);
 
         //Set UnActive the Back and Next button and not enable the pause button
         Statistics.transform.Find("Next Level").gameObject.SetActive(false);
