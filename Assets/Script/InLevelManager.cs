@@ -162,7 +162,7 @@ public class InLevelManager : MonoBehaviour
                 break;
             //case "7":
 	           // LevelsManager.Instance.StartBonusLevel();
-                break;
+                //break;
             default: 
 				Debug.Log("Couldn't find level");
 				break;
@@ -303,10 +303,18 @@ public class InLevelManager : MonoBehaviour
 		TotalLivesLost.text = _livesLost.ToString();
 		TotalLivesLost.text = _livesLost.ToString();
 		Statistics.SetActive(true);
-		
-		StartCoroutine(CheckStars());
 
-		if (_currentLevel < 7)
+        //Set UnActive the Back and Next button and not enable the pause button
+        Statistics.transform.Find("Next Level").gameObject.SetActive(false);
+        Statistics.transform.Find("Back to Levels").gameObject.SetActive(false);
+        Canvas.transform.Find("Pause_button").gameObject.GetComponent<Button>().enabled = false;
+        var AlphaColor = Canvas.transform.Find("Pause_button").gameObject.GetComponent<Image>().color;
+        AlphaColor.a = 0.5f;
+        Canvas.transform.Find("Pause_button").gameObject.GetComponent<Image>().color = AlphaColor;
+
+        StartCoroutine(CheckStars());
+
+        if (_currentLevel < 7)
 		{
 			LevelsManager.Instance.UnlockNewLevel(_currentLevel);
 		}	
@@ -356,8 +364,12 @@ public class InLevelManager : MonoBehaviour
 			i++;
 			yield return new WaitForSeconds(0.5f);
 		}
-		
-		var cancelArrow = LevelsManager.Instance.SetStars(yellowStars, _currentLevel);
+
+        //Set Active the Back and Next button
+        Statistics.transform.Find("Next Level").gameObject.SetActive(true);
+        Statistics.transform.Find("Back to Levels").gameObject.SetActive(true);
+
+        var cancelArrow = LevelsManager.Instance.SetStars(yellowStars, _currentLevel);
 		
 		if (cancelArrow)
 		{
