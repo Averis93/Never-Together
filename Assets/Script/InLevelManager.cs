@@ -19,6 +19,7 @@ public class InLevelManager : MonoBehaviour
 	public GameObject Background;
     public GameObject InfiniteBackground;
     public GameObject Bots;
+    public GameObject InputTutorial;
 	
 	// Coins count string
 	public Text CoinsCountText;
@@ -47,6 +48,7 @@ public class InLevelManager : MonoBehaviour
 	public Text TotalLivesLost;
 	public Text TimerText;
 	public GameObject TotalCoins;
+    public GameObject TotalCoinsNoTutorial;
 	public GameObject[] Stars;
 	public bool Gameover;
 
@@ -60,6 +62,7 @@ public class InLevelManager : MonoBehaviour
 	private bool _additionalLife;
 	private bool _stopGame;
 	private CameraShake _camShake;
+    private TriggerController _tutorial;
 
 	private Text _attractionTimer;
 	private Text _slowdownTimer;
@@ -73,11 +76,18 @@ public class InLevelManager : MonoBehaviour
 		
 		if(LevelsManager.Instance != null)
 			LevelsManager.Instance.Canvas.gameObject.SetActive(false);
-		
-		_coinsCount = 0;
+
+        _currentScene = SceneManager.GetActiveScene().name;
+
+        _coinsCount = 0;
 		_maxCoins = 150;
 		_totalCoinsCollected = 0;
-		_totalCoins = TotalCoins.transform.childCount;
+        _totalCoins = TotalCoins.transform.childCount;        
+
+        _tutorial = InputTutorial.GetComponent<TriggerController>();
+        if (_tutorial.AddCoins_LVL1 && _currentScene == "Level1")
+            _totalCoins = TotalCoins.transform.childCount + TotalCoinsNoTutorial.transform.childCount;
+
 		SetCountText();
 		_remainingLives = 3;
 		_livesLost = 0;
@@ -89,8 +99,7 @@ public class InLevelManager : MonoBehaviour
 		_camShake = GetComponent<CameraShake>();
 
 		_slowdownSpeed = 0.7f;
-		
-		_currentScene = SceneManager.GetActiveScene().name;
+				
         if (_currentScene != "BonusLevel")
         {
             _currentLevel = Int32.Parse(_currentScene.Substring(_currentScene.Length - 1));

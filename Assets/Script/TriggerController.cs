@@ -66,9 +66,12 @@ public class TriggerController : MonoBehaviour {
 
     public static bool _TutorialSeen_LVL1;
     public static bool _TutorialSeen_LVL4;
+
+    public bool AddCoins_LVL1;
     
     // Use this for initialization
     void Start () {
+        AddCoins_LVL1 = PlayerPrefs.GetInt("LVL1_AddCoins") == 1 ? true : false;
         _isFreeze = false;
         _showed = false;
         _nextImage = false;
@@ -100,6 +103,8 @@ public class TriggerController : MonoBehaviour {
         {
             LearningPart.text = "LEVEL 1";
             Props.SetActive(true);
+            AddCoins_LVL1 = true;
+            PlayerPrefs.SetInt("LVL1_AddCoins", AddCoins_LVL1 ? 1 : 0);
             for (int i = 0; i < _tutorialLenght; i++)
                 TutorialTriggers[i].SetActive(false);
 
